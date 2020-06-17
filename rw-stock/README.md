@@ -31,8 +31,6 @@ This API allows administrator to list, modify and unlist a stock.
     * list:stock
     * modify:stock
     * unlist:stock
-    Test account: email: aaa@gmail.com, password: A1aaaaaaa
 
 * Trader
     * trade:stock
-    Test account: email: bbb@gmail.com, password: B2bbbbbbb

@@ -3,10 +3,13 @@ from numpy import random
 from datetime import datetime
 from sqlalchemy import distinct
 
-from __init__ import create_app
+from app import create_app
 from models import Price, Stock, db
 
-with create_app.app_context():
+#p = subprocess.Popen([sys.executable, 'price_generator.py'])
+
+app = create_app()
+with app.app_context():
     #Retrieve the newest price for each stock
     query = db.session.query(Price).distinct(Price.code).order_by(Price.code,Price.id.desc()).all()
     values = {x.code:x.price for x in query}
