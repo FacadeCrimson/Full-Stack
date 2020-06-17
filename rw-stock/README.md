@@ -13,9 +13,10 @@ This API allows administrator to list, modify and unlist a stock.
 
 ### File
 
-* app.py -- the main app
+* app -- the main app
 * auth.py -- handle authorization of jwt tokens and communication with Auth0 API
 * manage.py -- heroku database migration
+* migrations -- manage database
 * models.py -- implement the models
 * price_generator.py -- generate new stock price continuously
 * Procfile -- deploy gunicorn

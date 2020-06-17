@@ -3,10 +3,10 @@ from numpy import random
 from datetime import datetime
 from sqlalchemy import distinct
 
-from app import app
+from __init__ import create_app
 from models import Price, Stock, db
 
-with app.app_context():
+with create_app.app_context():
     #Retrieve the newest price for each stock
     query = db.session.query(Price).distinct(Price.code).order_by(Price.code,Price.id.desc()).all()
     values = {x.code:x.price for x in query}
