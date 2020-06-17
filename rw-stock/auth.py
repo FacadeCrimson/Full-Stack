@@ -1,7 +1,6 @@
 import os
 import json
 import requests
-import flask_login
 from jose import jwt
 from functools import wraps
 from urllib.request import urlopen
