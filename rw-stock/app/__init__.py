@@ -58,6 +58,7 @@ def register():
     try:
         trader = Trader(id = id, name = name, email = email, cash = 10000)
         trader.insert()
+        db.session.close()
     except:
         abort(422)
     return jsonify({
@@ -83,6 +84,7 @@ def login():
             trader.insert()
         session['token'] = token
         stocks = Possession.query.filter(Possession.trader_id == id)
+        db.session.close()
     except:
         abort(403)
     message = f'''
@@ -128,6 +130,7 @@ def buy_stock(id, jwt):
             trader.stocks.append(poss)
         trader.cash = result
         db.session.commit()   
+        db.session.close()
     return f"You have successfully acquired {shares} shares of stock {code}."
 
 # Sell a certain stock
@@ -154,6 +157,7 @@ def sell_stock(id, jwt):
     trader.cash = trader.cash + price.price * shares
     position.position = new_position
     db.session.commit()
+    db.session.close()
     return f"You have successfully sold {shares} shares of stock {code}."
 
 # List a new stock
@@ -171,6 +175,7 @@ def list_stock(jwt):
         stock.insert()
         price = Price(code = code, price = price, timestamp = datetime.now())
         price.insert()
+        db.session.close()
     except:
         abort(400)
     return jsonify({
@@ -185,6 +190,7 @@ def unlist_stock(jwt, stock_code):
     stock = Stock.query.get(stock_code)
     try:
         stock.delete()
+        db.session.close()
     except:
         abort(422)
     return jsonify({
@@ -205,6 +211,7 @@ def modify_stock(jwt, stock_code):
         stock.name = name
         stock.market_id = exchange
         stock.update()
+        db.session.close()
     except:
         abort(400)
     return jsonify({
@@ -282,3 +289,4 @@ def my_scrapper():
         new_value = value + random.randn() * 3
         new_price = Price(code = record, price = new_value, timestamp=current_time)
         new_price.insert()
+        db.session.close()
