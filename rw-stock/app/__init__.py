@@ -68,6 +68,8 @@ def register():
 # Permission required: none
 @app.route('/login', methods=['POST'])
 def login():
+    if 'token' in session:
+        return "Already logged in!"
     req = request.get_json()
     email = req['email']
     password = req['password']
