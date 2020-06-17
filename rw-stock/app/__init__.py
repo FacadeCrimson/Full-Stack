@@ -84,7 +84,6 @@ def login():
             trader.insert()
         session['token'] = token
         stocks = Possession.query.filter(Possession.trader_id == id)
-        db.session.close()
     except:
         abort(403)
     message = f'''
@@ -94,6 +93,7 @@ def login():
     '''
     for stock in stocks:
         message = message + f"You have {stock.position} shares of {stock.stock_code}.\n"
+    db.session.close()
     return message
 
 # Log out
