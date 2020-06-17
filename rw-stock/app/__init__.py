@@ -289,4 +289,4 @@ def my_scrapper():
         new_value = value + random.randn() * 3
         new_price = Price(code = record, price = new_value, timestamp=current_time)
         new_price.insert()
-        db.session.close()
+    db.session.close()
