@@ -34,3 +34,7 @@ This API allows administrator to list, modify and unlist a stock.
 
 * Trader
     * trade:stock
+
+### Heroku deployment
+
+* Base URL: https://rw-stock.herokuapp.com/
