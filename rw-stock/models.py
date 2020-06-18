@@ -1,9 +1,9 @@
-
 import os
-from sqlalchemy import Column, String, Integer, DateTime, create_engine, ForeignKey
-from flask_sqlalchemy import SQLAlchemy
 import json
+from flask_sqlalchemy import SQLAlchemy
+from sqlalchemy import Column, String, Integer, DateTime, create_engine, ForeignKey
 
+# local testing database
 #database_name = "stock_price"
 #database_path = "postgres://{}/{}".format('localhost:5432', database_name)
 database_path = os.environ['DATABASE_URL']

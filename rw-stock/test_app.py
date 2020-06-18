@@ -1,13 +1,11 @@
 import os
-import unittest
 import json
-from flask_sqlalchemy import SQLAlchemy
+import unittest
 from sqlalchemy.sql import func
+from flask_sqlalchemy import SQLAlchemy
 
 from app import create_app
 from models import setup_db, db
-
-
 
 class CapstoneiTestCase(unittest.TestCase):
     """This class represents the trivia test case"""

@@ -1,3 +1,6 @@
+# This file was used in an early version of the app which adopts subprocess to generate price in the background
+# It has been deprecated.
+
 import time
 from numpy import random
 from datetime import datetime

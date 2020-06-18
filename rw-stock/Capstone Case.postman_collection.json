@@ -6,44 +6,29 @@
 	},
 	"item": [
 		{
-			"name": "Get price",
+			"name": "Log in Admin",
 			"request": {
-				"method": "GET",
+				"method": "POST",
 				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\"email\":\"aaa@gmail.com\",\"password\":\"A1aaaaaaa\"}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
 				"url": {
-					"raw": "0.0.0.0:8080/price",
+					"raw": "https://rw-stock.herokuapp.com/login",
+					"protocol": "https",
 					"host": [
-						"0",
-						"0",
-						"0",
-						"0"
+						"rw-stock",
+						"herokuapp",
+						"com"
 					],
-					"port": "8080",
 					"path": [
-						"price"
-					]
-				}
-			},
-			"response": []
-		},
-		{
-			"name": "Get exchange price",
-			"request": {
-				"method": "GET",
-				"header": [],
-				"url": {
-					"raw": "0.0.0.0:8080/exchange/1/price",
-					"host": [
-						"0",
-						"0",
-						"0",
-						"0"
-					],
-					"port": "8080",
-					"path": [
-						"exchange",
-						"1",
-						"price"
+						"login"
 					]
 				}
 			},
@@ -64,16 +49,77 @@
 					}
 				},
 				"url": {
-					"raw": "0.0.0.0:8080/list",
+					"raw": "https://rw-stock.herokuapp.com/list",
+					"protocol": "https",
 					"host": [
-						"0",
-						"0",
-						"0",
-						"0"
+						"rw-stock",
+						"herokuapp",
+						"com"
 					],
-					"port": "8080",
 					"path": [
 						"list"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "LIst stock 2",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\"exchange\":2,\"price\":70,\"name\":\"Microsoft\",\"code\":\"MSFT\"}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": ""
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get price",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "https://rw-stock.herokuapp.com/price",
+					"protocol": "https",
+					"host": [
+						"rw-stock",
+						"herokuapp",
+						"com"
+					],
+					"path": [
+						"price"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get exchange price",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "https://rw-stock.herokuapp.com/exchange/1/price",
+					"protocol": "https",
+					"host": [
+						"rw-stock",
+						"herokuapp",
+						"com"
+					],
+					"path": [
+						"exchange",
+						"1",
+						"price"
 					]
 				}
 			},
@@ -86,7 +132,7 @@
 				"header": [],
 				"body": {
 					"mode": "raw",
-					"raw": "{\"name\":\"Apple\", \"exchange\":2}",
+					"raw": "{\"name\":\"Apple Inc.\", \"exchange\":2}",
 					"options": {
 						"raw": {
 							"language": "json"
@@ -94,14 +140,13 @@
 					}
 				},
 				"url": {
-					"raw": "0.0.0.0:8080/stock/AAPL",
+					"raw": "https://rw-stock.herokuapp.com/stock/AAPL",
+					"protocol": "https",
 					"host": [
-						"0",
-						"0",
-						"0",
-						"0"
+						"rw-stock",
+						"herokuapp",
+						"com"
 					],
-					"port": "8080",
 					"path": [
 						"stock",
 						"AAPL"
@@ -116,17 +161,65 @@
 				"method": "DELETE",
 				"header": [],
 				"url": {
-					"raw": "0.0.0.0:8080/stock/MSFT",
+					"raw": "https://rw-stock.herokuapp.com/stock/MSFT",
+					"protocol": "https",
 					"host": [
-						"0",
-						"0",
-						"0",
-						"0"
+						"rw-stock",
+						"herokuapp",
+						"com"
 					],
-					"port": "8080",
 					"path": [
 						"stock",
 						"MSFT"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Log out",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "https://rw-stock.herokuapp.com/logout",
+					"protocol": "https",
+					"host": [
+						"rw-stock",
+						"herokuapp",
+						"com"
+					],
+					"path": [
+						"logout"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Log in Trader",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\"email\":\"bbb@gmail.com\",\"password\":\"B2bbbbbbb\"}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "https://rw-stock.herokuapp.com/login",
+					"protocol": "https",
+					"host": [
+						"rw-stock",
+						"herokuapp",
+						"com"
+					],
+					"path": [
+						"login"
 					]
 				}
 			},
@@ -147,14 +240,13 @@
 					}
 				},
 				"url": {
-					"raw": "0.0.0.0:8080/buy",
+					"raw": "https://rw-stock.herokuapp.com/buy",
+					"protocol": "https",
 					"host": [
-						"0",
-						"0",
-						"0",
-						"0"
+						"rw-stock",
+						"herokuapp",
+						"com"
 					],
-					"port": "8080",
 					"path": [
 						"buy"
 					]
@@ -177,14 +269,13 @@
 					}
 				},
 				"url": {
-					"raw": "0.0.0.0:8080/sell",
+					"raw": "https://rw-stock.herokuapp.com/sell",
+					"protocol": "https",
 					"host": [
-						"0",
-						"0",
-						"0",
-						"0"
+						"rw-stock",
+						"herokuapp",
+						"com"
 					],
-					"port": "8080",
 					"path": [
 						"sell"
 					]
@@ -207,97 +298,15 @@
 					}
 				},
 				"url": {
-					"raw": "0.0.0.0:8080/register",
+					"raw": "https://rw-stock.herokuapp.com/register",
+					"protocol": "https",
 					"host": [
-						"0",
-						"0",
-						"0",
-						"0"
+						"rw-stock",
+						"herokuapp",
+						"com"
 					],
-					"port": "8080",
 					"path": [
 						"register"
-					]
-				}
-			},
-			"response": []
-		},
-		{
-			"name": "Log in",
-			"request": {
-				"method": "POST",
-				"header": [],
-				"body": {
-					"mode": "raw",
-					"raw": "{\"email\":\"bbb@gmail.com\",\"password\":\"B2bbbbbbb\"}",
-					"options": {
-						"raw": {
-							"language": "json"
-						}
-					}
-				},
-				"url": {
-					"raw": "0.0.0.0:8080/login",
-					"host": [
-						"0",
-						"0",
-						"0",
-						"0"
-					],
-					"port": "8080",
-					"path": [
-						"login"
-					]
-				}
-			},
-			"response": []
-		},
-		{
-			"name": "Log in Copy",
-			"request": {
-				"method": "POST",
-				"header": [],
-				"body": {
-					"mode": "raw",
-					"raw": "{\"email\":\"aaa@gmail.com\",\"password\":\"A1aaaaaaa\"}",
-					"options": {
-						"raw": {
-							"language": "json"
-						}
-					}
-				},
-				"url": {
-					"raw": "0.0.0.0:8080/login",
-					"host": [
-						"0",
-						"0",
-						"0",
-						"0"
-					],
-					"port": "8080",
-					"path": [
-						"login"
-					]
-				}
-			},
-			"response": []
-		},
-		{
-			"name": "Log out",
-			"request": {
-				"method": "GET",
-				"header": [],
-				"url": {
-					"raw": "0.0.0.0:8080/logout",
-					"host": [
-						"0",
-						"0",
-						"0",
-						"0"
-					],
-					"port": "8080",
-					"path": [
-						"logout"
 					]
 				}
 			},

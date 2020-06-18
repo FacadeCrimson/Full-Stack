@@ -6,6 +6,7 @@ from functools import wraps
 from urllib.request import urlopen
 from flask import request, _request_ctx_stack, session
 
+## Get environment varibles
 AUTH0_DOMAIN = os.environ['URL']
 ALGORITHMS = ['RS256']
 API_AUDIENCE = os.environ['AUDIENCE']
@@ -18,8 +19,9 @@ class AuthError(Exception):
         self.error = error
         self.status_code = status_code
 
-## Check Auth Header
-## If header contains not Authorization, check cookie instead
+## Get token
+## Check session cookie first, if none
+## Check Authorization in header
 def get_token():
     """Obtains the Access Token from the Authorization Header
     """
@@ -123,7 +125,7 @@ def verify_decode_jwt(token):
                 'description': 'Unable to find the appropriate key.'
             }, 400)
 
-# Construct the decorator for permisssion authentication
+# Decorator for permisssion authentication
 def requires_auth(permission=''):
     def requires_auth_decorator(f):
         @wraps(f)
@@ -136,6 +138,7 @@ def requires_auth(permission=''):
         return wrapper
     return requires_auth_decorator
 
+# Decorator for permisssion authentication and id retrieval
 def auth_and_get_trader(permission=''):
     def requires_auth_decorator(f):
         @wraps(f)
@@ -149,6 +152,7 @@ def auth_and_get_trader(permission=''):
         return wrapper
     return requires_auth_decorator
 
+# Contact Auth0 API to register user
 def sign_up(email,password):
     url = "https://"+AUTH0_DOMAIN +"/dbconnections/signup"
     payload = 'client_id=' + API_CLIENT + '&email=' + email + '&password=' + password + '&connection=' + API_CONNECTION
@@ -158,6 +162,7 @@ def sign_up(email,password):
     response = requests.request("POST", url, headers=headers, data = payload).text
     return json.loads(response)
 
+# Contact Auth0 API to retrieve token
 def log_in(email,password):
     url = "https://"+AUTH0_DOMAIN +"/oauth/token"
     payload = 'grant_type=password&client_id=' + API_CLIENT + '&audience=' + API_AUDIENCE + '&username=' + email + '&password=' + password
