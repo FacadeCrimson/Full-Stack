@@ -18,7 +18,7 @@ from models import setup_db, Price, Stock, Trader, Possession, db
 def create_app(test_config=None):
     # create and configure the app
     app = Flask(__name__)
-    app.secret_key = os.urandom(16)
+    app.secret_key = "+tJ78z`icIr8$PW`O7;mo5vLN"
     CORS(app)
     setup_db(app)
     migrate = Migrate(app, db)
