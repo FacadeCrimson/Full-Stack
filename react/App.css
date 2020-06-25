@@ -1,150 +1,203 @@
-.App {
-  text-align: center;
-}
-
-html,body {
-  font: 14px "Century Gothic", Futura, sans-serif;
-  margin: 0;
-}
-
-ol, ul {
-  padding-left: 30px;
+a{
+  color:lightblue;
 }
 
 .first{
   display: flex;
   flex-direction: row;
-  
 }
 
 .second{
   height:60vw;
-  width: 100vw;
-  background-color:#b37dcc;
-  z-index:10;
+  width: 100%;
+  display: flex;
+  flex-direction: row;
+  z-index:5;
 }
 
 .navbar{
   height:60vw;
   width:10vw;
-  background-color:#b37dcc;
+  background-color:#C490D1;
   z-index:10;
+  display: flex;
+  flex-direction: column;
+  opacity:0;
 }
 
 #main{
   height:60vw;
   width:80vw;
-  background-color:#111111;
+  min-width: 700px;
+  background-color:white;
   position: relative;
   overflow: hidden;
-  z-index:-1;
+}
+
+
+div h1{
+  font-family: 'Cormorant Garamond', serif;
+  font-size:50px;
+  font-weight:400;
+  color:#303030;
+  top: 1%;
+  right: 5%;
+  position: absolute;
+}
+
+.contact{
+  top: 7%;
+  right: 5%;
+  position: absolute;
+}
+
+#main .contact:hover .contactmethod{
+  opacity:1;
+}
+
+div h3{
+  font-family: 'Cormorant Garamond', serif;
+  font-size:40px;
+  font-weight:400;
+  border-bottom: 1px dotted black;
+  color:#303030;
+}
+
+.contactmethod{
+    width: 150%;
+    top:75%;
+    right:-30%;
+    margin-left: -60px;
+    background-color: black;
+    color: #fff;
+    text-align: center;
+    padding: 5px 0;
+    border-radius: 6px;
+    position: absolute;
+    opacity:0;
+    transition: opacity 1s;
+    list-style-image:url("./GitHub.png");
+}
+
+.contactmethod li{
+  margin:0 auto;
+}
+
+
+#mainbottom{
+  height:60vw;
+  width:80vw;
+  min-width: 700px;
+  border-radius: 15px;
+  background-color:white;
+  position: relative;
+  overflow: hidden;
+  z-index:5;
+  opacity:0.5;
 }
 
 #main1 {
   left: 10vw;
   height: 60vw;
   width: 80vw;
-  background-color: black;
+  min-width: 700px;
+  border-radius: 15px;
+  background-color: #9cc28a;
   position: absolute;
   content: "";
+  transform:  scale(1.25) rotate(36.85deg) translate(0,0);
+  transform-origin: top left;
   z-index:0;
+  transition:transform 2s, opacity 2s;
 }
 
 #main2 {
   left: 10vw;
   height: 60vw;
   width: 80vw;
-  background-color: white;
+  min-width: 700px;
+  border-radius: 15px;
+  background-color: #fab2a2;
   position: absolute;
   content: "";
-  transform:  scale(1.25) rotate(36.85deg);
-  transform-origin: bottom right;
+  transform:  scale(1.25) rotate(36.85deg) translate(3vw,4vw);
+  transform-origin: top left;
   z-index:1;
+  transition:transform 2s, opacity 2s;
 }
 
 #main3 {
+  left: 10vw;
   height: 60vw;
   width: 80vw;
-  background-color: yellow;
+  min-width: 700px;
+  border-radius: 15px;
+  background-color: #c1b4e0;
   position: absolute;
   content: "";
-  transform:  scale(1.25) rotate(36.85deg);
+  transform:  scale(1.25) rotate(36.85deg) translate(6vw,8vw);
   transform-origin: top left;
-  transition: transform 1.5s;
-  z-index:1;
+  z-index:2;
+  transition:transform 2s, opacity 2s;
 }
 
-/* #main1:hover + #main3 {
-  transform:  scale(1.25) rotate(36.85deg) translate(0,40vw);
-} */
+#main4 {
+  left: 10vw;
+  height: 60vw;
+  width: 80vw;
+  min-width: 700px;
+  border-radius: 15px;
+  background-color: #9cc28a;
+  position: absolute;
+  content: "";
+  transform:  scale(1.25) rotate(36.85deg) translate(9vw,12vw);
+  transform-origin: top left;
+  z-index:2;
+  transition:transform 2s, opacity 2s;
+}
+
+.mainlabel {
+  font-family: Futura, 'Noto Sans JP', sans-serif;
+  font-size:2vw;
+  color:#303030;
+  top: 1%;
+  left: 5%;
+  position: absolute;
+}
+
+.mainlabel:hover{
+  color:white;
+
+}
+
+.maintext{
+  top: 30%;
+  left: 30%;
+  width: 40%;
+  position: absolute;
+  opacity:0;
+  transition:opacity 3s ease-in;
+}
 
 .sidebar{
   height:60vw;
   width:10vw;
-  background-color:#b37dcc;
+  background-color:#C490D1;
   z-index:10;
+  opacity:0;
 }
 
 /* 
-.board-row:after {
-  clear: both;
-  content: "";
-  display: table;
-}
-
-.status {
-  margin-bottom: 10px;
-}
 
 .square {
-  background: #fff;
   border: 1px solid #999;
   float: left;
   font-size: 24px;
   font-weight: bold;
   line-height: 34px;
   height: 34px;
-  margin-right: -1px;
-  margin-top: -1px;
-  padding: 0;
   text-align: center;
   width: 34px;
 }
 
-.square:focus {
-  outline: none;
-}
-
-.kbd-navigation .square:focus {
-  background: #ddd;
-}
-
-
-.game-info {
-  margin-left: 20px;
-}
-
-.control{
-  margin-left: 30px;
-  margin-top: 10px;
-  width: 40px;
-  height: 20px;
-}
-
-.title{
-  margin-left: 30px;
-  margin-top: 10px;
-}
-
-.warning{
-  position: absolute;
-  top: 35%;
-  width: 100%;
-  text-align: center;
-  font-size: 10px;
-  z-index: 1;
-}
-
-.game-board{
-  position: relative;
 } */
