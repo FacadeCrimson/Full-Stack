@@ -13,45 +13,33 @@ export default function Layout({ children, home }) {
         <link rel="icon" href="/shop.png" />
         <meta
           name="description"
-          content="Learn how to build a personal website using Next.js"
+          content="A simulated shopping website."
         />
         <meta
           property="og:image"
-          content={`https://og-image.now.sh/${encodeURI(
-            siteTitle
-          )}.png?theme=light&md=0&fontSize=75px&images=https%3A%2F%2Fassets.vercel.com%2Fimage%2Fupload%2Ffront%2Fassets%2Fdesign%2Fnextjs-black-logo.svg`}
+          content={`../public/images/ogimage.jpg`}
         />
         <meta name="og:title" content={siteTitle} />
         <meta name="twitter:card" content="summary_large_image" />
       </Head>
-      <header className={styles.header}>
-        {home ? (
-          <>
-            <img
-              src="/images/profile.jpg"
-              className={`${styles.headerHomeImage} ${utilStyles.borderCircle}`}
-              alt={name}
-            />
-            <h1 className={utilStyles.heading2Xl}>{name}</h1>
-          </>
-        ) : (
-          <>
-            <Link href="/">
-              <a>
-                <img
-                  src="/images/profile.jpg"
-                  className={`${styles.headerImage} ${utilStyles.borderCircle}`}
-                  alt={name}
-                />
-              </a>
-            </Link>
-            <h2 className={utilStyles.headingLg}>
-              <Link href="/">
-                <a className={utilStyles.colorInherit}>{name}</a>
-              </Link>
-            </h2>
-          </>
-        )}
+      <header className={styles.header}>  
+          <div id={styles.logo}><img src="/logo.png" alt="Logo"/></div>
+          <div id={styles.name}>Shopping</div>
+          <div id={styles.cart}><img src="/supermarket.png" alt="Logo"/></div>
+          <div id={styles.login}>Login/Signup</div>
+          <div id={styles.search}>
+            <div id={styles.searchicon}>&#x1F50D;</div>
+            <div id={styles.searchbar}><input type="text"></input></div>
+            </div>
+
+      </header>
+      <header className={styles.header} id={styles.category}>
+          <div>Women</div>
+          <div>Shoes</div>
+          <div>Bags&Assesories</div>
+          <div>Beauty</div>
+          <div>Men</div>
+          <div>Kids</div>
       </header>
       <main>{children}</main>
       {!home && (
@@ -64,3 +52,11 @@ export default function Layout({ children, home }) {
     </div>
   )
 }
+
+
+// className={`${styles.headerImage} ${utilStyles.borderCircle}`}
+// <h2 className={utilStyles.headingLg}>
+// <Link href="/">
+//   <a className={utilStyles.colorInherit}>{name}</a>
+// </Link>
+// </h2>

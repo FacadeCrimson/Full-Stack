@@ -1,23 +1,71 @@
-.container {
-  max-width: 36rem;
-  padding: 0 1rem;
-  margin: 3rem auto 6rem;
-}
-
 .header {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
+  height:60px;
+  width:100%;
 }
 
-.headerImage {
-  width: 6rem;
-  height: 6rem;
+.header div{
+  color: #606060;
+  text-align: center;
+  padding: 15px 15px;
+  text-decoration: none;
+  font-size: 17px;
+  height:100%;
+  overflow:hidden;
 }
 
-.headerHomeImage {
-  width: 8rem;
-  height: 8rem;
+#logo{
+  float:left;
+  width:60px;
+}
+
+#logo img{
+  height:100%;
+}
+
+#name{
+  float:left;
+  width:80px;
+}
+
+#login{
+  float:right;
+  width:120px;
+}
+
+#cart{
+  float:right;
+  width:60px;
+}
+
+#search{
+  padding:0 0;
+}
+
+#cart img{
+  height:100%;
+}
+
+#searchicon{
+  width:50px;
+  float:left;
+  font-size:30px;
+  padding-top:5px;
+}
+
+#searchbar input{
+  width:100%;
+  height:100%;
+}
+
+/* Afer header */
+
+#category{
+  display:flex;
+  justify-content: space-evenly;
+}
+
+#category div{
+  display:inline;
 }
 
 .backToHome {
