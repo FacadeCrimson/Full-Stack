@@ -1,3 +1,5 @@
+/* Site header */
+
 .header {
   height:60px;
   width:100%;
@@ -57,7 +59,7 @@
   height:100%;
 }
 
-/* Afer header */
+/* Topnavi header */
 
 #category{
   display:flex;
