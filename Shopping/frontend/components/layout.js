@@ -5,6 +5,7 @@ import Link from 'next/link'
 
 const name = 'Website name'
 export const siteTitle = 'Grocery'
+export const topnavi = ["Woman","Shoes","Bags&Assesories","Beauty","Men","Kids"]
 
 export default function Layout({ children, home }) {
   return (
@@ -34,12 +35,12 @@ export default function Layout({ children, home }) {
 
       </header>
       <header className={styles.header} id={styles.category}>
-          <div>Women</div>
-          <div>Shoes</div>
-          <div>Bags&Assesories</div>
-          <div>Beauty</div>
-          <div>Men</div>
-          <div>Kids</div>
+          <Topnavi name="Woman"></Topnavi>
+          <Topnavi name="Shoes"></Topnavi>
+          <Topnavi name="Bags&Assesories"></Topnavi>
+          <Topnavi name="Beauty"></Topnavi>
+          <Topnavi name="Men"></Topnavi>
+          <Topnavi name="Kids"></Topnavi>
       </header>
       <main>{children}</main>
       {!home && (
@@ -53,6 +54,13 @@ export default function Layout({ children, home }) {
   )
 }
 
+class Topnavi extends React.Component{
+  render(){
+    return(
+    <div className="topnavi"><Link href="/topnavi/[navi]" as={`/topnavi/${this.props.name}`}><a>{this.props.name}</a></Link></div>
+    )
+  }
+};
 
 // className={`${styles.headerImage} ${utilStyles.borderCircle}`}
 // <h2 className={utilStyles.headingLg}>
