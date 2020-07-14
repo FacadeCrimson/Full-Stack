@@ -4,7 +4,7 @@ import utilStyles from '../styles/utils.module.css'
 import Link from 'next/link'
 
 const name = 'Website name'
-export const siteTitle = 'Website title'
+export const siteTitle = 'Grocery'
 
 export default function Layout({ children, home }) {
   return (
@@ -24,9 +24,9 @@ export default function Layout({ children, home }) {
       </Head>
       <header className={styles.header}>  
           <div id={styles.logo}><img src="/logo.png" alt="Logo"/></div>
-          <div id={styles.name}>Shopping</div>
+          <div id={styles.name}>{siteTitle}</div>
           <div id={styles.cart}><img src="/supermarket.png" alt="Logo"/></div>
-          <div id={styles.login}>Login/Signup</div>
+          <div id={styles.login}><Link href="/login"><a>Login/Signup</a></Link></div>
           <div id={styles.search}>
             <div id={styles.searchicon}>&#x1F50D;</div>
             <div id={styles.searchbar}><input type="text"></input></div>
