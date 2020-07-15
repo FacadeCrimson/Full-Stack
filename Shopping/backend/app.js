@@ -1,8 +1,37 @@
 
 const express = require('express');
-const app = express();
 const bodyParser = require('body-parser')
-var User = require('./models.js')
+const cors = require('cors')
+const methodOverride = require('method-override')
+var cookieParser = require('cookie-parser');
+const {User,Author} = require('./models')
+
+
+const app = express();
+app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({ extended: true }));
+app.use(cors());
+app.use(methodOverride());
+app.use(cookieParser());
+app.use(express.static(__dirname + '/public'));
+require('./routes')(app)
+
+
+const mongoose = require('mongoose'),
+  env = process.env.NODE_ENV = process.env.NODE_ENV || 'development',
+  envConfig = require('../server/env')[env];
+mongoose.Promise = require('bluebird');
+mongoose.connect(envConfig.db, { useMongoClient: true, });
+mongoose.connection.on('connected', function () {  
+  console.log(`Database connection open to ${mongoose.connection.host} ${mongoose.connection.name}`);
+});
+mongoose.connection.on('error',function (err) {  
+  console.log('Mongoose default connection error: ' + err);
+});
+mongoose.connection.on('disconnected', function () {  
+  console.log('Mongoose default connection disconnected'); 
+});
+
 
 // create a new user called chris
 var chris = new User({
@@ -41,10 +70,6 @@ userSchema.pre('save', function(next) {
     next();
   });
 
-
-  // grab the user model
-var User = require('./app/models/user');
-
 // create a new user
 var newUser = User({
   name: 'Peter Quill',
@@ -75,19 +100,8 @@ User.find({ username: 'starlord55' }, function(err, user) {
     // object of the user
     console.log(user);
   });
-
-  // get a user with ID of 1
-User.findById(1, function(err, user) {
-    if (err) throw err;
   
-    // show the one user
-    console.log(user);
-  });
-
-  
-
-  // get any admin that was created in the past month
-
+// get any admin that was created in the past month
 // get the date 1 month ago
 var monthAgo = new Date();
 monthAgo.setMonth(monthAgo.getMonth() - 1);
@@ -100,90 +114,26 @@ User.find({ admin: true }).where('created_at').gt(monthAgo).exec(function(err, u
 });
 
 
-// get a user with ID of 1
-User.findById(1, function(err, user) {
-    if (err) throw err;
-  
-    // change the users location
-    user.location = 'uk';
-  
-    // save the user
-    user.save(function(err) {
-      if (err) throw err;
-  
-      console.log('User successfully updated!');
-    });
-  
-  });
+// User.findById
 
-  
-  // find the user starlord55
-// update him to starlord 88
-User.findOneAndUpdate({ username: 'starlord55' }, { username: 'starlord88' }, function(err, user) {
-    if (err) throw err;
-  
-    // we have the updated user returned to us
-    console.log(user);
-  });
+// User.findOneAndUpdate({ username: 'starlord55' }, { username: 'starlord88' }, function(err, user) {});
 
+// User.findByIdAndUpdate(4, { username: 'starlord88' }, function(err, user) {});
 
-  // find the user with id 4
-// update username to starlord 88
-User.findByIdAndUpdate(4, { username: 'starlord88' }, function(err, user) {
-    if (err) throw err;
-  
-    // we have the updated user returned to us
-    console.log(user);
-  });
+// User.findOneAndRemove({ username: 'starlord55' }, function(err) {});
 
-
-  // get the user starlord55
-User.find({ username: 'starlord55' }, function(err, user) {
-    if (err) throw err;
-  
-    // delete him
-    user.remove(function(err) {
-      if (err) throw err;
-  
-      console.log('User successfully deleted!');
-    });
-  });
-
-
-  // find the user with id 4
-User.findOneAndRemove({ username: 'starlord55' }, function(err) {
-    if (err) throw err;
-  
-    // we have deleted the user
-    console.log('User deleted!');
-  });
-
-
-  // find the user with id 4
-User.findByIdAndRemove(4, function(err) {
-    if (err) throw err;
-  
-    // we have deleted the user
-    console.log('User deleted!');
-  });
+// User.findByIdAndRemove(4, function(err) {});
 
 
 
-app.listen(5000, function() {
-    console.log('listening on 3000')
-  })
+app.listen(5000, (err) => {
+  if (err) {
+    console.log(err);
+  } else {
+    console.log('App listening on port 5000, with 2 routers, yayyy !')
+  }
+});
 
 app.get('/', function(req, res) {
     res.send('Hello World')
 })
-
-
-// const product = require('./routes/product.route'); // Imports routes for the products
-
-// mongoose.Promise = global.Promise;
-// const db = mongoose.connection;
-// db.on('error', console.error.bind(console, 'MongoDB connection error:'));
-
-// app.use(bodyParser.json());
-// app.use(bodyParser.urlencoded({extended: false}));
-// app.use('/products', product);

@@ -17,18 +17,38 @@ var userSchema = new Schema({
     created_at: Date,
     updated_at: Date
   })
+
+  const authorModel = mongoose.Schema({
+    name: { 
+     type: String, 
+     required: '{PATH} is required!'
+    },
+    bio: {
+     type: String
+    },
+    website: {
+     type: String
+    },
+    books: [
+      { type: mongoose.Schema.Types.ObjectId, ref: 'Book' }
+    ]
+  }, {
+    timestamps: true
+  });
   
 
-// custom method to add string to end of name
 // you can create more important methods like name validations or formatting
 // you can also do queries and find similar users 
 userSchema.methods.dudify = function() {
-    // add some stuff to the users name
     this.name = this.name + '-dude'; 
   
     return this.name;
   };
   
   var User = mongoose.model('User', userSchema)
+  var Author = mongoose.model('Author',authorModel)
 
-  module.exports = User
+  module.exports = {
+    'User': User,
+    'Author': Author,
+  };
