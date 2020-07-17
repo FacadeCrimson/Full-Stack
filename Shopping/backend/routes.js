@@ -25,7 +25,7 @@ module.exports = function(app){
   router.get('/', function(req, res) {res.send('Hello World')})
   router.get('/customers', showRecords.findAll)
   router.get('/searchcustomer', showRecords.findByName)
-  router.get('/products/:id', showRecords.show)
+  router.get('/products', showRecords.allProducts)
   router.post('/img', upload.single('avatar'),fileUpload.upload)
   app.use('/', router)
 }

@@ -8,11 +8,9 @@ const showRecords = {
     res.send(products)
   },
 
-  async show(req, res){
-    const product = await Product
-       .findById(req.params.id)
-       .populate('books')
-    res.send(product)
+  async allProducts(req, res){
+    const products =await Product.find()
+    res.send(products)
   },
 
   async findAll(req,res){

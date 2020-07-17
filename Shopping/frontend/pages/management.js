@@ -131,6 +131,7 @@ class Statistic extends React.Component{
 
 class Listing extends React.Component{
     render(){
+        const dir=process.env.NEXT_PUBLIC_SERVER+"/img"
         return <><div>Listing</div>
         <ul>
             <li>Info Update</li>
@@ -138,7 +139,7 @@ class Listing extends React.Component{
             <li>Remove Item</li>
             <li></li>
         </ul>
-        <div><form action="http://127.0.0.1:5000/img" method="post" enctype="multipart/form-data">
+        <div><form action={dir} method="post" enctype="multipart/form-data">
           <label>Name <input type="text" name="imgname"></input></label>
           <label>Category <input type="text" name="category"></input></label>
             <input type="file" name="avatar" />

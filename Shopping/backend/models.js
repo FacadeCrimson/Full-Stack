@@ -24,13 +24,14 @@ var customerSchema = new Schema({
     gender: { type: String, required: true},
     email:{ type: String, required: true, unique: true },
     phone:{ type: String, required: true, unique: true },
-    address:{ type: String, required: true, unique: true },
+    address:{ type: String, required: true },
     username: { type: String, required: true, unique: true },
       orders:[
         {time:{ type: Date,},
          products:[{
           product_id:{type: mongoose.Schema.Types.ObjectId, ref: 'Product'},
-          quantity:{ type: Number,},
+          name:{ type: String, required: true},
+          quantity:{ type: Number, required:true},
         }]
         }]
   },{timestamps: true})
@@ -54,12 +55,12 @@ var productModel = mongoose.Schema({
     category:{ type: String, required: true},
     tag:[{ type: String}],
     name: { type: String, required: true },
-    img:  { type: String, required: true },
+    img:  { type: String, required: true, default:"./public/img/no-image.png" },
     price: { type: Number, required: true },
     ratings:[{type: Number}],
     info:{
       size: { type: String },
-      color: { type: String },
+      weight: { type: String },
       description:{ type: String },
       other:{ type: String },
     },

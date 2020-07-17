@@ -4,7 +4,7 @@ import Link from 'next/link'
 
 const name = 'Website name'
 export const siteTitle = 'Grocery'
-export const topnavi = ["Woman","Shoes","Bags&Assesories","Beauty","Men","Kids"]
+export const topnavi = ["Vegetable","Shoes","Bags&Assesories","Beauty","Men","Kids"]
 
 export default function Layout({ children, home }) {
   return (
@@ -50,7 +50,7 @@ export default function Layout({ children, home }) {
 class Topnavi extends React.Component{
   render(){
     return(
-    <div className="topnavi"><Link href="/topnavi/[navi]" as={`/topnavi/${this.props.name}`}><a>{this.props.name}</a></Link></div>
+    <div className="topnavi"><Link href="/category/[navi]" as={`/category/${this.props.name}`}><a>{this.props.name}</a></Link></div>
     )
   }
 };
