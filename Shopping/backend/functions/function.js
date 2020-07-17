@@ -1,28 +1,28 @@
-const {User,Author} = require('../models')
+const {Customer,Product} = require('../models')
 
 const showRecords = {
   async index(req, res){
-    const authors = await Author
+    const products = await Product
        .find()
        .populate('books')
-    res.send(authors)
+    res.send(products)
   },
 
   async show(req, res){
-    const author = await Author
+    const product = await Product
        .findById(req.params.id)
        .populate('books')
-    res.send(author)
+    res.send(product)
   },
 
   async findAll(req,res){
-    const users =await User.find()
-    res.send(users)
+    const customers =await Customer.find()
+    res.send(customers)
   },
 
   async findByName(req,res){
-    const users =await User.find({"name":req.body.name})
-    res.send(users)
+    const customers =await Customer.find({"name":req.body.name})
+    res.send(customers)
   }
 }
 

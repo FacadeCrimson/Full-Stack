@@ -10,7 +10,12 @@ export default function Login() {
     <div id={utilStyles.name}>Shopping</div>
     </div>
     <div className={utilStyles.loginform}>
-        <div></div>
+        <div><form action="http://127.0.0.1:5000/img" method="post" enctype="multipart/form-data">
+            <input type="file" name="avatar" />
+            <input type="text" name="imgname"></input>
+            <input type="text" name="category"></input>
+            <input type="submit"></input>
+          </form></div>
     </div>
     <div>
           <Link href="/">
