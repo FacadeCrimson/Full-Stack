@@ -20,7 +20,7 @@ export default function Post({postData,vegetables}) {
       </div>
       <div className={`mainright mainbottom`}>
         {vegetables.map(item=>
-          <Itemcard img={item.img} name={item.name} rating={item.rating} price={item.price}></Itemcard>
+          <Itemcard key={item.id} img={item.img} name={item.name} rating={item.rating} price={item.price}></Itemcard>
         )
         }
       </div>
@@ -94,6 +94,7 @@ export async function getStaticPaths() {
     const average = arr => arr.reduce( ( p, c ) => p + c, 0 ) / arr.length;
     for(let item of data){
       vegetables.push({
+        "id":item._id,
         "img":item.img,
         "name":item.name,
         "rating":item.rating?average(item.rating):0,
