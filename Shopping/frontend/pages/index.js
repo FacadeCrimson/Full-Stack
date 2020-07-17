@@ -29,6 +29,9 @@ export default function Home({ allPostsData }) {
           ))}
         </ul>
       </section>
+      <Link href="/management" >
+              <a>Management</a>
+      </Link>
     </Layout>
   )
 }
