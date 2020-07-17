@@ -11,9 +11,9 @@ export default function Login() {
     </div>
     <div className={utilStyles.loginform}>
         <div><form action="http://127.0.0.1:5000/img" method="post" enctype="multipart/form-data">
+          <label>Name <input type="text" name="imgname"></input></label>
+          <label>Category <input type="text" name="category"></input></label>
             <input type="file" name="avatar" />
-            <input type="text" name="imgname"></input>
-            <input type="text" name="category"></input>
             <input type="submit"></input>
           </form></div>
     </div>
