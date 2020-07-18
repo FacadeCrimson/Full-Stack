@@ -1,12 +1,23 @@
 import Head from 'next/head'
+import Link from 'next/link'
+import React from 'react'
 import Layout,{topnavi}  from '../../components/layout'
-import utilStyles from '../../styles/utils.module.css'
 
-export default function Post({postData,vegetables}) {
+export default class Post extends React.Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      page:1,
+    };
+  }
+
+  render(){
+    const number=Array.from(Array(Math.floor(this.props.vegetables.length/12)+1).keys())
+    const page=this.props.vegetables.slice((this.state.page-1)*12,this.state.page*12-1)
     return (
       <Layout>
         <Head>
-        <title>{postData}</title>
+        <title>{this.props.path}</title>
       </Head>
       <div className="main">
       <div className={`mainleft maintop`}>
@@ -18,11 +29,16 @@ export default function Post({postData,vegetables}) {
       <div className={`mainleft mainbottom`}>
 
       </div>
-      <div className={`mainright mainbottom`}>
-        {vegetables.map(item=>
+      <div className={`mainright mainbottom`} id="display">
+        {
+        page.map(item=>
           <Itemcard key={item.id} img={item.img} name={item.name} rating={item.rating} price={item.price}></Itemcard>
         )
         }
+        <div className='pagination'>{
+          number.map(n=><span key={n+1} className="page" onClick={()=>this.setState({page:n+1})}>{n+1}</span>)
+        }
+          </div>
       </div>
 
       </div>
@@ -30,22 +46,39 @@ export default function Post({postData,vegetables}) {
 
       <style jsx>{`
       .main{
-        width:1500px;
-        height:2000px;
+        width:1200px;
         margin:auto;
       }
       .mainleft{
         width:200px;
         float:left;
+        background-color:purple;
+
       }
       .maintop{
-        height:30px;
+        height:50px;
       }
       .mainright{
         width:auto;
       }
       .mainbottom{
-        height:auto;
+        min-height:500px;
+      }
+      .pagination{
+        width:auto;
+        height:50px;
+        background-color:yellow;
+        position:absolute;
+        bottom:-50px;
+        left:1000px;
+        text_align:center;
+      }
+      .page{
+        text-decoration: underline;
+      }
+      .page:hover{
+        cursor:pointer;
+        color:blue;
       }
     `}</style>
       </Layout>
@@ -53,19 +86,34 @@ export default function Post({postData,vegetables}) {
     )
   }
 
+  }
+    
+
 class Itemcard extends React.Component{
   render(){
     return(
       <div className="card">
-        {this.props.img}
-        {this.props.name}
-        {this.props.rating}
-        {this.props.price}
+         <Link href="/item/[name]" as={`/item/${this.props.name}`}><img src={this.props.img}></img></Link>
+         <Link href="/item/[name]" as={`/item/${this.props.name}`}><a>{this.props.name}</a></Link>
+        <div>{this.props.rating}</div>
+        <span>$ </span>{this.props.price}
       <style jsx>{`
         .card{
-          height:300px;
-          width:200px;
-          backgroundcolor:yellow;
+          height:400px;
+          width:250px;
+          padding:10px;
+          padding-top:20px;
+          background-color:yellow;
+          border:black solid 1px;
+          margin:0 41px;
+          float:left;
+        }
+        .card img{
+          margin-bottom:20px;
+        }
+        .card img:hover{
+          cursor:pointer;
+          transform: scale(1.1);
         }
       `}</style>
       </div>
@@ -88,26 +136,42 @@ export async function getStaticPaths() {
   }
 
   export async function getStaticProps({ params }) {
-    let response = await fetch(process.env.NEXT_PUBLIC_SERVER+"/products")
+    let server=process.env.NEXT_PUBLIC_SERVER
+    let response = await fetch(server+"/products")
     let data = await response.json()
     let vegetables = []
-    const average = arr => arr.reduce( ( p, c ) => p + c, 0 ) / arr.length;
+    // calculate rating
+    const average = arr => arr.reduce( ( p, c ) => p + c, 0 ) / arr.length
+  
     for(let item of data){
+      const rating = item.ratings?average(item.ratings):0
       vegetables.push({
         "id":item._id,
-        "img":item.img,
+        "img":server+item.img,
         "name":item.name,
-        "rating":item.rating?average(item.rating):0,
+        "rating":starGenerator(rating),
         "price":item.price
       })
     }
-    const postData = params.navi
+    const path = params.navi
     return {
       props: {
-        postData,
+        path,
         vegetables
       }
     }
+ }
+
+ function starGenerator(rating){
+  var star=""
+  const n=Math.trunc(rating)
+  for(let i=0;i<n;i++){
+    star=star+"★"
+  }
+  for(let i=n;i<5;i++){
+    star=star+"☆"
+  }
+  return star
  }
 
 //  react hook

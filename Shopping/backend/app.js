@@ -18,7 +18,7 @@ var corsOptions = {
 app.use(cors(corsOptions))
 app.use(methodOverride())
 app.use(cookieParser())
-app.use(express.static(__dirname + '/public'))
+app.use(express.static('public'))
 
 require('./routes')(app)
 

@@ -55,7 +55,7 @@ var productModel = mongoose.Schema({
     category:{ type: String, required: true},
     tag:[{ type: String}],
     name: { type: String, required: true },
-    img:  { type: String, required: true, default:"./public/img/no-image.png" },
+    img:  { type: String, required: true, default:"/img/no-image.png" },
     price: { type: Number, required: true },
     ratings:[{type: Number}],
     info:{
