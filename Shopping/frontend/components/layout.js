@@ -4,7 +4,7 @@ import Link from 'next/link'
 
 const name = 'Website name'
 export const siteTitle = 'Grocery'
-export const topnavi = ["Vegetable","Shoes","Bags&Assesories","Beauty","Men","Kids"]
+export const topnavi = ["Vegetable","Fruit","Meat","Grain","Milk","Drink"]
 
 export default function Layout({ children, home }) {
   return (

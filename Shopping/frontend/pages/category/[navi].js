@@ -13,32 +13,37 @@ export default class Post extends React.Component {
 
   render(){
     const number=Array.from(Array(Math.floor(this.props.vegetables.length/12)+1).keys())
-    const page=this.props.vegetables.slice((this.state.page-1)*12,this.state.page*12-1)
+    const page=this.props.vegetables.slice((this.state.page-1)*12,this.state.page*12)
     return (
       <Layout>
         <Head>
         <title>{this.props.path}</title>
       </Head>
       <div className="main">
-      <div className={`mainleft maintop`}>
+      <div className='maintop'>
+          <div className='topleft'>
 
-      </div>
-      <div className={`mainright maintop`}>
-
-      </div>
-      <div className={`mainleft mainbottom`}>
-
-      </div>
-      <div className={`mainright mainbottom`} id="display">
-        {
-        page.map(item=>
-          <Itemcard key={item.id} img={item.img} name={item.name} rating={item.rating} price={item.price}></Itemcard>
-        )
-        }
-        <div className='pagination'>{
-          number.map(n=><span key={n+1} className="page" onClick={()=>this.setState({page:n+1})}>{n+1}</span>)
-        }
           </div>
+          <div className='topright'>
+
+          </div>
+      </div>
+      <div className='mainbottom'>
+          <div className="mainleft">
+            <div className="filter"></div>
+          </div>
+          <div className="mainright">
+            {
+            page.map(item=>
+              <Itemcard key={item.id} img={item.img} name={item.name} rating={item.rating} price={item.price}></Itemcard>
+            )
+            }
+          </div>     
+      </div>
+      <div className='pagination'><div className="pagi">
+      { number.map(n=><span key={n+1} className="page" onClick={()=>this.setState({page:n+1})}>{n+1}</span>)}
+      </div>
+     
       </div>
 
       </div>
@@ -49,29 +54,41 @@ export default class Post extends React.Component {
         width:1200px;
         margin:auto;
       }
-      .mainleft{
-        width:200px;
-        float:left;
-        background-color:purple;
-
-      }
       .maintop{
         height:50px;
       }
-      .mainright{
+      .topleft{
+        width:200px;
+        height:100%;
+        float:left;
+        background-color:yellow;
+      }
+      .topright{
         width:auto;
+        height:100%;
       }
       .mainbottom{
         min-height:500px;
+        display: flex;
+      }
+      .mainleft{
+        float: left;
+      }
+      .mainright{
+        float: left;
+        width:auto;
       }
       .pagination{
-        width:auto;
         height:50px;
-        background-color:yellow;
+        display:block;
+        padding-top:30px;
+        padding-left:700px;
+        
+      }
+      .pagi{
         position:absolute;
-        bottom:-50px;
-        left:1000px;
-        text_align:center;
+        transform:translateX(-50%);
+        letter-spacing: 5px;
       }
       .page{
         text-decoration: underline;
@@ -79,6 +96,9 @@ export default class Post extends React.Component {
       .page:hover{
         cursor:pointer;
         color:blue;
+      }
+      .filter{
+        width:200px;
       }
     `}</style>
       </Layout>
