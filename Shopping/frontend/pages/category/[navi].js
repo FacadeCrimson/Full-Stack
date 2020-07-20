@@ -130,6 +130,7 @@ class Itemcard extends React.Component{
         }
         .card img{
           margin-bottom:20px;
+          max-width:100%;
         }
         .card img:hover{
           cursor:pointer;

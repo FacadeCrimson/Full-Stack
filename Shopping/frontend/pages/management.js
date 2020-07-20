@@ -1,5 +1,6 @@
 import Head from 'next/head'
 import React from 'react';
+import { siteTitle } from '../components/layout'
 import utilStyles from '../styles/utils.module.css'
 import Link from 'next/link'
 
@@ -44,7 +45,7 @@ export default class Management extends React.Component{
                 <div className="portalnavi">
                     <div id="header">
                         <div id="logo"><img src="/logo.png" alt="Logo"/></div>
-                        <div id="name">Shopping</div>
+                        <div id="name">{siteTitle}</div>
                     </div>
                         <ul id="navlist">
                             <li id="0" onClick={()=>this.handleClick(0)}>Main</li>
@@ -84,10 +85,19 @@ export default class Management extends React.Component{
                 #logo{
                     width:50px;
                 }
-                #name{
-                    font-size:26px;
-                    padding:5px 15px;
+                #logo img{
+                    max-width:100%;
                 }
+                
+                #name{
+                    width:130px;
+                    padding:0 20px;
+                    line-height:1.5;
+                    font-size:21px;
+                    font-family: 'Barlow', sans-serif;
+                    color:#606060;
+                }
+                
                 ul{
                     margin-left:-40px;
                 }

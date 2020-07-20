@@ -2,15 +2,15 @@ import Head from 'next/head'
 import styles from './layout.module.css'
 import Link from 'next/link'
 
-const name = 'Website name'
-export const siteTitle = 'Grocery'
-export const topnavi = ["Vegetable","Fruit","Meat","Grain","Milk","Drink"]
+export const siteTitle = 'One-stop Grocery'
+export const topnavi = ["Vegetable","Fruit","Meat","Grain","Dairy","Drink"]
 
-export default function Layout({ children, home }) {
+export default function Layout({ children }) {
   return (
     <div className={styles.container}>
       <Head>
         <link rel="icon" href="/shop.png" />
+        <link href="https://fonts.googleapis.com/css2?family=Barlow:wght@500&display=swap" rel="stylesheet"></link>
         <meta
           name="description"
           content="A simulated shopping website."
@@ -32,7 +32,7 @@ export default function Layout({ children, home }) {
             <div id={styles.searchbar}><input type="text"></input></div>
             </div>
       </header>
-      <header className={styles.header} id={styles.category}>
+      <header className={styles.header} className={styles.category}>
           {
             topnavi.map(topnavi=>{
               return <Topnavi name={topnavi} key={topnavi}></Topnavi>
@@ -41,7 +41,16 @@ export default function Layout({ children, home }) {
       </header>
       <main>{children}</main>
       <footer>
-
+        <div className={`${styles.category} ${styles.footer}`}>
+          <a>About</a>
+          <a>Acknowledgement</a>
+          <a>Contact</a>
+          <a>Feedback</a>
+          <Link href="/management" >
+              <a>Management</a>
+          </Link>
+        </div>
+        <div className={`${styles.category} ${styles.footer}`}>© 2020 One-stop Grocery</div>
       </footer>
     </div>
   )
