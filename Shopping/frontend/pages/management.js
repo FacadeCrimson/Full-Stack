@@ -23,10 +23,8 @@ export default class Management extends React.Component{
         switch(param) {
             case 1:
               return <Statistic></Statistic>
-              break;
             case 2:
               return <Listing></Listing>
-              break;
             case 3:
               return <Stock></Stock>
             default:
