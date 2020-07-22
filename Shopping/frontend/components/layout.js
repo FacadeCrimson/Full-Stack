@@ -26,7 +26,7 @@ export default function Layout({ children }) {
           <div id={styles.logo}><img src="/logo.png" alt="Logo"/></div>
           <div id={styles.name}><Link href="/"><a>{siteTitle}</a></Link></div>
           <div id={styles.cart}><img src="/supermarket.png" alt="Logo"/></div>
-          <div id={styles.login}><Link href="/login"><a>Login/Signup</a></Link></div>
+          <div id={styles.login}><a href={process.env.NEXT_PUBLIC_SERVER+"/login"}>Login/Signup</a></div>
           <div id={styles.search}>
             <div id={styles.searchicon}>&#x1F50D;</div>
             <div id={styles.searchbar}><input type="text"></input></div>

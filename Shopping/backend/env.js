@@ -21,4 +21,4 @@ module.exports = {
     AUTH0_CLIENT_SECRET:"PCKWrAM3rLVl-NgYS_p-o_H53Si2pqEE9wFSWHqxGfNmwXCuniQkU-w4whcv33FK",
     AUTH0_CALLBACK_URL:"http://localhost:3000"
   }
-};
+}

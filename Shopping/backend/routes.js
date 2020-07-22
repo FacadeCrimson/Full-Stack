@@ -52,6 +52,7 @@ module.exports = function(app){
     scope: 'openid email profile'
   }), function (req, res) {
     res.redirect(envConfig.AUTH0_CALLBACK_URL)
+    
   })
 
   // Perform the final stage of authentication and redirect to previously requested URL or '/user'
