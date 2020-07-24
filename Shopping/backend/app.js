@@ -17,12 +17,12 @@ var sess = {
     saveUninitialized: true
   }
 
-if (envConfig !== 'development') {
-    // Use secure cookies in production (requires SSL/TLS)
-    sess.cookie.secure = true;
-    // Behind a proxy (like on Heroku) or "Unable to verify authorization request state"
-    // app.set('trust proxy', 1);
-  }
+// if (envConfig !== 'development') {
+//     // Use secure cookies in production (requires SSL/TLS)
+//     sess.cookie.secure = true;
+//     // Behind a proxy (like on Heroku) or "Unable to verify authorization request state"
+//     // app.set('trust proxy', 1);
+//   }
 
 // Load Passport
 var passport = require('passport')
@@ -45,6 +45,14 @@ var strategy = new Auth0Strategy(
   )
 passport.use(strategy)
 
+passport.serializeUser(function(user, done) {
+    done(null, user.id);
+ })
+ 
+ passport.deserializeUser(function(obj, done) {
+    done(null, obj);
+ })
+
 const app = express()
 app.use(bodyParser.json())
 app.use(bodyParser.urlencoded({ extended: true }))
@@ -64,4 +72,22 @@ app.use(userInViews())
 
 require('./routes')(app)
 
+//error handler
+app.use(function(req, res, next) {
+  const err = new Error(`Can't find ${req.originalUrl} on this server!`);
+  err.status = 'fail'
+  err.statusCode = 404
+  next(err)
+})
+
+app.use(function (err, req, res, next) {
+    err.statusCode = err.statusCode || 500;
+    err.status = err.status || 'error';
+  
+    res.status(err.statusCode).json({
+      status: err.status,
+      message: err.message
+    })
+})
+  
 app.listen(envConfig.port)

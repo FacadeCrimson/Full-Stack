@@ -10,7 +10,7 @@ module.exports = {
     AUTH0_CLIENT_ID: "i54sB7aK2e7baUdmFJoM3PsOTkYWz676",
     AUTH0_DOMAIN: "simontan.auth0.com",
     AUTH0_CLIENT_SECRET: "PCKWrAM3rLVl-NgYS_p-o_H53Si2pqEE9wFSWHqxGfNmwXCuniQkU-w4whcv33FK",
-    AUTH0_CALLBACK_URL:"http://localhost:3000"
+    AUTH0_CALLBACK_URL:"http://localhost:5000/callback"
   },
   production: {
     rootPath: rootPath,
@@ -19,6 +19,6 @@ module.exports = {
     AUTH0_CLIENT_ID:"i54sB7aK2e7baUdmFJoM3PsOTkYWz676",
     AUTH0_DOMAIN:"simontan.auth0.com",
     AUTH0_CLIENT_SECRET:"PCKWrAM3rLVl-NgYS_p-o_H53Si2pqEE9wFSWHqxGfNmwXCuniQkU-w4whcv33FK",
-    AUTH0_CALLBACK_URL:"http://localhost:3000"
+    AUTH0_CALLBACK_URL:"http://localhost:5000/callback"
   }
 }

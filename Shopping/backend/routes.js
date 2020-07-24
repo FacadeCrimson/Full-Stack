@@ -40,19 +40,21 @@ module.exports = function(app){
   
   //user page secured: get user profile
   router.get('/user', secured(), function (req, res, next) {
-    const { _raw, _json, ...userProfile } = req.user;
-    res.render('user', {
-      userProfile: JSON.stringify(userProfile, null, 2),
-      title: 'Profile page'
-    })
+    const { _raw, _json, ...userProfile } = req.user
+      res.send(JSON.stringify(userProfile, null, 2))
   })
 
   // Perform the login, after login Auth0 will redirect to callback
   router.get('/login', passport.authenticate('auth0', {
     scope: 'openid email profile'
   }), function (req, res) {
-    res.redirect(envConfig.AUTH0_CALLBACK_URL)
+    res.redirect('/')
     
+  })
+
+  router.get('/test',function (req, res, next) {
+    res.send("OK")
+    console.log(req.session.login)
   })
 
   // Perform the final stage of authentication and redirect to previously requested URL or '/user'
@@ -64,7 +66,7 @@ module.exports = function(app){
         if (err) { return next(err)}
         const returnTo = req.session.returnTo
         delete req.session.returnTo
-        res.redirect(returnTo || '/user')
+        res.redirect(returnTo || envConfig.frontend)
       })
     })(req, res, next)
   })

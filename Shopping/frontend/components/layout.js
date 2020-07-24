@@ -42,7 +42,7 @@ export default function Layout({ children }) {
       <main>{children}</main>
       <footer>
         <div className={`${styles.category} ${styles.footer}`}>
-          <a>About</a>
+        <Link href="/about" ><a>About</a></Link>
           <a>Acknowledgement</a>
           <a>Contact</a>
           <a>Feedback</a>
