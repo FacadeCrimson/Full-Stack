@@ -2,9 +2,11 @@ const express = require('express');
 const bodyParser = require('body-parser')
 const cors = require('cors')
 const methodOverride = require('method-override')
-var cookieParser = require('cookie-parser')
-var session = require('express-session')
-var userInViews = require('./functions/userInViews')
+const cookieParser = require('cookie-parser')
+const session = require('express-session')
+
+const userInViews = require('./functions/userInViews')
+const AppError = require('./functions/error')
 
 env = process.env.NODE_ENV = process.env.NODE_ENV || 'development'
 envConfig = require('./env')[env]
@@ -46,11 +48,11 @@ var strategy = new Auth0Strategy(
 passport.use(strategy)
 
 passport.serializeUser(function(user, done) {
-    done(null, user.id);
+    done(null, user.id)
  })
  
  passport.deserializeUser(function(obj, done) {
-    done(null, obj);
+    done(null, obj)
  })
 
 const app = express()
@@ -74,10 +76,7 @@ require('./routes')(app)
 
 //error handler
 app.use(function(req, res, next) {
-  const err = new Error(`Can't find ${req.originalUrl} on this server!`);
-  err.status = 'fail'
-  err.statusCode = 404
-  next(err)
+  next(new AppError(`Can't find ${req.originalUrl} on this server!`, 404))
 })
 
 app.use(function (err, req, res, next) {

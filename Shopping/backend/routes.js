@@ -31,17 +31,23 @@ var querystring = require('querystring')
 env = process.env.NODE_ENV = process.env.NODE_ENV || 'development'
 envConfig = require('./env')[env]
 
+//error catching function
+const catchAsync = fn => {
+  return (req, res, next) => {
+    fn(req, res, next).catch(next)
+  }
+}
+
 module.exports = function(app){
   router.get('/', function(req, res) {res.send('Hello World')})
-  router.get('/customers', showRecords.findAll)
-  router.get('/searchcustomer', showRecords.findByName)
+  router.get('/customers', showRecords.allCustomers)
+  router.get('/searchcustomer', showRecords.findCustomerByName)
   router.get('/products', showRecords.allProducts)
+  router.get('/search', catchAsync(showRecords.findProductByName))
   router.post('/img', upload.single('avatar'),fileUpload.upload)
   
   //user page secured: get user profile
   router.get('/user', secured(), function (req, res, next) {
-    const { _raw, _json, ...userProfile } = req.user
-      res.send(JSON.stringify(userProfile, null, 2))
   })
 
   // Perform the login, after login Auth0 will redirect to callback
@@ -52,9 +58,8 @@ module.exports = function(app){
     
   })
 
-  router.get('/test',function (req, res, next) {
+  router.get('/test',secured(),function (req, res, next) {
     res.send("OK")
-    console.log(req.session.login)
   })
 
   // Perform the final stage of authentication and redirect to previously requested URL or '/user'
