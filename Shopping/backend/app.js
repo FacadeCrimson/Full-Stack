@@ -11,14 +11,23 @@ envConfig = require('./env')[env]
 const app = express()
 app.use(bodyParser.json())
 app.use(bodyParser.urlencoded({ extended: true }))
+app.use(cookieParser())
+app.use(methodOverride())
+
 var corsOptions = {
     origin: envConfig.frontend,
     methods: "GET,HEAD,PUT,PATCH,POST,DELETE",
     optionsSuccessStatus: 200
 }
 app.use(cors(corsOptions))
-app.use(methodOverride())
-app.use(cookieParser())
+
+var allowCrossDomain = function(req, res, next) {
+  res.header('Access-Control-Allow-Origin', envConfig.frontend)
+  res.header('Access-Control-Allow-Methods', "GET,HEAD,PUT,PATCH,POST,DELETE")
+  res.header('Access-Control-Allow-Headers', 'Authorization')
+  next()
+}
+app.use(allowCrossDomain)
 app.use(express.static('public'))
 
 require('./routes')(app)

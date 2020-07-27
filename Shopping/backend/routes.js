@@ -43,7 +43,7 @@ module.exports = function(app){
   router.post('/img', upload.single('avatar'),fileUpload.upload)
   
   router.get('/test',jwtCheck,function (req, res, next) {
-    res.json({"data":"OK"})
+    res.send("OK")
   })
 
   app.use('/', router)
