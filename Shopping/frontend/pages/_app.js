@@ -1,5 +1,5 @@
 import '../styles/global.css'
-import { Auth0Provider } from '../components/react-auth0-spa'
+import { Auth0Provider } from '../lib/react-auth0-spa'
 
 export default function App({ Component, pageProps }) {
     return <Auth0Provider

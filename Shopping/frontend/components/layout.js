@@ -1,7 +1,7 @@
 import Head from 'next/head'
 import Link from 'next/link'
 import styles from './layout.module.css'
-import { useAuth0 } from '../components/react-auth0-spa';
+import { useAuth0 } from '../lib/react-auth0-spa';
 
 export const siteTitle = 'One-stop Grocery'
 export const topnavi = ["Vegetable","Fruit","Meat","Grain","Dairy","Drink"]

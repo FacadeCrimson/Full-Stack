@@ -1,4 +1,4 @@
-/* Site header */
+/* Site Header */
 
 .header {
   height:60px;
@@ -72,7 +72,7 @@
   height:100%;
 }
 
-/* Topnavi header */
+/* Top Navi */
 
 .category{
   display:flex;
@@ -86,6 +86,8 @@
 .backToHome {
   margin: 3rem 0 0;
 }
+
+/* Footer */
 
 .footer{
   margin:25px 5px;
