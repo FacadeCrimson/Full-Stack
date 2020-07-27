@@ -1,10 +1,11 @@
 import Head from 'next/head'
+import Link from 'next/link'
 import Layout, { siteTitle } from '../components/layout'
 import utilStyles from '../styles/utils.module.css'
-import Link from 'next/link'
-import Date from '../components/date'
+import { useAuth0 } from '@auth0/auth0-react'
 
 export default function Home() {
+  const { loginWithRedirect } = useAuth0()
   return (
     <Layout>
       <Head>
@@ -24,8 +25,7 @@ export default function Home() {
           <div className="subimg2"><Subimage name="grain"></Subimage></div>
           <div className="subimg2"> <Subimage name="dairy"></Subimage></div>
           <div className="subimg2"> <Subimage name="drink"></Subimage></div>
-          <Link href="/login"><div className="subimg2" id="signup"> <div>Signup Now!</div> <div>Enjoy membership benefits!</div></div></Link>
-
+          <div className="subimg2" id="signup" onClick={() => loginWithRedirect({screen_hint: "signup",})}> <div>Signup Now!</div> <div>Enjoy membership benefits!</div></div>
         </div>
         
 

@@ -1,13 +1,15 @@
 import Head from 'next/head'
 import Link from 'next/link'
+import { useRouter } from 'next/router'
 import styles from './layout.module.css'
-import { useAuth0 } from '../lib/react-auth0-spa';
+import { useAuth0 } from '@auth0/auth0-react';
 
 export const siteTitle = 'One-stop Grocery'
 export const topnavi = ["Vegetable","Fruit","Meat","Grain","Dairy","Drink"]
 
 export default function Layout({ children }) {
-  const { isAuthenticated, loginWithRedirect, logoutWithRedirect } = useAuth0()
+  const { isAuthenticated, loginWithRedirect, logout } = useAuth0()
+  const router = useRouter()
   return (
     <div className={styles.container}>
       <Head>
@@ -35,7 +37,7 @@ export default function Layout({ children }) {
             </div>
           )}
           {isAuthenticated && (
-            <div onClick={() => logoutWithRedirect({})}>
+            <div onClick={() =>logout({returnTo: process.env.NEXT_PUBLIC_AUTH0_CALLBACK_URL})}>
               Log out
             </div>
           )}
