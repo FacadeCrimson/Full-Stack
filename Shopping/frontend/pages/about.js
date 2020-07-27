@@ -3,33 +3,19 @@ import Head from 'next/head'
 import Layout, { siteTitle } from '../components/layout'
 import Link from 'next/link'
 
-export default function Home(props,user) {
+export default function Home() {
   return (
     <Layout>
       <Head>
         <title>{siteTitle}</title>
 
       </Head>
-        <div>{props.data}</div>
-        <div>{user.user}</div>
       <App></App>
       <style jsx>{`
     `}</style>
     </Layout>
   )
 }
-
-
-export async function getServerSideProps(context) {
-    let server=process.env.NEXT_PUBLIC_SERVER
-    let response = await fetch(server+'/test')
-    let data = await response.text()
-    console.log(data)
-    return {
-      props: {"data":data}, // will be passed to the page component as props
-      user: {"user":response.locals.user}
-    }
-  }
 
   const themes = {
     light: {

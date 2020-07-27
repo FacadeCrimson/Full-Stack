@@ -3,57 +3,10 @@ const bodyParser = require('body-parser')
 const cors = require('cors')
 const methodOverride = require('method-override')
 const cookieParser = require('cookie-parser')
-const session = require('express-session')
-
-const userInViews = require('./functions/userInViews')
 const AppError = require('./functions/error')
 
 env = process.env.NODE_ENV = process.env.NODE_ENV || 'development'
 envConfig = require('./env')[env]
-
-// config express-session
-var sess = {
-    secret: '-SGbST5dYexCEH',
-    cookie: {},
-    resave: false,
-    saveUninitialized: true
-  }
-
-// if (envConfig !== 'development') {
-//     // Use secure cookies in production (requires SSL/TLS)
-//     sess.cookie.secure = true;
-//     // Behind a proxy (like on Heroku) or "Unable to verify authorization request state"
-//     // app.set('trust proxy', 1);
-//   }
-
-// Load Passport
-var passport = require('passport')
-var Auth0Strategy = require('passport-auth0')
-
-// Configure Passport to use Auth0
-var strategy = new Auth0Strategy(
-    {
-      domain: envConfig.AUTH0_DOMAIN,
-      clientID: envConfig.AUTH0_CLIENT_ID,
-      clientSecret: envConfig.AUTH0_CLIENT_SECRET,
-      callbackURL: envConfig.AUTH0_CALLBACK_URL,
-    },
-    function (accessToken, refreshToken, extraParams, profile, done) {
-      // accessToken is the token to call Auth0 API (not needed in the most cases)
-      // extraParams.id_token has the JSON Web Token
-      // profile has all the information from the user
-      return done(null, profile);
-    }
-  )
-passport.use(strategy)
-
-passport.serializeUser(function(user, done) {
-    done(null, user.id)
- })
- 
- passport.deserializeUser(function(obj, done) {
-    done(null, obj)
- })
 
 const app = express()
 app.use(bodyParser.json())
@@ -67,10 +20,6 @@ app.use(cors(corsOptions))
 app.use(methodOverride())
 app.use(cookieParser())
 app.use(express.static('public'))
-app.use(session(sess))
-app.use(passport.initialize())
-app.use(passport.session())
-app.use(userInViews())
 
 require('./routes')(app)
 

@@ -1,11 +1,13 @@
 import Head from 'next/head'
-import styles from './layout.module.css'
 import Link from 'next/link'
+import styles from './layout.module.css'
+import { useAuth0 } from '../components/react-auth0-spa';
 
 export const siteTitle = 'One-stop Grocery'
 export const topnavi = ["Vegetable","Fruit","Meat","Grain","Dairy","Drink"]
 
 export default function Layout({ children }) {
+  const { isAuthenticated, loginWithRedirect, logoutWithRedirect } = useAuth0()
   return (
     <div className={styles.container}>
       <Head>
@@ -26,7 +28,19 @@ export default function Layout({ children }) {
           <div id={styles.logo}><img src="/logo.png" alt="Logo"/></div>
           <div id={styles.name}><Link href="/"><a>{siteTitle}</a></Link></div>
           <div id={styles.cart}><img src="/supermarket.png" alt="Logo"/></div>
-          <div id={styles.login}><a href={process.env.NEXT_PUBLIC_SERVER+"/login"}>Login/Signup</a></div>
+          <div id={styles.login}>
+          {!isAuthenticated && (
+            <div onClick={() => loginWithRedirect({})}>
+              Log in
+            </div>
+          )}
+          {isAuthenticated && (
+            <div onClick={() => logoutWithRedirect({})}>
+              Log out
+            </div>
+          )}
+          
+          </div>
           <div id={styles.search}>
             <div id={styles.searchicon}>&#x1F50D;</div>
             <div id={styles.searchbar}><input type="text"></input></div>
@@ -46,6 +60,7 @@ export default function Layout({ children }) {
           <a>Acknowledgement</a>
           <a>Contact</a>
           <a>Feedback</a>
+          <Link href="/user" ><a>User</a></Link>
           <Link href="/management" >
               <a>Management</a>
           </Link>
@@ -62,4 +77,4 @@ class Topnavi extends React.Component{
     <div className="topnavi"><Link href="/category/[navi]" as={`/category/${this.props.name}`}><a>{this.props.name}</a></Link></div>
     )
   }
-};
+}

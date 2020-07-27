@@ -126,7 +126,3 @@ function Subimage(props){
     </div>
   
 }
-
-// export async function getStaticProps() {
- 
-// }
