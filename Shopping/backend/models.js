@@ -22,10 +22,10 @@ var Schema = mongoose.Schema
 var customerSchema = new Schema({
     name: { type: String, required: true},
     gender: { type: String, required: true},
-    email:{ type: String, required: true, unique: true },
+    email:{ type: String, required: true, unique: true, index: true },
     phone:{ type: String, required: true, unique: true },
     address:{ type: String, required: true },
-    username: { type: String, required: true, unique: true },
+    username: { type: String, required: true, unique: true, index: true },
       orders:[
         {time:{ type: Date,},
          products:[{
@@ -33,7 +33,8 @@ var customerSchema = new Schema({
           name:{ type: String, required: true},
           quantity:{ type: Number, required:true},
         }]
-        }]
+        }],
+      history:[{product_id:{type: mongoose.Schema.Types.ObjectId, ref: 'Product'}}]
   },{timestamps: true})
 
 // customerSchema.pre('save', function(next) {

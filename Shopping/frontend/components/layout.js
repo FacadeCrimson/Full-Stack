@@ -1,6 +1,5 @@
 import Head from 'next/head'
 import Link from 'next/link'
-import { useRouter } from 'next/router'
 import styles from './layout.module.css'
 import { useAuth0 } from '@auth0/auth0-react';
 
@@ -9,7 +8,6 @@ export const topnavi = ["Vegetable","Fruit","Meat","Grain","Dairy","Drink"]
 
 export default function Layout({ children }) {
   const { isAuthenticated, loginWithRedirect, logout } = useAuth0()
-  const router = useRouter()
   return (
     <div className={styles.container}>
       <Head>
