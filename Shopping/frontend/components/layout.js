@@ -1,13 +1,16 @@
 import Head from 'next/head'
 import Link from 'next/link'
 import styles from './layout.module.css'
-import { useAuth0 } from '@auth0/auth0-react';
+import { useAuth0 } from '@auth0/auth0-react'
+import Logout from './logout'
+import Login from './login'
 
 export const siteTitle = 'One-stop Grocery'
 export const topnavi = ["Vegetable","Fruit","Meat","Grain","Dairy","Drink"]
 
 export default function Layout({ children }) {
-  const { isAuthenticated, loginWithRedirect, logout } = useAuth0()
+  const { isAuthenticated} = useAuth0()
+  
   return (
     <div className={styles.container}>
       <Head>
@@ -29,17 +32,7 @@ export default function Layout({ children }) {
           <div id={styles.name}><Link href="/"><a>{siteTitle}</a></Link></div>
           <div id={styles.cart}><img src="/supermarket.png" alt="Logo"/></div>
           <div id={styles.login}>
-          {!isAuthenticated && (
-            <div onClick={() => loginWithRedirect({})}>
-              Log in
-            </div>
-          )}
-          {isAuthenticated && (
-            <div onClick={() =>logout({returnTo: process.env.NEXT_PUBLIC_AUTH0_CALLBACK_URL})}>
-              Log out
-            </div>
-          )}
-          
+          {isAuthenticated ? (<Logout></Logout> ):(<Login></Login>)}
           </div>
           <div id={styles.search}>
             <div id={styles.searchicon}>&#x1F50D;</div>

@@ -1,5 +1,5 @@
 import Head from 'next/head'
-import Layout, { siteTitle } from './layout'
+import Layout, { siteTitle } from '../components/layout'
 import { useState} from 'react'
 import useInterval from '../lib/useInterval'
 

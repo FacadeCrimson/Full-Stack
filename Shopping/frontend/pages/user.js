@@ -3,7 +3,7 @@ import Link from 'next/link'
 import useGetData from '../lib/useGetData'
 import {useAuth0, withAuthenticationRequired} from "@auth0/auth0-react"
 import Layout, { siteTitle } from '../components/layout'
-import Loading from '../components/loading'
+import Loading from './loading'
 
 function User() {
     const data= useGetData('/test')
@@ -26,5 +26,11 @@ function User() {
 }
 
 export default withAuthenticationRequired(User, {
-    onRedirecting: () => <Loading></Loading>
-})
+    onRedirecting: () => <Loading></Loading>,
+    loginOptions: {
+        appState: {
+            targetUrl:'/user'
+        }
+      }
+}
+)
