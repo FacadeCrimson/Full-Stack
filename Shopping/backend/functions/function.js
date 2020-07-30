@@ -17,7 +17,7 @@ const showRecords = {
   async findProductByName(req, res, next){
     const products =await Product.find({"name":req.body.name})
     if (products.length===0) {
-      return next(new AppError('No tour found with that ID', 404))
+      return next(new AppError('No products found with that name.', 404))
      }
     res.send(products)
     // res.status(201).json({
@@ -31,9 +31,12 @@ const showRecords = {
     res.send(customers)
   },
 
-  async findCustomerByName(req, res, next){
-    const customers =await Customer.find({"name":req.body.name})
-    res.send(customers)
+  async findCustomerByEmail(req, res, next){
+    const customers =await Customer.find({"email":req.query.email})
+    if (customers.length===0) {
+      return next(new AppError('No customers found with that email.', 404))
+     }
+    res.send(customers[0])
   }
 }
 

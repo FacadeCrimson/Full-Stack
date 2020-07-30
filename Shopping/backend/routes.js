@@ -37,7 +37,6 @@ const catchAsync = fn => {
 module.exports = function(app){
   router.get('/', function(req, res) {res.send('Hello World')})
   router.get('/customers', showRecords.allCustomers)
-  router.get('/searchcustomer', showRecords.findCustomerByName)
   router.get('/products', showRecords.allProducts)
   router.get('/search', catchAsync(showRecords.findProductByName))
   router.post('/img', upload.single('avatar'),fileUpload.upload)
@@ -45,6 +44,9 @@ module.exports = function(app){
   router.get('/test',jwtCheck,function (req, res, next) {
     res.send({"data":"OK"})
   })
+
+  router.get('/check', jwtCheck, showRecords.findCustomerByEmail)
+  router.post('/signup', jwtCheck, function (req, res, next) {res.send({"data":"OK"})})
 
   app.use('/', router)
 }

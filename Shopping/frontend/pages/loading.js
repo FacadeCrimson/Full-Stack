@@ -1,11 +1,42 @@
 import Head from 'next/head'
+import { useRouter } from 'next/router'
+import { useState, useEffect} from 'react'
+import { useAuth0} from '@auth0/auth0-react'
 import Layout, { siteTitle } from '../components/layout'
-import { useState} from 'react'
 import useInterval from '../lib/useInterval'
 
 export default function Loading(){
-    const [number, setNumber] = useState(1)
+    const router = useRouter()
+    const {user,getAccessTokenSilently}=useAuth0()
+    const baseUrl = process.env.NEXT_PUBLIC_SERVER
+    useEffect(()=>{
+        async function fetchData() {
+        if(router.query){
+            if(user){
+                const {email} = user
+                const url = "/check?email="+email
+                const token = await  getAccessTokenSilently()
+                var myHeaders = new Headers()
+                myHeaders.append("Authorization", `Bearer ${token}`)
+                var requestOptions = {
+                method: 'GET',
+                headers: myHeaders,
+                redirect: 'follow'
+                }
+                let res = await fetch(`${baseUrl}${url}`, requestOptions)
+                let json = await res.json()
+                if(json.status==="fail"){
+                    router.replace({pathname: '/signup',query: { path: router.query.path },})
+                }
+                else{
+                    router.replace(router.query.path)
+                }
+            }
+        }
+    }   fetchData()
+    },[router.query,user])
 
+    const [number, setNumber] = useState(1)
     useInterval(() => {
         setNumber(number + 1)
         if(number>5){

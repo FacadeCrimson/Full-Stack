@@ -27,14 +27,6 @@
     line-height: 1.5;
   }
 
-  .loginform{
-    width:500px;
-    height:500px;
-    border-radius:5px;
-    border:1px solid #606060;
-    margin:auto;
-  }
-  
   .borderCircle {
     border-radius: 9999px;
   }

@@ -1,7 +1,7 @@
 import { useAuth0 } from '@auth0/auth0-react'
 import { useState, useEffect } from 'react'
 
-export default function useGetData(path){
+export default function usePost(path,body){
     const [data, setData] = useState()
     const { getAccessTokenSilently } = useAuth0()
     const baseUrl = process.env.NEXT_PUBLIC_SERVER
@@ -12,13 +12,14 @@ export default function useGetData(path){
             var myHeaders = new Headers()
             myHeaders.append("Authorization", `Bearer ${token}`)
             var requestOptions = {
-            method: 'GET',
+            method: 'POST',
+            body: body,
             headers: myHeaders,
             redirect: 'follow'
             }
             let res = await fetch(`${baseUrl}${path}`, requestOptions)
-            let json = await res.json()
-            setData(json)
+            let status = res.status
+            setData(status)
         }
         fetchData()
       }, [])

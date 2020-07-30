@@ -18,7 +18,7 @@ function User() {
             <h2>{name}</h2>
             <p>{email}</p>
             <div>{JSON.stringify(user, null, 2)}</div>
-            <div>{!data?<div>Loading...</div>:<div>{data}</div>}</div>
+            <div>{!data?<div>Loading...</div>:<div>{data.data}</div>}</div>
             <style jsx>{`
             `}</style>
         </Layout>

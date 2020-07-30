@@ -1,7 +1,7 @@
 import { useAuth0 } from '@auth0/auth0-react'
 import { useRouter } from 'next/router'
-import { useState,useEffect} from 'react'
-import {shroud} from './protected'
+import { useState } from 'react'
+import { shroud } from './protected'
 
 export default function Logout(){
     const { logout } = useAuth0()
