@@ -20,12 +20,13 @@ var Schema = mongoose.Schema
 
 // create a schema
 var customerSchema = new Schema({
-    name: { type: String, required: true },
-    gender: { type: String, required: true },
-    email:{ type: String, required: true, unique: true, index: true },
-    phone:{ type: String, required: true },
-    address:{ type: String, required: true },
-    username: { type: String, required: true, unique: true, index: true },
+    Name: { type: String, required: true },
+    Gender: { type: String, required: true },
+    Email:{ type: String, required: true, unique: true, index: true },
+    Phone:{ type: String, required: true },
+    Address:{ type: String, required: true },
+    Username: { type: String, required: true, unique: true, index: true },
+    Birthday: {type:Date,required: true},
       orders:[
         {time:{ type: Date,},
          products:[{

@@ -18,7 +18,8 @@ var storage = multer.diskStorage({
 var upload = multer({ storage: storage })
 
 // require functions from files
-showRecords = require('./functions/getfunction')
+getFunctions = require('./functions/getfunction')
+postFunctions = require('./functions/postfunction')
 fileUpload = require('./functions/fileupload')
 
 //implement authentication
@@ -36,19 +37,17 @@ const catchAsync = fn => {
 
 module.exports = function(app){
   router.get('/', function(req, res) {res.send('Hello World')})
-  router.get('/customers', showRecords.allCustomers)
-  router.get('/products', showRecords.allProducts)
-  router.get('/search', catchAsync(showRecords.findProductByName))
+  router.get('/customers', getFunctions.allCustomers)
+  router.get('/products', getFunctions.allProducts)
+  router.get('/search', catchAsync(getFunctions.findProductByName))
   router.post('/img', upload.single('avatar'),fileUpload.upload)
   
   router.get('/test',jwtCheck,function (req, res, next) {
     res.send({"data":"OK"})
   })
 
-  router.get('/check', jwtCheck, showRecords.findCustomerByEmail)
-  router.post('/signup', jwtCheck, function (req, res, next) {
-    console.log(req.body)
-    res.send({"data":"OK"})})
+  router.get('/check', jwtCheck, getFunctions.findCustomerByEmail)
+  router.post('/signup', jwtCheck, catchAsync(postFunctions.signUp))
 
   app.use('/', router)
 }

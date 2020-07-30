@@ -1,7 +1,7 @@
 const {Customer,Product} = require('../models')
 const AppError = require('./error')
 
-const showRecords = {
+const getFunctions = {
   async index(req, res){
     const products = await Product
        .find()
@@ -32,7 +32,8 @@ const showRecords = {
   },
 
   async findCustomerByEmail(req, res, next){
-    const customers =await Customer.find({"email":req.query.email})
+    console.log(req.query.email)
+    const customers =await Customer.find({"Email":req.query.email})
     if (customers.length===0) {
       return next(new AppError('No customers found with that email.', 404))
      }
@@ -40,7 +41,7 @@ const showRecords = {
   }
 }
 
-module.exports = showRecords
+module.exports = getFunctions
 
 // var monthAgo = new Date();
 // monthAgo.setMonth(monthAgo.getMonth() - 1);
