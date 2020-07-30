@@ -74,13 +74,13 @@ export default function Home() {
         position:relative;
       }
       #signup{
-        background-color:purple;
+        background-color:white;
         justify-content: center;
         align-items: center;
         text-align:center;
         font-family: 'Barlow', sans-serif;
         font-size:20px;
-        padding-top:80px;
+        padding-top:90px;
         line-height:2.2;
       }
       #signup:hover{

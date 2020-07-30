@@ -18,7 +18,7 @@ var storage = multer.diskStorage({
 var upload = multer({ storage: storage })
 
 // require functions from files
-showRecords = require('./functions/function')
+showRecords = require('./functions/getfunction')
 fileUpload = require('./functions/fileupload')
 
 //implement authentication
@@ -46,7 +46,9 @@ module.exports = function(app){
   })
 
   router.get('/check', jwtCheck, showRecords.findCustomerByEmail)
-  router.post('/signup', jwtCheck, function (req, res, next) {res.send({"data":"OK"})})
+  router.post('/signup', jwtCheck, function (req, res, next) {
+    console.log(req.body)
+    res.send({"data":"OK"})})
 
   app.use('/', router)
 }
