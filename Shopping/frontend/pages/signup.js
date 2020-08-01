@@ -17,10 +17,10 @@ export default function Login() {
       return}
     const token = await getAccessTokenSilently()
     const url=process.env.NEXT_PUBLIC_SERVER+"/signup"
-    var myHeaders = new Headers()
+    let myHeaders = new Headers()
     myHeaders.append("Authorization", `Bearer ${token}`)
     myHeaders.append('Content-Type','application/json')
-    var requestOptions = {
+    const requestOptions = {
     method: 'POST',
     body: JSON.stringify(form),
     headers: myHeaders,

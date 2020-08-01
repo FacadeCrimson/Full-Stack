@@ -13,7 +13,7 @@ export default function usePost(path,body){
             myHeaders.append("Authorization", `Bearer ${token}`)
             var requestOptions = {
             method: 'POST',
-            body: body,
+            body: JSON.stringify(body),
             headers: myHeaders,
             redirect: 'follow'
             }

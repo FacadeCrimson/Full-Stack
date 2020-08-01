@@ -12,6 +12,11 @@ const postFunctions = {
         await newCustomer.save()
         res.send({"data":"OK"})
     },
+    async recordHistory(req, res, next){
+        var temp=req.body
+        console.log(temp)
+        res.send({"data":"OK"})
+    },
 }
 
 module.exports=postFunctions

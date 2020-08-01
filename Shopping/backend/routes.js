@@ -48,6 +48,7 @@ module.exports = function(app){
 
   router.get('/check', jwtCheck, getFunctions.findCustomerByEmail)
   router.post('/signup', jwtCheck, catchAsync(postFunctions.signUp))
+  router.post('/history', catchAsync(postFunctions.recordHistory))
 
   app.use('/', router)
 }
