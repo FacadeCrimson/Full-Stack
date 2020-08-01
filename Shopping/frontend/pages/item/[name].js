@@ -2,9 +2,9 @@ import Head from 'next/head'
 import Layout from '../../components/layout'
 import {useAuth0} from "@auth0/auth0-react"
 import {useEffect } from 'react'
-import Loading from '../../components/Temp'
+import Loading from '../../components/temp'
 
-export default function Post({path}) {
+export default function Post({name,data}) {
     const { user } = useAuth0()
     const baseUrl = process.env.NEXT_PUBLIC_SERVER
     
@@ -14,7 +14,7 @@ export default function Post({path}) {
                 const { email } = user 
                 const body ={
                     "email":email,
-                    "path":path
+                    "id":data._id
                 }
                 let myHeaders = new Headers()
                 myHeaders.append('Content-Type','application/json')
@@ -34,19 +34,19 @@ export default function Post({path}) {
     return (
         <Layout>
             <Head>
-                <title>{path}</title>
+                <title>{name}</title>
             </Head>
         </Layout>
       )}
 
 export async function getStaticPaths() {
     let server=process.env.NEXT_PUBLIC_SERVER
-    let response = await fetch(server+"/products")
+    let response = await fetch(server+"/allproducts")
     let data = await response.json()
     const paths = data.map(data => {
     return {
         params: {
-        name: data.name
+        name: data.name,
         }
     }
     })
@@ -57,14 +57,16 @@ return {
 }
     
 export async function getStaticProps({ params }) {
-let server=process.env.NEXT_PUBLIC_SERVER
-// let response = await fetch(server+"/products")
-// let data = await response.json()
-
-const path = params.name
+    let server=process.env.NEXT_PUBLIC_SERVER 
+    const name = params.name
+    const body ={
+        "name":name
+    }
+    let response = await fetch(server+"/productinfo"+"?name="+name)
+    let data = await response.json()
 return {
     props: {
-    path,
+    name,data
     }
 }
 }

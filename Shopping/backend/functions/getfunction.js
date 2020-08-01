@@ -15,15 +15,11 @@ const getFunctions = {
   },
 
   async findProductByName(req, res, next){
-    const products =await Product.find({"name":req.body.name})
+    const products =await Product.find({"name":req.query.name})
     if (products.length===0) {
       return next(new AppError('No products found with that name.', 404))
      }
-    res.send(products)
-    // res.status(201).json({
-    //   status: 'success',
-    //   products:products
-    // })
+    res.send(products[0])
   },
 
   async allCustomers(req, res, next){
@@ -32,7 +28,6 @@ const getFunctions = {
   },
 
   async findCustomerByEmail(req, res, next){
-    console.log(req.query.email)
     const customers =await Customer.find({"Email":req.query.email})
     if (customers.length===0) {
       return next(new AppError('No customers found with that email.', 404))
@@ -49,8 +44,6 @@ module.exports = getFunctions
 //   if (err) throw err;
 //   console.log(users);
 // });
-
-// User.findOneAndUpdate({ username: 'starlord55' }, { username: 'starlord88' }, function(err, user) {});
 
 // User.findByIdAndUpdate(4, { username: 'starlord88' }, function(err, user) {});
 

@@ -158,7 +158,7 @@ export async function getStaticPaths() {
 
   export async function getStaticProps({ params }) {
     let server=process.env.NEXT_PUBLIC_SERVER
-    let response = await fetch(server+"/products")
+    let response = await fetch(server+"/allproducts")
     let data = await response.json()
     let vegetables = []
     // calculate rating

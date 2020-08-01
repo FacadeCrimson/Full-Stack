@@ -3,7 +3,7 @@ import Link from 'next/link'
 import useGetData from '../lib/useGetData'
 import {useAuth0, withAuthenticationRequired} from "@auth0/auth0-react"
 import Layout, { siteTitle } from '../components/layout'
-import Temp from '../components/Temp'
+import Temp from '../components/temp'
 import Loading from './loading'
 
 function User() {
@@ -23,6 +23,7 @@ function User() {
                 </div>
                 <div className="viewrow">
                     <div className="subtitle">View History</div>
+                    {customer.history.map(data=><div key={data._id}>{data._id}</div>)}
                     <div className="item">{}</div>
                 </div>
                 <div className="viewrow">
@@ -35,7 +36,7 @@ function User() {
                 </div>
                 <div className="viewrow">
                     <div className="subtitle">Options</div>
-                    <div className="item">{}</div>
+                    <div className="item">Modify Information, Delete Account</div>
                 </div>
             </div>
             
