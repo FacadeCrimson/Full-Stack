@@ -28,11 +28,14 @@ const getFunctions = {
   },
 
   async findCustomerByEmail(req, res, next){
-    const customers =await Customer.find({"Email":req.query.email})
-    if (customers.length===0) {
+    const customer =await Customer.findOne({"Email":req.query.email})
+    if (!customer) {
       return next(new AppError('No customers found with that email.', 404))
      }
-    res.send(customers[0])
+    await customer.populate('history','name').execPopulate()
+    console.log(customer)
+
+    res.json({"username":customer.Username,"history":customer.history})
   }
 }
 

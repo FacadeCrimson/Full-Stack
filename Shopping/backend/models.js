@@ -35,7 +35,7 @@ var customerSchema = new Schema({
           quantity:{ type: Number, required:true},
         }]
         }],
-      history:[{product_id:{type: mongoose.Schema.Types.ObjectId, ref: 'Product'}}],
+      history:[{type: mongoose.Schema.Types.ObjectId, ref: 'Product'}],
       cart:[{
         product_id:{type: mongoose.Schema.Types.ObjectId, ref: 'Product'},
         name:{ type: String, required: true},

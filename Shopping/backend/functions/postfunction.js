@@ -16,7 +16,7 @@ const postFunctions = {
     async recordHistory(req, res, next){
         const temp=req.body
         const {email,id}=temp
-        Customer.findOneAndUpdate({ Email: email }, {$push:{ history:{id} }},function (err, raw) {})
+        Customer.findOneAndUpdate({ Email: email }, {$push:{ history:id }},function (err, raw) {})
     
         res.send({"data":"OK"})
     },

@@ -10,8 +10,8 @@ function User() {
     const { user } = useAuth0()
     const { email } = user
     const params = {email:email}
-    const customer = useGetData('/check',params)
-    return (!customer?<Temp></Temp>:
+    const response = useGetData('/check',params)
+    return (!response?<Temp></Temp>:
         <Layout>
             <Head>
                 <title>{siteTitle}</title>
@@ -19,11 +19,11 @@ function User() {
             <div className="profile">
                 <div className="title">
                     <img src={user.picture} alt="Profile" className="rounded-circle img-fluid profile-picture mb-3 mb-md-0"/>
-                    <h2>Welcome {customer.Username} !</h2>
+                    <h2>Welcome {response.username} !</h2>
                 </div>
                 <div className="viewrow">
                     <div className="subtitle">View History</div>
-                    {customer.history.map(data=><div key={data._id}>{data._id}</div>)}
+                    {response.history.map(data=><div key={data.name}>{data.name}</div>)}
                     <div className="item">{}</div>
                 </div>
                 <div className="viewrow">
