@@ -4,6 +4,7 @@ import useGetData from '../lib/useGetData'
 import {useAuth0, withAuthenticationRequired} from "@auth0/auth0-react"
 import Layout, { siteTitle } from '../components/layout'
 import Temp from '../components/temp'
+import Itemcard from '../components/itemCardHorizontal'
 import Loading from './loading'
 
 function User() {
@@ -23,8 +24,7 @@ function User() {
                 </div>
                 <div className="viewrow">
                     <div className="subtitle">View History</div>
-                    {response.history.map(data=><div key={data.name}>{data.name}</div>)}
-                    <div className="item">{}</div>
+                    <div className="item"> {response.history.map(data=><Itemcard name={data.name} img={data.img} price={data.price} ratings={data.ratings}></Itemcard> )}</div>
                 </div>
                 <div className="viewrow">
                     <div className="subtitle">Shopping Cart</div>
@@ -63,6 +63,14 @@ function User() {
                     border: 1px solid grey;
                     margin:10px 0 ;
                 }
+                .item{
+                    height:160px;
+                    margin-top:10px;
+                    overflow:scroll;
+                    overflow-y: hidden;
+                    white-space:nowrap;
+                    
+                }
             `}</style>
         </Layout>
     )
@@ -77,21 +85,3 @@ export default withAuthenticationRequired(User, {
       }
 }
 )
-
-
-// var customerSchema = new Schema({
-//       orders:[
-//         {time:{ type: Date,},
-//          products:[{
-//           product_id:{type: mongoose.Schema.Types.ObjectId, ref: 'Product'},
-//           name:{ type: String, required: true},
-//           quantity:{ type: Number, required:true},
-//         }]
-//         }],
-//       history:[{product_id:{type: mongoose.Schema.Types.ObjectId, ref: 'Product'}}],
-//       cart:[{
-//         product_id:{type: mongoose.Schema.Types.ObjectId, ref: 'Product'},
-//         name:{ type: String, required: true},
-//         quantity:{ type: Number, required:true},
-//       }]
-//   },{timestamps: true})

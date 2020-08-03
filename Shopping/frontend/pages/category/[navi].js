@@ -2,6 +2,7 @@ import Head from 'next/head'
 import Link from 'next/link'
 import React from 'react'
 import Layout,{topnavi}  from '../../components/layout'
+import starGenerator from '../../lib/starGenerator'
 
 export default class Post extends React.Component {
   constructor(props) {
@@ -161,16 +162,13 @@ export async function getStaticPaths() {
     let response = await fetch(server+"/allproducts")
     let data = await response.json()
     let vegetables = []
-    // calculate rating
-    const average = arr => arr.reduce( ( p, c ) => p + c, 0 ) / arr.length
   
     for(let item of data){
-      const rating = item.ratings?average(item.ratings):0
       vegetables.push({
         "id":item._id,
         "img":server+item.img,
         "name":item.name,
-        "rating":starGenerator(rating),
+        "rating":starGenerator(item.ratings),
         "price":item.price
       })
     }
@@ -182,26 +180,3 @@ export async function getStaticPaths() {
       }
     }
  }
-
- function starGenerator(rating){
-  var star=""
-  const n=Math.trunc(rating)
-  for(let i=0;i<n;i++){
-    star=star+"★"
-  }
-  for(let i=n;i<5;i++){
-    star=star+"☆"
-  }
-  return star
- }
-
-//  react hook
-// import useSWR from 'swr'
-
-// function Profile() {
-//   const { data, error } = useSWR('/api/user', fetch)
-
-//   if (error) return <div>failed to load</div>
-//   if (!data) return <div>loading...</div>
-//   return <div>hello {data.name}!</div>
-// }

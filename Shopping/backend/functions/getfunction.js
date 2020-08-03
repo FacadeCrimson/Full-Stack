@@ -32,8 +32,10 @@ const getFunctions = {
     if (!customer) {
       return next(new AppError('No customers found with that email.', 404))
      }
-    await customer.populate('history','name').execPopulate()
-    console.log(customer)
+    await customer.populate({
+      path: 'history',
+      select: 'name img price ratings'
+    }).execPopulate()
 
     res.json({"username":customer.Username,"history":customer.history})
   }
