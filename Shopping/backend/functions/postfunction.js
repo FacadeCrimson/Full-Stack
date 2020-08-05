@@ -16,8 +16,14 @@ const postFunctions = {
     async recordHistory(req, res, next){
         const temp=req.body
         const {email,id}=temp
-        Customer.findOneAndUpdate({ Email: email }, {$push:{ history:id }},function (err, raw) {})
+        await Customer.findOneAndUpdate({ Email: email }, {$push:{ history:id }},function (err, raw) {})
     
+        res.send({"data":"OK"})
+    },
+    async comment(req, res, next){
+        const temp=req.body
+        let query = await Customer.findOne({ 'Email': temp.email })
+        await Product.findOneAndUpdate({"_id":temp.itemid},{$push:{comments:{customer_id:query._id,name:query.Name,time:temp.date,content:temp.comment}}},function (err, raw) {})
         res.send({"data":"OK"})
     },
 }
