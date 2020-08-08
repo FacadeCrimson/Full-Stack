@@ -28,8 +28,26 @@ const postFunctions = {
     },
     async cart(req, res, next){
         const temp=req.body
-        console.log(temp)
-        await Customer.findOneAndUpdate({ 'Email': temp.email },{$push:{cart:{product_id:temp.itemid,quantity:temp.quantity}}})
+        const result = await Customer.findOneAndUpdate(
+            {  'Email': temp.email, 'cart.product_id':temp.itemid},
+            { $inc: { "cart.$[outer].quantity": temp.quantity} },
+            { "arrayFilters": [{"outer.product_id": temp.itemid}]},
+        )
+        if (!result){
+            console.log(temp)
+            await Customer.findOneAndUpdate(
+                { 'Email': temp.email },
+                {$push:{cart:{product_id:temp.itemid,quantity:temp.quantity}}}
+                )
+        }
+        res.send({"data":"OK"})
+    },
+    async removeItem(req, res, next){
+        const temp=req.body
+        await Customer.findOneAndUpdate(
+            {  'Email': temp.email},
+            { $pull: { cart : { "product_id" :  temp.itemid} } }
+        )
         res.send({"data":"OK"})
     },
 }

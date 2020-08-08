@@ -2,12 +2,6 @@ const {Customer,Product} = require('../models')
 const AppError = require('./error')
 
 const getFunctions = {
-  async index(req, res){
-    const products = await Product
-       .find()
-       .populate('books')
-    res.send(products)
-  },
 
   async allProducts(req, res, next){
     const products =await Product.find()
@@ -36,13 +30,21 @@ const getFunctions = {
       path: 'history',
       select: 'name img price ratings'
     }).execPopulate()
-
     res.json({"username":customer.Username,"history":customer.history})
   },
 
   async getCart(req, res, next){
     const customer =await Customer.findOne({"Email":req.query.email})
-    console.log(customer)
+    if (!customer) {
+      return next(new AppError('No customers found with that email.', 404))
+     }
+     await customer.populate({
+      path: 'cart',
+      populate:{
+        path:'product_id',
+        select: 'name img price ratings',
+      }
+    }).execPopulate()
     res.json(customer.cart)
   },
 }
@@ -55,9 +57,3 @@ module.exports = getFunctions
 //   if (err) throw err;
 //   console.log(users);
 // });
-
-// User.findByIdAndUpdate(4, { username: 'starlord88' }, function(err, user) {});
-
-// User.findOneAndRemove({ username: 'starlord55' }, function(err) {});
-
-// User.findByIdAndRemove(4, function(err) {});

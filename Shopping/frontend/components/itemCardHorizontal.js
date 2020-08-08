@@ -13,21 +13,22 @@ export default function Itemcard (props){
         </div>
         <style jsx>{`
         .card{
-            display:inline-block;
+            display:flex;
             height:100%;
-            width:auto;
+            width:350px;
             margin-right:15px;
             border:1px solid #606060;
         }
         .card img{
             display:inline;
             height:100%;
-            width:auto;
         }
         .text{
             height:100%;
             float:right;
             text-align:right;
+            padding:30px;
+            line-height:40px;
         }
       `}</style>
     </div>

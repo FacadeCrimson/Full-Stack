@@ -36,19 +36,19 @@ const catchAsync = fn => {
 }
 
 module.exports = function(app){
-  router.get('/', function(req, res) {res.send('Hello World')})
   router.get('/customers', getFunctions.allCustomers)
   router.post('/img', upload.single('avatar'),fileUpload.upload)
   
   router.get('/allproducts', catchAsync(getFunctions.allProducts))
   router.get('/productinfo', catchAsync(getFunctions.findProductByName))
-  router.post('/getcart',jwtCheck, getFunctions.getCart)
-
   router.get('/check', jwtCheck, getFunctions.findCustomerByEmail)
+  router.get('/getcart',jwtCheck, getFunctions.getCart)
+
   router.post('/signup', jwtCheck, catchAsync(postFunctions.signUp))
   router.post('/history',postFunctions.recordHistory)
   router.post('/comment',jwtCheck, postFunctions.comment)
   router.post('/cart',jwtCheck, postFunctions.cart)
+  router.post('/removeitem',jwtCheck, postFunctions.removeItem)
 
   app.use('/', router)
 }
