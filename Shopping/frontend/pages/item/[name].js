@@ -9,6 +9,7 @@ export default function Post({name,item}) {
     const { user, getAccessTokenSilently } = useAuth0()
     const baseUrl = process.env.NEXT_PUBLIC_SERVER
     const [form,setForm] = useState("")
+    const [quantity,setQuantity] = useState(0)
     
     useEffect(() => {
         async function fetchData() {
@@ -67,6 +68,35 @@ export default function Post({name,item}) {
         return
     }
 
+    const handleQuantityChange=(event)=>{
+        const tvalue=event.target.value
+        setQuantity(tvalue)
+        return
+    }
+
+    const handleQuantitySubmit=async (event)=>{
+        event.preventDefault()
+        const token = await getAccessTokenSilently()
+        const url=process.env.NEXT_PUBLIC_SERVER+"/cart"
+        let myHeaders = new Headers()
+        myHeaders.append("Authorization", `Bearer ${token}`)
+        myHeaders.append('Content-Type','application/json')
+        const requestOptions = {
+        method: 'POST',
+        body: JSON.stringify({"itemid":item._id,"name":item.name,"quantity":quantity,"email":user.email}),
+        headers: myHeaders,
+        redirect: 'follow'
+        }
+        let res = await fetch(`${url}`, requestOptions)
+        let json =await res.json()
+        setQuantity(0)
+        if(json.data==="OK"){
+            return
+        }
+        alert("Adding to cart failed.")
+        return
+    }
+
     return (
         <Layout>
             <Head>
@@ -80,7 +110,7 @@ export default function Post({name,item}) {
                         <div>{item.category} {item.tag}</div>
                         <div>$ {item.price}</div>
                         <div>{starGenerator(item.ratings)} {item.ratings.length} ratings</div>
-                        <br></br>
+                        {user && <form id="quantityselect" onSubmit={handleQuantitySubmit}><input id="quantity" type="text" type="number" min="0" value={quantity} onChange={handleQuantityChange}></input><button type="submit">Add to cart</button></form>}
                         <h3>info</h3>
                         <div>
                             <div>size: {item.info.size}</div>
@@ -93,9 +123,11 @@ export default function Post({name,item}) {
                         <h2>Description</h2>
                         <div>{item.info.description}</div>
                     </div>
-                    {item.comments.map(comment=><Comment {...comment}></Comment>)}
+                    <div className="comments">
+                    {item.comments.map(comment=><Comment key={comment.time} {...comment}></Comment>)}
+                    </div>
                     
-                        <form onSubmit={handleSubmit}>
+                        <form id="commentinput" onSubmit={handleSubmit}>
                         <h3>Leave your comments</h3>
                         <textarea onChange={handleChange} value={form}></textarea>
                         <button type="submit" value="Submit">Submit</button>
@@ -130,7 +162,15 @@ export default function Post({name,item}) {
                     flex: 50%;
                     text-align:right;
                 }
-                form{
+                #quantity{
+                    margin:20px 10px;
+                    display: inline-block;
+                    font-size:20px;
+                }
+                #quantityselect{
+                    margin-top:10px;
+                }
+                #commentinput{
                     width:100%;
                     padding:50px;
                 }
@@ -153,6 +193,9 @@ export default function Post({name,item}) {
                     font-size: 16px;
                     cursor: pointer;
                     float:right;
+                  }
+                  .comments{
+                      padding:40px;
                   }
             `}</style>
         </Layout>
@@ -192,8 +235,32 @@ return {
 
 
 function Comment(props){
-    return <div>
-                <div>{props.name}</div><div>{props.time}</div>
-                <div>{props.content}</div>
+    return <div className="wrapper">
+                <div className="identifier"><div id="name">{props.name}</div><div id="time">{props.time}</div></div>
+                <div id="content">{props.content}</div>
+                <style jsx>{`
+                .identifier{
+                    width:100%;
+                    height:20px;
+                }
+                #name{
+                    float:left;
+                }
+                #time{
+                    float:right;
+                }
+                #content{
+                    padding:0 60px;
+
+                }
+                .wrapper{
+                    padding:10px 10px;
+                }
+                div.wrapper:nth-child(2n+1){
+                    background-color:#d4ebf2;
+                }
+
+                  }
+            `}</style>
             </div>
 }

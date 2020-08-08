@@ -30,7 +30,7 @@ export default function Layout({ children }) {
       <header className={styles.header}>  
           <div id={styles.logo}><img src="/logo.png" alt="Logo"/></div>
           <div id={styles.name}><Link href="/"><a>{siteTitle}</a></Link></div>
-          <div id={styles.cart}><img src="/supermarket.png" alt="Logo"/></div>
+          <Link href="/cart" ><div id={styles.cart}><img src="/supermarket.png" alt="Logo"/></div></Link>
           <div id={styles.login}>
           {isAuthenticated ? (<Logout></Logout> ):(<Login></Login>)}
           </div>

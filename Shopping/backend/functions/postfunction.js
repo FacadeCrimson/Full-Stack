@@ -23,7 +23,13 @@ const postFunctions = {
     async comment(req, res, next){
         const temp=req.body
         let query = await Customer.findOne({ 'Email': temp.email })
-        await Product.findOneAndUpdate({"_id":temp.itemid},{$push:{comments:{customer_id:query._id,name:query.Name,time:temp.date,content:temp.comment}}},function (err, raw) {})
+        await Product.findOneAndUpdate({"_id":temp.itemid},{$push:{comments:{customer_id:query._id,name:query.Name,time:temp.date,content:temp.comment}}})
+        res.send({"data":"OK"})
+    },
+    async cart(req, res, next){
+        const temp=req.body
+        console.log(temp)
+        await Customer.findOneAndUpdate({ 'Email': temp.email },{$push:{cart:{product_id:temp.itemid,quantity:temp.quantity}}})
         res.send({"data":"OK"})
     },
 }

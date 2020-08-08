@@ -42,11 +42,13 @@ module.exports = function(app){
   
   router.get('/allproducts', catchAsync(getFunctions.allProducts))
   router.get('/productinfo', catchAsync(getFunctions.findProductByName))
+  router.post('/getcart',jwtCheck, getFunctions.getCart)
 
   router.get('/check', jwtCheck, getFunctions.findCustomerByEmail)
   router.post('/signup', jwtCheck, catchAsync(postFunctions.signUp))
   router.post('/history',postFunctions.recordHistory)
   router.post('/comment',jwtCheck, postFunctions.comment)
+  router.post('/cart',jwtCheck, postFunctions.cart)
 
   app.use('/', router)
 }

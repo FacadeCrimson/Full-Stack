@@ -38,7 +38,13 @@ const getFunctions = {
     }).execPopulate()
 
     res.json({"username":customer.Username,"history":customer.history})
-  }
+  },
+
+  async getCart(req, res, next){
+    const customer =await Customer.findOne({"Email":req.query.email})
+    console.log(customer)
+    res.json(customer.cart)
+  },
 }
 
 module.exports = getFunctions
