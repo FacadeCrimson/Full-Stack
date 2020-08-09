@@ -5,7 +5,6 @@ import {useState } from 'react'
 import useGetData from '../lib/useGetData'
 import {useAuth0, withAuthenticationRequired} from "@auth0/auth0-react"
 import Layout, { siteTitle } from '../components/layout'
-import Temp from '../components/temp'
 import Loading from './loading'
 import Itemcard from '../components/itemCardHorizontal'
 import Message from '../components/message'
@@ -15,8 +14,7 @@ function Cart() {
     const { email } = user
     const params = {email:email}
     const response = useGetData('/getcart',params)
-    return (!response?<Temp></Temp>:
-        <Layout>
+    return <Layout>
             <Head>
                 <title>{siteTitle}</title>
             </Head>
@@ -34,7 +32,6 @@ function Cart() {
                 }
             `}</style>
         </Layout>
-    )
 }
 
 export default withAuthenticationRequired(Cart, {
@@ -50,7 +47,6 @@ export default withAuthenticationRequired(Cart, {
 function Cartitem(props){
     const router = useRouter()
     const { user, getAccessTokenSilently } = useAuth0()
-    const {quantity,setQuantity} = useState(props.quantity)
 
     const handleClick=async (event,code)=>{
         event.preventDefault()

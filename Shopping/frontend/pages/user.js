@@ -3,7 +3,6 @@ import Link from 'next/link'
 import useGetData from '../lib/useGetData'
 import {useAuth0, withAuthenticationRequired} from "@auth0/auth0-react"
 import Layout, { siteTitle } from '../components/layout'
-import Temp from '../components/temp'
 import Itemcard from '../components/itemCardHorizontal'
 import Loading from './loading'
 
@@ -12,8 +11,7 @@ function User() {
     const { email } = user
     const params = {email:email}
     const response = useGetData('/check',params)
-    return (!response?<Temp></Temp>:
-        <Layout>
+    return <Layout>
             <Head>
                 <title>{siteTitle}</title>
             </Head>
@@ -73,7 +71,6 @@ function User() {
                 }
             `}</style>
         </Layout>
-    )
 }
 
 export default withAuthenticationRequired(User, {
