@@ -2,7 +2,6 @@ import Head from 'next/head'
 import Layout from '../../components/layout'
 import {useAuth0} from "@auth0/auth0-react"
 import {useState, useEffect } from 'react'
-import Loading from '../../components/temp'
 import starGenerator from '../../lib/starGenerator'
 
 export default function Post({name,item}) {
