@@ -25,9 +25,6 @@ fileUpload = require('./functions/fileupload')
 //implement authentication
 var jwtCheck = require('./functions/jwt')
 
-env = process.env.NODE_ENV = process.env.NODE_ENV || 'development'
-envConfig = require('./env')[env]
-
 //error catching function
 const catchAsync = fn => {
   return (req, res, next) => {
@@ -36,6 +33,7 @@ const catchAsync = fn => {
 }
 
 module.exports = function(app){
+  router.get('/', function(req,res){res.send("Hello World!")})
   router.get('/customers', getFunctions.allCustomers)
   router.post('/img', upload.single('avatar'),fileUpload.upload)
   

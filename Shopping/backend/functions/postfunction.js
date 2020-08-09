@@ -1,6 +1,5 @@
 const {Customer,Product} = require('../models')
 const AppError = require('./error')
-const { findCustomerByEmail } = require('./getfunction')
 
 const postFunctions = {
     async signUp(req, res, next){

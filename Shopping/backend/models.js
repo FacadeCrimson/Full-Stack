@@ -1,10 +1,9 @@
 const mongoose = require('mongoose')
 mongoose.Promise = require('bluebird')
+require('dotenv').config()
 
-env = process.env.NODE_ENV = process.env.NODE_ENV || 'development',
-envConfig = require('./env')[env]
-
-mongoose.connect(envConfig.db, {useNewUrlParser: true, useUnifiedTopology: true})
+const database = "mongodb+srv://"+process.env.DBUSER+":"+process.env.DBPASSWORD+"@cluster0.jpxdz.mongodb.net/"+process.env.DBNAME+"?retryWrites=true&w=majority"
+mongoose.connect(!process.env.ENV?process.env.DB:database, {useNewUrlParser: true, useUnifiedTopology: true})
 
 mongoose.connection.on('connected', function () {  
   console.log(`Database connection open to ${mongoose.connection.host} ${mongoose.connection.name}`);

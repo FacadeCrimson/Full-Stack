@@ -4,9 +4,7 @@ const cors = require('cors')
 const methodOverride = require('method-override')
 const cookieParser = require('cookie-parser')
 const AppError = require('./functions/error')
-
-env = process.env.NODE_ENV = process.env.NODE_ENV || 'development'
-envConfig = require('./env')[env]
+require('dotenv').config()
 
 const app = express()
 app.use(bodyParser.json())
@@ -15,14 +13,14 @@ app.use(cookieParser())
 app.use(methodOverride())
 
 var corsOptions = {
-    origin: envConfig.frontend,
+    origin: process.env.FRONTEND,
     methods: "GET,HEAD,PUT,PATCH,POST,DELETE",
     optionsSuccessStatus: 200
 }
 app.use(cors(corsOptions))
 
 var allowCrossDomain = function(req, res, next) {
-  res.header('Access-Control-Allow-Origin', envConfig.frontend)
+  res.header('Access-Control-Allow-Origin', process.env.FRONTEND)
   res.header('Access-Control-Allow-Methods', "GET,HEAD,PUT,PATCH,POST,DELETE")
   res.header('Access-Control-Allow-Headers', 'Authorization')
   next()
@@ -47,4 +45,4 @@ app.use(function (err, req, res, next) {
     })
 })
   
-app.listen(envConfig.port)
+app.listen(process.env.PORT)
