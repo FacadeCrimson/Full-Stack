@@ -1,9 +1,22 @@
 import React from 'react'
 import Head from 'next/head'
-import Layout, { siteTitle } from '../components/layout'
 import Link from 'next/link'
+import {useState, useEffect } from 'react'
+import Layout, { siteTitle } from '../components/layout'
 
 export default function Home() {
+  useEffect(() => {
+    async function fetchData() {
+        let server=process.env.NEXT_PUBLIC_SERVER
+        let res = await fetch(server+"/allproducts")
+        let json = await res.json()
+        console.log(json)
+    }
+    fetchData()
+  }, []
+
+  )
+  
   return (
     <Layout>
       <Head>
