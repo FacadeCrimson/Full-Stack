@@ -3,7 +3,7 @@ import { useState} from 'react'
 import Layout, { siteTitle } from './layout'
 import useInterval from '../lib/useInterval'
 
-export default function Loading(){
+export default function Temp(){
 
     const [number, setNumber] = useState(1)
     useInterval(() => {
