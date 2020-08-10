@@ -7,9 +7,10 @@ export default function Logout(){
     const { logout } = useAuth0()
     const router = useRouter()
     const [path,setPath]=useState(router.asPath)
+    const returnTo =process.env.NEXT_PUBLIC_AUTH0_CALLBACK_URL
 
     function logoutWithRedirect(){
-        logout()
+        logout({returnTo:returnTo.substring(0,returnTo.length-8)})
         if(shroud.has(path)){
             router.push('/')
         }
