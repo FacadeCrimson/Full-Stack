@@ -11,7 +11,8 @@ function User() {
     const { email } = user
     const params = {email:email}
     const response = useGetData('/check',params)
-    return <Layout>
+    return !response?<div></div>:
+    <Layout>
             <Head>
                 <title>{siteTitle}</title>
             </Head>
@@ -21,12 +22,12 @@ function User() {
                     <h2>Welcome {response.username} !</h2>
                 </div>
                 <div className="viewrow">
-                    <div className="subtitle">View History</div>
-                    <div className="item"> {response.history.map(data=><Itemcard name={data.name} img={data.img} price={data.price} ratings={data.ratings}></Itemcard> )}</div>
+                    <div className="subtitle">Most Recent View History</div>
+                    <div className="item"> {response.history.slice(response.history.length>20?history.length-20:0).reverse().map(data=><Itemcard name={data.name} img={data.img} price={data.price} ratings={data.ratings}></Itemcard> )}</div>
                 </div>
                 <div className="viewrow">
-                    <div className="subtitle">Shopping Cart</div>
-                    <div className="item">{}</div>
+                    <div className="subtitle">Shopping Cart<div className="redirect"><Link href='/cart'><a>Manage Cart</a></Link></div></div>
+                    <div className="item">{response.cart.map(data=><Itemcard name={data.product_id.name} img={data.product_id.img} price={data.product_id.price} ratings={data.product_id.ratings}></Itemcard> )}</div>
                 </div>
                 <div className="viewrow">
                     <div className="subtitle">Previous Orders</div>
@@ -34,7 +35,7 @@ function User() {
                 </div>
                 <div className="viewrow">
                     <div className="subtitle">Options</div>
-                    <div className="item">Modify Information, Delete Account</div>
+                    <div className="item"><Link href='/cart'><a>Modify Infomation</a></Link>&nbsp;&nbsp;&nbsp;<Link href='/cart'><a>Delete Account</a></Link></div>
                 </div>
             </div>
             
@@ -57,13 +58,20 @@ function User() {
                 }
                 .viewrow{
                     width:100%;
-                    height:200px;
-                    border: 1px solid grey;
-                    margin:10px 0 ;
+                    height:220px;
+                    margin:20px 0;
+                    box-shadow: 0px 0px 20px #606060;
+                    border-radius:15px;
+                    padding:10px 10px;
+                }
+                .redirect{
+                    display:inline-block;
+                    float:right;
                 }
                 .item{
                     height:160px;
                     margin-top:10px;
+                    display: flex;
                     overflow:scroll;
                     overflow-y: hidden;
                     white-space:nowrap;

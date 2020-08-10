@@ -15,7 +15,7 @@ const postFunctions = {
     async recordHistory(req, res, next){
         const temp=req.body
         const {email,id}=temp
-        await Customer.findOneAndUpdate({ Email: email }, {$push:{ history:id }},function (err, raw) {})
+        await Customer.findOneAndUpdate({ Email: email }, {$push:{ history:id }})
     
         res.send({"data":"OK"})
     },
@@ -33,7 +33,6 @@ const postFunctions = {
             { "arrayFilters": [{"outer.product_id": temp.itemid}]},
         )
         if (!result){
-            console.log(temp)
             await Customer.findOneAndUpdate(
                 { 'Email': temp.email },
                 {$push:{cart:{product_id:temp.itemid,quantity:temp.quantity}}}
@@ -47,6 +46,10 @@ const postFunctions = {
             {  'Email': temp.email},
             { $pull: { cart : { "product_id" :  temp.itemid} } }
         )
+        res.send({"data":"OK"})
+    },
+
+    async addListing(req, res, next){
         res.send({"data":"OK"})
     },
 }

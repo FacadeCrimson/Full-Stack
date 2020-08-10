@@ -14,7 +14,8 @@ function Cart() {
     const { email } = user
     const params = {email:email}
     const response = useGetData('/getcart',params)
-    return <Layout>
+    return !response?<div></div>:
+    <Layout>
             <Head>
                 <title>{siteTitle}</title>
             </Head>

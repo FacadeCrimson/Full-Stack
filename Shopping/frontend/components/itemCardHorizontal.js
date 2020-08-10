@@ -28,6 +28,7 @@ export default function Itemcard (props){
             float:right;
             text-align:right;
             padding:30px;
+            padding-top:6%;
             line-height:40px;
         }
       `}</style>

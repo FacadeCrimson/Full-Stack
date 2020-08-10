@@ -59,14 +59,15 @@ export default class Post extends React.Component {
         height:50px;
       }
       .topleft{
-        width:200px;
+        width:202px;
         height:100%;
         float:left;
-        background-color:yellow;
+        border:1px solid #606060
       }
       .topright{
         width:auto;
         height:100%;
+        border:1px solid #606060
       }
       .mainbottom{
         min-height:500px;
@@ -74,6 +75,7 @@ export default class Post extends React.Component {
       }
       .mainleft{
         float: left;
+        border:1px solid #606060
       }
       .mainright{
         float: left;
@@ -124,7 +126,6 @@ class Itemcard extends React.Component{
           width:250px;
           padding:10px;
           padding-top:20px;
-          background-color:yellow;
           border:black solid 1px;
           margin:0 41px;
           float:left;

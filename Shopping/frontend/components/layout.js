@@ -50,13 +50,11 @@ export default function Layout({ children }) {
       <footer>
         <div className={`${styles.category} ${styles.footer}`}>
         <Link href="/about" ><a>About</a></Link>
-          <a>Acknowledgement</a>
-          <a>Contact</a>
-          <a>Feedback</a>
-          <Link href="/user" ><a>User</a></Link>
-          <Link href="/management" >
-              <a>Management</a>
-          </Link>
+        <Link href="/acknowledgement" ><a>Acknowledgement</a></Link>
+        <Link href="/contact" ><a>Contact</a></Link>
+        <Link href="/feedback" ><a>Feedback</a></Link>
+        <Link href="/user" ><a>User</a></Link>
+        <Link href="/management" ><a>Management</a></Link>
         </div>
         <div className={`${styles.category} ${styles.footer}`}>© 2020 One-stop Grocery</div>
       </footer>

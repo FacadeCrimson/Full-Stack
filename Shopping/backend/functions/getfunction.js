@@ -29,8 +29,14 @@ const getFunctions = {
     await customer.populate({
       path: 'history',
       select: 'name img price ratings'
+    }).populate({
+      path: 'cart',
+      populate:{
+        path:'product_id',
+        select: 'name img price ratings',
+      }
     }).execPopulate()
-    res.json({"username":customer.Username,"history":customer.history})
+    res.json({"username":customer.Username,"history":customer.history,"cart":customer.cart})
   },
 
   async getCart(req, res, next){
@@ -50,10 +56,3 @@ const getFunctions = {
 }
 
 module.exports = getFunctions
-
-// var monthAgo = new Date();
-// monthAgo.setMonth(monthAgo.getMonth() - 1);
-// User.find({ admin: true }).where('created_at').gt(monthAgo).exec(function(err, users) {
-//   if (err) throw err;
-//   console.log(users);
-// });

@@ -48,5 +48,7 @@ module.exports = function(app){
   router.post('/cart',jwtCheck, postFunctions.cart)
   router.post('/removeitem',jwtCheck, postFunctions.removeItem)
 
+  router.post('/addlisting',jwtCheck, postFunctions.removeItem)
+
   app.use('/', router)
 }

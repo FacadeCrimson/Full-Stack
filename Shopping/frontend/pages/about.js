@@ -1,90 +1,16 @@
-import React from 'react'
 import Head from 'next/head'
-import Link from 'next/link'
-import {useState, useEffect } from 'react'
-import Layout, { siteTitle } from '../components/layout'
+import Layout from '../components/layout'
+import Article from '../components/article'
 
-export default function Home() {
-  useEffect(() => {
-    async function fetchData() {
-        let server=process.env.NEXT_PUBLIC_SERVER
-        let res = await fetch(server+"/allproducts")
-        let json = await res.json()
-        console.log(json)
-    }
-    fetchData()
-  }, []
-
-  )
+export default function About() {
   
   return (
     <Layout>
       <Head>
-        <title>{siteTitle}</title>
-
+        <title>About</title>
       </Head>
-      <App></App>
-      <style jsx>{`
-    `}</style>
+      <Article title="About" content={["This is my personal project where I try to realise a Single-Page Application for online grocery store. I build the website and API server from ground up, with self-sufficient log in/out, search, filter, comment, history and cart functions. Authorization code flow implemented using Auth0 with PKCE.",
+                                      "The project is developed in Node.js environment. API is facilitated using Express framework and MongoDB database with data models and interactions. The frontend is polished with Next.js and React."]}></Article>
     </Layout>
   )
 }
-
-  const themes = {
-    light: {
-      foreground: '#000000',
-      background: '#eeeeee',
-    },
-    dark: {
-      foreground: '#ffffff',
-      background: '#222222',
-    },
-  }
-
-  const ThemeContext = React.createContext({
-    theme: themes.dark,
-    toggleTheme: () => {},
-  })
-
-  function ThemeTogglerButton() {
-    return (
-      <ThemeContext.Consumer>
-        {({theme, toggleTheme}) => (
-          <button
-            onClick={toggleTheme}
-            style={{backgroundColor: theme.background}}>
-            Toggle Theme
-          </button>
-        )}
-      </ThemeContext.Consumer>
-    )
-  }
-
-
-class App extends React.Component {
-    constructor(props) {
-      super(props);
-  
-      this.toggleTheme = () => {
-        this.setState(state => ({
-          theme:
-            state.theme === themes.dark
-              ? themes.light
-              : themes.dark,
-        }))
-      }
-  
-      this.state = {
-        theme: themes.light,
-        toggleTheme: this.toggleTheme,
-      }
-    }
-  
-    render() {
-      return (
-        <ThemeContext.Provider value={this.state}>
-          <ThemeTogglerButton />
-        </ThemeContext.Provider>
-      );
-    }
-  }
