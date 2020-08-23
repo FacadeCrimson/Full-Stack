@@ -19,6 +19,7 @@
     "express-session": "^1.17.1",
     "graphql-yoga": "^1.18.3",
     "jwks-rsa": "^1.9.0",
-    "method-override": "^3.0.0"
+    "method-override": "^3.0.0",
+    "redis": "^3.0.2"
   }
 }
