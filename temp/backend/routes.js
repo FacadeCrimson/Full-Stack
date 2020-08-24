@@ -1,3 +1,5 @@
+redisFunctions=require('./functions/checkredis')
+
 const express = require('express')
 router = express.Router()
 

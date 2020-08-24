@@ -20,6 +20,10 @@
     "graphql-yoga": "^1.18.3",
     "jwks-rsa": "^1.9.0",
     "method-override": "^3.0.0",
+    "prisma-client-lib": "^1.34.10",
     "redis": "^3.0.2"
+  },
+  "devDependencies": {
+    "@prisma/cli": "^2.5.1"
   }
 }
