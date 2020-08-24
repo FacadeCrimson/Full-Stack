@@ -7,9 +7,10 @@ const AppError = require('./functions/error')
 require('dotenv').config()
 
 const redis = require('redis')
-var client = redis.createClient(process.env.RDS_PORT, process.env.RDS_HOST, {no_ready_check: true});
-// client.auth('password', function (err) {
-//     if (err) throw err
+var client = redis.createClient(process.env.RDS_PORT, process.env.RDS_HOST, {no_ready_check: true})
+// auth_pass:process.env.RDS_PWD
+// client.auth(process.env.RDS_PWD, function (err) {
+//     console.log(err)
 // })
 
 client.on('error', function (err) {
