@@ -17,14 +17,14 @@ export default function Home() {
       <div className="imggrid">
         <div id="column1">
           <div id="mainimg"><img src="/images/ogimage.jpg"></img></div>
-          <div className="subimg1"> <Subimage name="vegetable"></Subimage></div>
-          <div className="subimg1"> <Subimage name="fruit"></Subimage></div>
-          <div className="subimg1"> <Subimage name="meat"></Subimage></div>
+          <div className="subimg1"> <Subimage name="Vegetable"></Subimage></div>
+          <div className="subimg1"> <Subimage name="Fruit"></Subimage></div>
+          <div className="subimg1"> <Subimage name="Meat"></Subimage></div>
         </div>
         <div id="column2">
-          <div className="subimg2"><Subimage name="grain"></Subimage></div>
-          <div className="subimg2"> <Subimage name="dairy"></Subimage></div>
-          <div className="subimg2"> <Subimage name="drink"></Subimage></div>
+          <div className="subimg2"><Subimage name="Grain"></Subimage></div>
+          <div className="subimg2"> <Subimage name="Dairy"></Subimage></div>
+          <div className="subimg2"> <Subimage name="Drink"></Subimage></div>
           <div className="subimg2" id="signup" onClick={() => loginWithRedirect({screen_hint: "signup",})}> <div>Signup Now!</div> <div>Enjoy membership benefits!</div></div>
         </div>
         
