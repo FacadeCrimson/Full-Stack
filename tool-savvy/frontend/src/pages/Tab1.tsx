@@ -18,6 +18,10 @@ const Tab1: React.FC = () => {
           </IonToolbar>
         </IonHeader>
         <ExploreContainer name="Tab 1 page" />
+          <div>There is a famous saying that goes: "Don't be obsessed with tools." and another one: "I suppose it is tempting, if the only tool you have is a hammer, to treat everything as if it were a nail."
+              <p>This app aims to help you become savvy about tools, and in turn, be a master of tools.</p>
+              <p>After all, it's what we accomplish with tools that matters.</p>
+          </div>
       </IonContent>
       <IonFooter>
           <IonToolbar>
