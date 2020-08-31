@@ -95,8 +95,8 @@ export default function Home() {
 function Subimage(props){
   const label=props.name
   return <div className="wrapper">
-    <Link href="/category/[navi]" as={`/category/${props.name}`}><img src={`/images/${props.name}.jpg`}></img></Link>
-    <div className="centered">{label.toUpperCase()}</div>
+    <Link href="/category/[navi]" as={`/category/${label}`}><img src={`/images/${label}.jpg`}></img></Link>
+    <Link href="/category/[navi]" as={`/category/${label}`}><div className="centered">{label.toUpperCase()}</div></Link>
      <style jsx>{`
     img{
     height: 300px;
@@ -111,6 +111,9 @@ function Subimage(props){
   }
   .wrapper:hover > .centered{
     z-index:1;
+  }
+  .centered:hover{
+    cursor:pointer;
   }
 
   .centered{
