@@ -1,5 +1,5 @@
 import React, {useState, useEffect} from 'react';
-import { IonContent, IonHeader, IonPage, IonTitle, IonToolbar, IonFooter, 
+import { IonContent, IonHeader, IonPage, IonTitle, IonToolbar, IonFooter, IonRouterOutlet,
 	IonCard, IonCardHeader, IonCardSubtitle, IonCardTitle, IonCardContent,
 	IonItem, IonIcon, IonLabel, IonButton, IonGrid, IonRow, IonCol
 	} from '@ionic/react';
@@ -89,9 +89,15 @@ const Tab1: React.FC = () => {
       </IonGrid>
 
       <IonCard>
-        <IonItem href="#" className="ion-activated">
+        <IonItem href="/about" className="ion-activated">
           <IonIcon icon={wifi} slot="start" />
-          <IonLabel>Card Link Item 1 activated</IonLabel>
+          <IonLabel>About</IonLabel>
+        </IonItem>
+      </IonCard>
+	  <IonCard>
+        <IonItem href="/detail" className="ion-activated">
+          <IonIcon icon={wifi} slot="start" />
+          <IonLabel>Detail</IonLabel>
         </IonItem>
       </IonCard>
       </IonContent>
