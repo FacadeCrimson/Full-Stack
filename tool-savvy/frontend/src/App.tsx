@@ -15,7 +15,8 @@ import Tab1 from './pages/Tab1';
 import Tab2 from './pages/Tab2';
 import Tab3 from './pages/Tab3';
 import About from './pages/About';
-import Detail from './pages/Detail';
+import Comp1 from './pages/Comp1';
+import Comp2 from './pages/Comp2';
 
 /* Core CSS required for Ionic components to work properly */
 import '@ionic/react/css/core.css';
@@ -45,7 +46,8 @@ const App: React.FC = () => (
           <Route path="/tab2" component={Tab2} exact={true} />
           <Route path="/tab3" component={Tab3} />
           <Route path="/about" component={About} exact={true} />
-          <Route path="/detail" component={Detail} exact={true} />
+          <Route path="/comp1" component={Comp1} exact={true} />
+          <Route path="/comp2" component={Comp2} exact={true} />
           <Route path="/" render={() => <Redirect to="/tab1" />} exact={true} />
         </IonRouterOutlet>
         <IonTabBar slot="bottom">

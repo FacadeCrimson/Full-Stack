@@ -1,12 +1,11 @@
 import React, { useState } from 'react';
 import { IonContent, IonHeader, IonPage, IonTitle, IonToolbar, IonFooter, 
     IonActionSheet, IonAlert, IonBadge, IonRippleEffect,IonList, IonItemDivider, IonChip, IonAvatar, IonDatetime ,
-	IonCard, IonCardHeader, IonCardSubtitle, IonCardTitle, IonCardContent, IonCheckbox,
-	IonItem, IonIcon, IonLabel, IonButton, IonGrid, IonRow, IonCol, IonText
+    IonCheckbox,IonItem, IonIcon, IonLabel, IonButton, IonGrid, IonRow, IonCol, IonText
     } from '@ionic/react';
 import { trash, share, caretForwardCircle, heart, close, pin, closeCircle} from 'ionicons/icons';
 
-const Detail: React.FC = () => {
+const Comp1: React.FC = () => {
     const [showActionSheet, setShowActionSheet] = useState(false);
 
     const [showAlert1, setShowAlert1] = useState(false);
@@ -456,7 +455,7 @@ const Detail: React.FC = () => {
   );
 };
 
-export default Detail;
+export default Comp1;
 
 const customYearValues = [2020, 2016, 2008, 2004, 2000, 1996];
 

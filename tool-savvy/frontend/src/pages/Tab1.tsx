@@ -3,7 +3,7 @@ import { IonContent, IonHeader, IonPage, IonTitle, IonToolbar, IonFooter, IonRou
 	IonCard, IonCardHeader, IonCardSubtitle, IonCardTitle, IonCardContent,
 	IonItem, IonIcon, IonLabel, IonButton, IonGrid, IonRow, IonCol
 	} from '@ionic/react';
-import { pin, wifi, wine, warning, walk } from 'ionicons/icons';
+import { pin, wifi} from 'ionicons/icons';
 import './Tab1.css';
 
 const Tab1: React.FC = () => {
@@ -95,9 +95,15 @@ const Tab1: React.FC = () => {
         </IonItem>
       </IonCard>
 	  <IonCard>
-        <IonItem href="/detail" className="ion-activated">
+        <IonItem href="/comp1" className="ion-activated">
           <IonIcon icon={wifi} slot="start" />
-          <IonLabel>Detail</IonLabel>
+          <IonLabel>Component1</IonLabel>
+        </IonItem>
+      </IonCard>
+	  <IonCard>
+        <IonItem href="/comp2" className="ion-activated">
+          <IonIcon icon={wifi} slot="start" />
+          <IonLabel>Component2</IonLabel>
         </IonItem>
       </IonCard>
       </IonContent>
