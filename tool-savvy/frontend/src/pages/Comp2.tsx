@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { IonContent, IonHeader, IonPage, IonTitle, IonToolbar, IonFooter, 
-    IonFabList, IonFabButton, IonFab, IonList, IonItemDivider, IonInput, IonTextarea, IonNote,
+    IonFabList, IonFabButton, IonFab, IonList, IonItemDivider, IonInput, IonTextarea, IonNote, IonModal ,IonPopover,
 	IonCard, IonCardHeader, IonCardSubtitle, IonCardTitle, IonCardContent, IonCheckbox,
 	IonItem, IonIcon, IonLabel, IonButton, IonGrid, IonRow, IonCol, IonText
     } from '@ionic/react';
@@ -10,6 +10,9 @@ const Comp2: React.FC = () => {
 
     const [text, setText] = useState<string>();
     const [number, setNumber] = useState<number>();
+    const [showModal, setShowModal] = useState(false);
+    const [showPopover, setShowPopover] = useState(false);
+
   return (
     <IonPage>
         <IonHeader>
@@ -190,6 +193,24 @@ const Comp2: React.FC = () => {
             <IonLabel>Note (Start)</IonLabel>
         </IonItem> 
 
+      <IonModal
+        isOpen={showModal}
+        cssClass='my-custom-class'
+        swipeToClose={true}
+        onDidDismiss={() => setShowModal(false)}>
+          <p>This is modal content</p>
+          <IonButton onClick={() => setShowModal(false)}>Close Modal</IonButton>
+      </IonModal>
+      <IonButton onClick={() => setShowModal(true)}>Show Modal</IonButton>
+
+      <IonPopover
+        isOpen={showPopover}
+        cssClass='my-custom-class'
+        onDidDismiss={e => setShowPopover(false)}
+      >
+        <p>This is popover content</p>
+      </IonPopover>
+      <IonButton onClick={() => setShowPopover(true)}>Show Popover</IonButton>
 
       </IonContent>
     </IonPage>

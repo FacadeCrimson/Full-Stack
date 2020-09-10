@@ -106,6 +106,19 @@ const Tab1: React.FC = () => {
           <IonLabel>Component2</IonLabel>
         </IonItem>
       </IonCard>
+
+      <IonCard>
+        <IonItem href="/user/1" className="ion-activated">
+          <IonIcon icon={wifi} slot="start" />
+          <IonLabel>User1</IonLabel>
+        </IonItem>
+      </IonCard>
+      <IonCard>
+        <IonItem href="/user/2" className="ion-activated">
+          <IonIcon icon={wifi} slot="start" />
+          <IonLabel>User2</IonLabel>
+        </IonItem>
+      </IonCard>
       </IonContent>
 
       <IonFooter>
