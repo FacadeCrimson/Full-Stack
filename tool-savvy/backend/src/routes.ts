@@ -12,7 +12,17 @@ import * as contactController from "./controllers/contact";
 import * as passportConfig from "./config/passport";
 
 export default function(app: any){
-  router.get("/test", function(req,res){res.send("Hello World!");});
+  router.get("/test", function(req,res){res.json([
+    {
+      "id": 1, "text": "review PR"
+    },
+    {
+      "id": 2, "text": "update readme"
+    },
+    {
+      "id": 3, "text": "write docs"
+    }
+  ]);});
 
     /**
      * Primary app routes.
