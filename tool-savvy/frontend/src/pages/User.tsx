@@ -15,7 +15,9 @@ const User: React.FC<UserProps> = ({match}) => {
             <IonTitle>{match.params.id}</IonTitle>
             </IonToolbar>
         </IonHeader>
-        
+        <IonContent>
+
+        </IonContent>
     </IonPage>
   );
 };

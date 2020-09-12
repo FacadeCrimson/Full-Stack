@@ -1,5 +1,5 @@
 import React, {useState, useEffect} from 'react';
-import { IonContent, IonHeader, IonPage, IonTitle, IonToolbar, IonFooter, IonRouterOutlet,
+import { IonContent, IonHeader, IonPage, IonTitle, IonToolbar,
 	IonCard, IonCardHeader, IonCardSubtitle, IonCardTitle, IonCardContent,
 	IonItem, IonIcon, IonLabel, IonButton, IonGrid, IonRow, IonCol
 	} from '@ionic/react';
@@ -50,30 +50,30 @@ const Tab1: React.FC = () => {
 
 		<IonGrid>
         <IonRow>
-			<IonCol size="3" offset="1">
-				<IonCard>
-					<IonItem>
-					<IonIcon icon={pin} slot="start" />
-					<IonButton fill="outline" slot="end">View</IonButton>
-					</IonItem>
-					<IonCardContent>
-					{data?data:"Nothing to display yet!"}
-					</IonCardContent>
-				</IonCard>
+			<IonCol size="12"  sizeMd="3" offsetMd="1">
+          <IonCard>
+            <IonItem>
+            <IonIcon icon={pin} slot="start" />
+            <IonButton fill="outline" slot="end">View</IonButton>
+            </IonItem>
+            <IonCardContent>
+            {data?data:"Nothing to display yet!"}
+            </IonCardContent>
+          </IonCard>
 			</IonCol>
-          	<IonCol size="3" offset="1">
-				<IonCard>
-					<IonItem>
-					<IonIcon icon={pin} slot="start" />
-					<IonButton fill="outline" slot="end">View</IonButton>
-					</IonItem>
-					<IonCardContent>
-					This is content, without any paragraph or header tags,
-					within an ion-cardContent element.
-					</IonCardContent>
-				</IonCard>
-          	</IonCol>
-          	<IonCol size="3" offset="1">
+      <IonCol size="12"  sizeMd="3" offsetMd="1">
+          <IonCard>
+            <IonItem>
+            <IonIcon icon={pin} slot="start" />
+            <IonButton fill="outline" slot="end">View</IonButton>
+            </IonItem>
+            <IonCardContent>
+            This is content, without any paragraph or header tags,
+            within an ion-cardContent element.
+            </IonCardContent>
+          </IonCard>
+      </IonCol>
+          	<IonCol size="12"  sizeMd="3" offsetMd="1">
 		  		<IonCard>
 					<IonItem>
 					<IonIcon icon={pin} slot="start" />
@@ -129,12 +129,6 @@ const Tab1: React.FC = () => {
         <IonItem href="/dashboard" className="ion-activated">
           <IonIcon icon={wifi} slot="start" />
           <IonLabel>Dashboard</IonLabel>
-        </IonItem>
-      </IonCard>
-      <IonCard>
-        <IonItem href="/map" className="ion-activated">
-          <IonIcon icon={wifi} slot="start" />
-          <IonLabel>Map</IonLabel>
         </IonItem>
       </IonCard>
       </IonContent>

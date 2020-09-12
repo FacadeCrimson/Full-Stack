@@ -1,8 +1,7 @@
 import React, { useState } from 'react';
-import { IonContent, IonHeader, IonPage, IonTitle, IonToolbar, IonFooter, 
+import { IonContent, IonHeader, IonPage, IonTitle, IonToolbar,
     IonFabList, IonFabButton, IonFab, IonList, IonItemDivider, IonInput, IonTextarea, IonNote, IonModal ,IonPopover,
-	IonCard, IonCardHeader, IonCardSubtitle, IonCardTitle, IonCardContent, IonCheckbox,
-	IonItem, IonIcon, IonLabel, IonButton, IonGrid, IonRow, IonCol, IonText
+	IonItem, IonIcon, IonLabel, IonButton, IonGrid, IonRow, IonCol, 
     } from '@ionic/react';
 import { add, settings, share, person, arrowForwardCircle, arrowBackCircle, arrowUpCircle, logoVimeo, logoFacebook, logoInstagram, logoTwitter } from 'ionicons/icons';
 

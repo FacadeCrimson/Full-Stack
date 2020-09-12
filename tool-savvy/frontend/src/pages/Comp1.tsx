@@ -1,9 +1,9 @@
 import React, { useState } from 'react';
-import { IonContent, IonHeader, IonPage, IonTitle, IonToolbar, IonFooter, 
+import { IonContent,  IonPage, IonToolbar, IonFooter, 
     IonActionSheet, IonAlert, IonBadge, IonRippleEffect,IonList, IonItemDivider, IonChip, IonAvatar, IonDatetime ,
-    IonCheckbox,IonItem, IonIcon, IonLabel, IonButton, IonGrid, IonRow, IonCol, IonText
+    IonCheckbox,IonItem, IonIcon, IonLabel, IonButton, 
     } from '@ionic/react';
-import { trash, share, caretForwardCircle, heart, close, pin, closeCircle} from 'ionicons/icons';
+import { trash, share, caretForwardCircle, heart, close, closeCircle} from 'ionicons/icons';
 
 const Comp1: React.FC = () => {
     const [showActionSheet, setShowActionSheet] = useState(false);
@@ -336,7 +336,7 @@ const Comp1: React.FC = () => {
 
         <IonChip>
           <IonAvatar>
-            <img src="https://gravatar.com/avatar/dba6bae8c566f9d4041fb9cd9ada7741?d=identicon&f=y" />
+            <img src="https://gravatar.com/avatar/dba6bae8c566f9d4041fb9cd9ada7741?d=identicon&f=y" alt="avatar"/>
           </IonAvatar>
           <IonLabel>Avatar Chip</IonLabel>
           <IonIcon icon={closeCircle} />
