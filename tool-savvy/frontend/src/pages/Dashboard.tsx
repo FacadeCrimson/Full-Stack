@@ -1,26 +1,30 @@
-import React, { useEffect} from 'react';
-import { IonContent, IonHeader, IonPage, IonTitle, IonToolbar, IonCheckbox, IonText,IonButton, IonSelect, IonSelectOption,
+import React,{useState} from 'react';
+import { IonContent, IonHeader, IonPage, IonTitle, IonToolbar, IonCheckbox, IonText, IonSelect, IonSelectOption,
 	IonCard, IonCardHeader, IonCardSubtitle, IonCardTitle, IonCardContent, IonChip, IonList,IonItemDivider,
 	IonItem, IonIcon, IonLabel, IonGrid, IonRow, IonCol
 	} from '@ionic/react';
 import { locate, calendar } from 'ionicons/icons';
 import './Dashboard.css';
-import {store, Kepler} from '../components/Kepler';
-import {KeplerCus1} from '../components/KeplerCus1';
-import ReactDOM from 'react-dom';
-import * as KeplerGl from 'kepler.gl';
+import EmbeddedMap from '../components/EmbeddedMap';
+import nycTrips from '../components/data/nyc-trips.csv';
+import nycTripsSubset from '../components/data/nyc-subset.csv';
 
 const checkboxList = [
     { val: 'Pie Chart', isChecked: true },
     { val: 'Bar Chart', isChecked: false },
     { val: 'Line Chart', isChecked: false }
   ];
+ const mapping:{ [id: string]: any } ={
+    1:nycTrips,
+    2:nycTripsSubset
+ }
 
 const Dashboard: React.FC = () => {
-    useEffect(()=>{
-        KeplerCus1(KeplerGl, store);
-        ReactDOM.render(Kepler, document.getElementById('map'));
-      })
+    const [data,setData]=useState<any>(nycTrips);
+
+    const replaceData=(id:string)=>{
+        setData(mapping[id])
+    }
 
   return (
     <IonPage>
@@ -147,14 +151,13 @@ const Dashboard: React.FC = () => {
 			</IonCol>
             <IonCol sizeMd="2" offsetMd="0" pushMd="8" size="5" offset="1">
                 <IonList>
-                    <IonItem>Filters</IonItem>
-                    <IonItem><IonCheckbox slot="start"  /></IonItem>
-                    <IonItem><IonCheckbox slot="start"  /></IonItem>
-                    <IonItem><IonCheckbox slot="start"  /></IonItem>
+                    <IonItem>Dataset</IonItem>
+                    <IonItem className="select" onClick={()=>{replaceData("1")}}>Dataset 1</IonItem>
+                    <IonItem className="select" onClick={()=>{replaceData("2")}}>Dataset 2</IonItem>
                     </IonList>
 			</IonCol>
             <IonCol sizeMd="8" size="12" pullMd="2" className="canvas">
-                <div id="map">abc</div>
+                <EmbeddedMap csv={data}></EmbeddedMap>
 				
 			</IonCol>
            

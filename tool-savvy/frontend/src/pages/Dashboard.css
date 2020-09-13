@@ -12,8 +12,9 @@ ion-col.canvas{
     height:800px;
 }
 
-.ionicon{
-    color:#f4f4f4,
+.select:hover{
+    cursor:pointer;
+    background-color: lightgoldenrodyellow !important;
 }
 
 @media screen and (max-width: 770px){

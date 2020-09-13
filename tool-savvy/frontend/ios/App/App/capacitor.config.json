@@ -1,5 +1,5 @@
 {
-  "appId": "first.app.try",
+  "appId": "io.ionic.starter",
   "appName": "frontend",
   "bundledWebRuntime": false,
   "npmClient": "npm",
