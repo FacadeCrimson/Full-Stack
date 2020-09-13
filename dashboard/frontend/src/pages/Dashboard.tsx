@@ -1,14 +1,15 @@
 import React,{useState} from 'react';
-import { IonContent, IonHeader, IonPage, IonTitle, IonToolbar, IonCheckbox, IonText, IonSelect, IonSelectOption, IonButton,
+import { IonContent, IonHeader, IonPage, IonTitle, IonToolbar, IonCheckbox, IonText, IonSelect, IonSelectOption, IonButton, IonInput,
 	IonCard, IonCardHeader, IonCardSubtitle, IonCardTitle, IonCardContent, IonChip, IonList,IonItemDivider,
 	IonItem, IonIcon, IonLabel, IonGrid, IonRow, IonCol
 	} from '@ionic/react';
 import { locate, calendar } from 'ionicons/icons';
 import './Dashboard.css';
-import EmbeddedMap from '../components/EmbeddedMap';
+import {EmbeddedMap ,SaveConfigButton} from '../components/MapComponents';
 import nycTrips from '../components/data/nyc-trips.csv';
 import nycTripsSubset from '../components/data/nyc-subset.csv';
 import ReactFileReader from 'react-file-reader';
+import config from '../components/data/nyc-config.json';
 
 const checkboxList = [
     { val: 'Pie Chart', isChecked: true },
@@ -22,6 +23,7 @@ const checkboxList = [
 
 const Dashboard: React.FC = () => {
     const [data,setData]=useState<any>(nycTrips);
+    const [name,setName]=useState<string>("default");
     const replaceData=(id:string)=>{
         setData(mapping[id])
     }
@@ -33,6 +35,26 @@ const Dashboard: React.FC = () => {
             setData(reader.result)
         }
         reader.readAsText(files[0]);
+    }
+
+    const handleUpload = async (files:any) => {
+        const url = process.env.REACT_APP_BACKEND+'/uploaddata'
+        var reader = new FileReader();
+        reader.onload = async function(e) {
+            // Use reader.result
+                const info ={
+                    "name":name
+                }
+                var fd = new FormData()
+                fd.append('info', JSON.stringify(info))
+                fd.append('avatar', new Blob([reader.result as ArrayBuffer]))
+
+                await fetch(url, {
+                method: 'POST',
+                body: fd
+                })
+        }
+        reader.readAsArrayBuffer(files[0]);
     }
 
   return (
@@ -161,14 +183,25 @@ const Dashboard: React.FC = () => {
                     <IonItem className="select" onClick={()=>{replaceData("1")}}>Sample Dataset 1</IonItem>
                     <IonItem className="select" onClick={()=>{replaceData("2")}}>Sample Dataset 2</IonItem>
                     <IonItem>
+                        <SaveConfigButton></SaveConfigButton>
+                    </IonItem>
+                    <IonItem>
                         <ReactFileReader handleFiles={handleFiles} fileTypes={'.csv'}>
                             <IonButton>Upload</IonButton>
+                        </ReactFileReader>
+                    </IonItem>
+                    <IonItemDivider></IonItemDivider>
+                    <IonItem>
+                        <IonLabel>FileName</IonLabel>
+                        <IonInput placeholder="filename"></IonInput>
+                        <ReactFileReader handleFiles={handleUpload} fileTypes={'.csv'}>
+                        <IonButton>Upload</IonButton>
                         </ReactFileReader>
                     </IonItem>
                     </IonList>
 			</IonCol>
             <IonCol sizeMd="8" size="12" pullMd="2" className="canvas">
-                <EmbeddedMap csv={data}></EmbeddedMap>
+                <EmbeddedMap csv={data} conf={config}></EmbeddedMap>
 				
 			</IonCol>
            

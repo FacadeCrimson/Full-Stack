@@ -1,5 +1,6 @@
 import React from 'react';
 import {Provider} from 'react-redux';
+import { Reducer } from 'redux';
 import {handleActions} from 'redux-actions';
 import {routerReducer} from 'react-router-redux';
 import {combineReducers, applyMiddleware, compose, createStore} from 'redux';
@@ -25,7 +26,7 @@ const reducers = (function createReducers() {
             activeSidePanel: null,  
             currentModal: null      
         }
-      }),
+      }) as Reducer<any,any>,
       app: handleActions({
         // empty
       }, initialAppState),
