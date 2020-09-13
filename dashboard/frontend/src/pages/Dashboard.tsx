@@ -35,7 +35,7 @@ const Dashboard: React.FC = () => {
             setCurrent('nyc-trips')
             setData(nycTrips)
         }else{
-            fetchData(setList)
+            await fetchData(setList)
         }
     }
 
@@ -78,8 +78,8 @@ const Dashboard: React.FC = () => {
                 method: 'POST',
                 body: fd
                 })
-                setCurrent(name)
                 setName("default")
+                await fetchData(setList)
         }
         reader.readAsArrayBuffer(files[0]);
     }
@@ -200,10 +200,10 @@ const Dashboard: React.FC = () => {
 				<IonList>
                 <IonItem>Graph</IonItem>
 
-                    {checkboxList.map(({ val, isChecked }, i) => (
+                    {Object.keys(checkboxList).map((key, i) => (
                         <IonItem key={i}>
-                        <IonLabel>{val}</IonLabel>
-                        <IonCheckbox slot="end" value={val} checked={isChecked} />
+                        <IonLabel>{checkboxList[key].val}</IonLabel>
+                        <IonCheckbox slot="end" value={checkboxList[key].val} checked={checkboxList[key].isChecked} />
                         </IonItem>
                     ))}
                 </IonList>
@@ -212,9 +212,9 @@ const Dashboard: React.FC = () => {
                 <IonList>
                     <IonItem>Dataset</IonItem>
                     {(list.length===0 || !list)?<IonItem>No Data Yet</IonItem>:
-                        list.map((filename)=>(<IonItem key={filename}>
-                            <IonText className="data" onClick={()=>handleClick(filename)}>{filename.split('.')[0]}</IonText>
-                            <IonButton slot="end" color="danger" onClick={()=>handleDelete(filename)}>Delete</IonButton>
+                        Object.keys(list).map((key)=>(<IonItem key={list[key]}>
+                            <IonText className="data" onClick={()=>handleClick(list[key])}>{list[key].split('.')[0]}</IonText>
+                            <IonButton slot="end" color="danger" onClick={()=>handleDelete(list[key])}>Delete</IonButton>
                             </IonItem>))
                     }          
                     <IonItem>

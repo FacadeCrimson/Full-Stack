@@ -44,10 +44,10 @@ return (
         <div>No todos, add some!</div>
         ) : (
             <IonList>
-                {todos.map((todo, i) => (
+                {Object.keys(todos).map((key, i) => (
                     <IonItem key={i}>
                     <IonLabel>
-                        <h2>{todo.text}</h2>
+                        <h2>{todos[key].text}</h2>
                     </IonLabel>
                     <IonIcon data-icon="trash" icon={trash} color="danger" slot="end" />
                     </IonItem>

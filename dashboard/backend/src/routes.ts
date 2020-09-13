@@ -45,7 +45,14 @@ export default function(app: any){
   router.post("/uploadconfig", upload.single("file"), function(req, res, next){
     const dir = path.join(__dirname, "/public/map/config/");
     if (!fs.existsSync(dir)) {fs.mkdirSync(dir,{recursive: true});}
-    fs.writeFile(dir+req.body.name+".json", JSON.stringify(req.body.file), 
+    const file=dir+req.body.name+".json"
+    if(fs.existsSync(file)){
+        fs.unlink(file, (err) => {
+        if (err) {
+          console.error(err);
+          return;}});
+    }
+    fs.writeFile(file, JSON.stringify(req.body.file), 
     function(err){if(err)console.error(err);return;}
     );
     res.status(201).send({ message: "Config Uploaded" });
