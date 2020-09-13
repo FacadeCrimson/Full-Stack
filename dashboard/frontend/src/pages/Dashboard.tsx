@@ -1,5 +1,5 @@
 import React,{useState} from 'react';
-import { IonContent, IonHeader, IonPage, IonTitle, IonToolbar, IonCheckbox, IonText, IonSelect, IonSelectOption,
+import { IonContent, IonHeader, IonPage, IonTitle, IonToolbar, IonCheckbox, IonText, IonSelect, IonSelectOption, IonButton,
 	IonCard, IonCardHeader, IonCardSubtitle, IonCardTitle, IonCardContent, IonChip, IonList,IonItemDivider,
 	IonItem, IonIcon, IonLabel, IonGrid, IonRow, IonCol
 	} from '@ionic/react';
@@ -8,6 +8,7 @@ import './Dashboard.css';
 import EmbeddedMap from '../components/EmbeddedMap';
 import nycTrips from '../components/data/nyc-trips.csv';
 import nycTripsSubset from '../components/data/nyc-subset.csv';
+import ReactFileReader from 'react-file-reader';
 
 const checkboxList = [
     { val: 'Pie Chart', isChecked: true },
@@ -21,9 +22,17 @@ const checkboxList = [
 
 const Dashboard: React.FC = () => {
     const [data,setData]=useState<any>(nycTrips);
-
     const replaceData=(id:string)=>{
         setData(mapping[id])
+    }
+
+    const handleFiles = (files:any) => {
+        var reader = new FileReader();
+        reader.onload = function(e) {
+            // Use reader.result
+            setData(reader.result)
+        }
+        reader.readAsText(files[0]);
     }
 
   return (
@@ -149,8 +158,13 @@ const Dashboard: React.FC = () => {
             <IonCol sizeMd="2" offsetMd="0" pushMd="8" size="5" offset="1">
                 <IonList>
                     <IonItem>Dataset</IonItem>
-                    <IonItem className="select" onClick={()=>{replaceData("1")}}>Dataset 1</IonItem>
-                    <IonItem className="select" onClick={()=>{replaceData("2")}}>Dataset 2</IonItem>
+                    <IonItem className="select" onClick={()=>{replaceData("1")}}>Sample Dataset 1</IonItem>
+                    <IonItem className="select" onClick={()=>{replaceData("2")}}>Sample Dataset 2</IonItem>
+                    <IonItem>
+                        <ReactFileReader handleFiles={handleFiles} fileTypes={'.csv'}>
+                            <IonButton>Upload</IonButton>
+                        </ReactFileReader>
+                    </IonItem>
                     </IonList>
 			</IonCol>
             <IonCol sizeMd="8" size="12" pullMd="2" className="canvas">
