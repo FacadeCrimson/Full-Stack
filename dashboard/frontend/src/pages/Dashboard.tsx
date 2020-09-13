@@ -28,6 +28,17 @@ const Dashboard: React.FC = () => {
         setName(event.target.value)
     }
 
+    const handleDelete = async (filename:string)=>{
+        const url = process.env.REACT_APP_BACKEND+'/deletedata/?name='+filename
+        await fetch(url)
+        if(filename.split('.')[0]===current){
+            setCurrent('nyc-trips')
+            setData(nycTrips)
+        }else{
+            fetchData(setList)
+        }
+    }
+
     const handleClick = async (filename:string)=>{
         const fname = filename.split('.')[0]
         const url1 = process.env.REACT_APP_BACKEND+'/map/data/'+filename
@@ -42,7 +53,6 @@ const Dashboard: React.FC = () => {
             setConf(JSON.parse(json))
         }
         setCurrent(fname)
-        console.log(conf)
     }
 
     const handleFiles = (files:any) => {
@@ -75,22 +85,7 @@ const Dashboard: React.FC = () => {
     }
 
     useEffect(() => {
-        async function fetchData() {
-            const url=process.env.REACT_APP_BACKEND+'/getdatalist'
-            // const token = await  getAccessTokenSilently()
-            // var myHeaders = new Headers()
-            // myHeaders.append("Authorization", `Bearer ${token}`)
-            // var requestOptions = {
-            // method: 'GET',
-            // headers: myHeaders,
-            // redirect: 'follow'
-            // }
-            let res = await fetch(url)
-            let json = await res.json()
-            setList(json)
-        }
-        fetchData()
-        console.log(conf)
+        fetchData(setList)
       }, [current])
 
   return (
@@ -216,8 +211,11 @@ const Dashboard: React.FC = () => {
             <IonCol sizeMd="2" offsetMd="0" pushMd="8" size="5" offset="1">
                 <IonList>
                     <IonItem>Dataset</IonItem>
-                    {list.length===0?<IonItem>No Data Yet</IonItem>:
-                        list.map((filename)=>(<IonItem key={filename} onClick={()=>handleClick(filename)}>{filename.split('.')[0]}</IonItem>))
+                    {(list.length===0 || !list)?<IonItem>No Data Yet</IonItem>:
+                        list.map((filename)=>(<IonItem key={filename}>
+                            <IonText className="data" onClick={()=>handleClick(filename)}>{filename.split('.')[0]}</IonText>
+                            <IonButton slot="end" color="danger" onClick={()=>handleDelete(filename)}>Delete</IonButton>
+                            </IonItem>))
                     }          
                     <IonItem>
                         <SaveConfigButton name={current}></SaveConfigButton>
@@ -275,3 +273,19 @@ const Dashboard: React.FC = () => {
 };
 
 export default Dashboard;
+
+
+async function fetchData(setList:Function) {
+    const url=process.env.REACT_APP_BACKEND+'/getdatalist'
+    // const token = await  getAccessTokenSilently()
+    // var myHeaders = new Headers()
+    // myHeaders.append("Authorization", `Bearer ${token}`)
+    // var requestOptions = {
+    // method: 'GET',
+    // headers: myHeaders,
+    // redirect: 'follow'
+    // }
+    fetch(url).then(response => response.json())
+    .then(data => {
+        setList(data)
+    })}

@@ -46,9 +46,19 @@ export default function(app: any){
     const dir = path.join(__dirname, "/public/map/config/");
     if (!fs.existsSync(dir)) {fs.mkdirSync(dir,{recursive: true});}
     fs.writeFile(dir+req.body.name+".json", JSON.stringify(req.body.file), 
-    function(error){if(error)throw error;}
+    function(err){if(err)console.error(err);return;}
     );
     res.status(201).send({ message: "Config Uploaded" });
+  } 
+  );
+
+  router.get("/deletedata", function(req, res, next){
+    const file = path.join(__dirname, "/public/map/data/"+req.query.name);
+    fs.unlink(file, (err) => {
+      if (err) {
+        console.error(err);
+        return;}});
+    res.status(201).send({ message: "Data Deleted" });
   } 
   );
 

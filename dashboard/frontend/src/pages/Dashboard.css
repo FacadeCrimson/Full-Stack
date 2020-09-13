@@ -12,6 +12,10 @@ ion-col.canvas{
     background-color: lightgoldenrodyellow !important;
 }
 
+.data:hover{
+    cursor:pointer;
+}
+
 @media screen and (max-width: 770px){
     .mapboxgl-map {
         max-width: 100%;
