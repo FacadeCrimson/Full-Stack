@@ -1,1 +1,0 @@
-declare module "react-virtualized/dist/commonjs/AutoSizer";

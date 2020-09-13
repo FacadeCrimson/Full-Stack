@@ -1,9 +1,10 @@
 import nycConfig from './data/nyc-config.json';
-import * as KeplerGl from 'kepler.gl';
+import {processCsvData,KeplerGlSchema,addDataToMap} from 'kepler.gl';
+import { Store } from 'redux';
 
-export const customize =function(store:any,csv:any) {
+export const customize =function(store:Store,csv:string) {
     // Use processCsvData helper to convert csv file into kepler.gl structure {fields, rows}
-    const data = KeplerGl.processCsvData(csv);
+    const data = processCsvData(csv);
     // Create dataset structure
     const dataset = {
       data,
@@ -15,12 +16,12 @@ export const customize =function(store:any,csv:any) {
     };
     const config=nycConfig;
 
-    const loadedData = KeplerGl.KeplerGlSchema.load(
+    const loadedData = KeplerGlSchema.load(
       dataset,
       config
     );
 
-    store.dispatch(KeplerGl.addDataToMap({
+    store.dispatch(addDataToMap({
       datasets: dataset,
       config: loadedData.config,
       options: {
