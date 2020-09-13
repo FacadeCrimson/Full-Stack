@@ -5,12 +5,12 @@ import {customize} from './KeplerLoadData';
 import {IonButton} from '@ionic/react';
 import {KeplerGlSchema} from 'kepler.gl';
 
-interface ContainerProps {
+interface ContainerProps1 {
     csv: string;
     conf:object;
 }
 
-export const EmbeddedMap: React.FC<ContainerProps> = ({csv,conf}) => {
+export const EmbeddedMap: React.FC<ContainerProps1> = ({csv,conf}) => {
     useEffect(()=>{
         customize(store,csv,conf);
         ReactDOM.render(Kepler, document.getElementById('map'));
@@ -19,11 +19,26 @@ export const EmbeddedMap: React.FC<ContainerProps> = ({csv,conf}) => {
   return (<div id="map"></div>);
 };
 
-export const SaveConfigButton: React.FC = () => {
-    const handleSave = ()=>{
-      const newConfig = KeplerGlSchema.getConfigToSave(store.getState().keplerGl.map)
-      console.log(typeof newConfig)
-      console.log(newConfig)
+interface ContainerProps2 {
+  name:string
+}
+
+export const SaveConfigButton: React.FC<ContainerProps2> = ({name}) => {
+    const handleSave = async ()=>{
+         const newConfig = KeplerGlSchema.getConfigToSave(store.getState().keplerGl.map)
+  
+        const url = process.env.REACT_APP_BACKEND+'/uploadconfig'
+
+            var fd = new FormData()
+            fd.append('name', name)
+            fd.append('type', "config")
+            fd.append('file', JSON.stringify(newConfig))
+
+            await fetch(url, {
+            method: 'POST',
+            body: fd
+            })
+    
     }
     return <IonButton onClick={handleSave}>Save Current Config</IonButton>
   }

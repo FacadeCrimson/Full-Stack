@@ -1,31 +1,48 @@
-import React,{useState} from 'react';
+import React,{useState,useEffect} from 'react';
 import { IonContent, IonHeader, IonPage, IonTitle, IonToolbar, IonCheckbox, IonText, IonSelect, IonSelectOption, IonButton, IonInput,
 	IonCard, IonCardHeader, IonCardSubtitle, IonCardTitle, IonCardContent, IonChip, IonList,IonItemDivider,
 	IonItem, IonIcon, IonLabel, IonGrid, IonRow, IonCol
 	} from '@ionic/react';
 import { locate, calendar } from 'ionicons/icons';
 import './Dashboard.css';
+import {doesFileExist} from '../components/Function';
 import {EmbeddedMap ,SaveConfigButton} from '../components/MapComponents';
 import nycTrips from '../components/data/nyc-trips.csv';
-import nycTripsSubset from '../components/data/nyc-subset.csv';
-import ReactFileReader from 'react-file-reader';
 import config from '../components/data/nyc-config.json';
+import ReactFileReader from 'react-file-reader';
 
 const checkboxList = [
     { val: 'Pie Chart', isChecked: true },
     { val: 'Bar Chart', isChecked: false },
     { val: 'Line Chart', isChecked: false }
   ];
- const mapping:{ [id: string]: any } ={
-    1:nycTrips,
-    2:nycTripsSubset
- }
 
 const Dashboard: React.FC = () => {
     const [data,setData]=useState<any>(nycTrips);
+    const [conf,setConf]=useState<object>(config);
     const [name,setName]=useState<string>("default");
-    const replaceData=(id:string)=>{
-        setData(mapping[id])
+    const [list,setList]=useState<Array<string>>([]);
+    const [current,setCurrent]=useState<string>('nyc-trips');
+
+    const handleChange = (event:any)=>{
+        setName(event.target.value)
+    }
+
+    const handleClick = async (filename:string)=>{
+        const fname = filename.split('.')[0]
+        const url1 = process.env.REACT_APP_BACKEND+'/map/data/'+filename
+        const url2 = process.env.REACT_APP_BACKEND+'/map/config/'+fname+'.json'
+        const config = doesFileExist(url2)
+        const res1 = await fetch(url1)
+        const text = await res1.text()
+        setData(text)
+        if(config){
+            const res2 = await fetch(url2)
+            const json = await res2.json()
+            setConf(JSON.parse(json))
+        }
+        setCurrent(fname)
+        console.log(conf)
     }
 
     const handleFiles = (files:any) => {
@@ -42,20 +59,39 @@ const Dashboard: React.FC = () => {
         var reader = new FileReader();
         reader.onload = async function(e) {
             // Use reader.result
-                const info ={
-                    "name":name
-                }
                 var fd = new FormData()
-                fd.append('info', JSON.stringify(info))
-                fd.append('avatar', new Blob([reader.result as ArrayBuffer]))
+                fd.append('name', name)
+                fd.append('type', "data")
+                fd.append('file', new Blob([reader.result as ArrayBuffer]))
 
                 await fetch(url, {
                 method: 'POST',
                 body: fd
                 })
+                setCurrent(name)
+                setName("default")
         }
         reader.readAsArrayBuffer(files[0]);
     }
+
+    useEffect(() => {
+        async function fetchData() {
+            const url=process.env.REACT_APP_BACKEND+'/getdatalist'
+            // const token = await  getAccessTokenSilently()
+            // var myHeaders = new Headers()
+            // myHeaders.append("Authorization", `Bearer ${token}`)
+            // var requestOptions = {
+            // method: 'GET',
+            // headers: myHeaders,
+            // redirect: 'follow'
+            // }
+            let res = await fetch(url)
+            let json = await res.json()
+            setList(json)
+        }
+        fetchData()
+        console.log(conf)
+      }, [current])
 
   return (
     <IonPage>
@@ -180,28 +216,30 @@ const Dashboard: React.FC = () => {
             <IonCol sizeMd="2" offsetMd="0" pushMd="8" size="5" offset="1">
                 <IonList>
                     <IonItem>Dataset</IonItem>
-                    <IonItem className="select" onClick={()=>{replaceData("1")}}>Sample Dataset 1</IonItem>
-                    <IonItem className="select" onClick={()=>{replaceData("2")}}>Sample Dataset 2</IonItem>
+                    {list.length===0?<IonItem>No Data Yet</IonItem>:
+                        list.map((filename)=>(<IonItem key={filename} onClick={()=>handleClick(filename)}>{filename.split('.')[0]}</IonItem>))
+                    }          
                     <IonItem>
-                        <SaveConfigButton></SaveConfigButton>
+                        <SaveConfigButton name={current}></SaveConfigButton>
                     </IonItem>
                     <IonItem>
                         <ReactFileReader handleFiles={handleFiles} fileTypes={'.csv'}>
-                            <IonButton>Upload</IonButton>
+                            <IonButton>Tempo Upload</IonButton>
                         </ReactFileReader>
                     </IonItem>
                     <IonItemDivider></IonItemDivider>
                     <IonItem>
                         <IonLabel>FileName</IonLabel>
-                        <IonInput placeholder="filename"></IonInput>
+                        <IonInput placeholder={name} value={name} onIonChange={handleChange} required></IonInput>
                         <ReactFileReader handleFiles={handleUpload} fileTypes={'.csv'}>
                         <IonButton>Upload</IonButton>
                         </ReactFileReader>
                     </IonItem>
+                       
                     </IonList>
 			</IonCol>
             <IonCol sizeMd="8" size="12" pullMd="2" className="canvas">
-                <EmbeddedMap csv={data} conf={config}></EmbeddedMap>
+                <EmbeddedMap csv={data} conf={conf}></EmbeddedMap>
 				
 			</IonCol>
            

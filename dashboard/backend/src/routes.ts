@@ -13,48 +13,64 @@ import * as passportConfig from "./config/passport";
 
 import path from "path";
 import fs from "fs";
-//static directory 
-const directoryPath = path.join(__dirname, "public/fonts");
 
 // file upload
 import multer from "multer";
 const storage = multer.diskStorage({
   destination: function (req, file, cb) {
-    const dir="/public/data/";
-    if (!fs.existsSync(dir)) {fs.mkdirSync(dir),{recursive: true};}
+    let dir=__dirname+"/public/map/";
+    if(req.body.type==="data"){
+      dir=dir+"data/";
+    }else if(req.body.type==="config"){
+      dir=dir+"config/";
+    }
+    if (!fs.existsSync(dir)) {fs.mkdirSync(dir,{recursive: true});}
     cb(null, dir);
   },
   filename: function (req, file, cb) {
-    cb(null, "abcde" + path.extname(file.originalname)); //Appending extension
+    cb(null, `${req.body.name}.csv`);
   }
 });
 const upload = multer({ storage: storage });
 
+// route handler
 export default function(app: any){
-  router.get("/test", function(req,res){
-  //passsing directoryPath and callback function
+  router.get("/test", function(req,res){res.json("Hello World!");});
+
+  router.post("/uploaddata",  upload.single("file"),function(req, res, next){
+    res.status(201).send({ message: "Data Uploaded" });
+  } 
+  );
+
+  router.post("/uploadconfig", upload.single("file"), function(req, res, next){
+    const dir = path.join(__dirname, "/public/map/config/");
+    if (!fs.existsSync(dir)) {fs.mkdirSync(dir,{recursive: true});}
+    fs.writeFile(dir+req.body.name+".json", JSON.stringify(req.body.file), 
+    function(error){if(error)throw error;}
+    );
+    res.status(201).send({ message: "Config Uploaded" });
+  } 
+  );
+
+  router.get("/getdatalist", function(req,res){
+      //passsing directoryPath and callback function
+    const directoryPath = path.join(__dirname, "/public/map/data/");
+    if(!fs.existsSync(directoryPath)){
+      res.json({});
+    }
     fs.readdir(directoryPath, function (err, files) {
       //handling error
       if (err) {
           return console.log("Unable to scan directory: " + err);
       } 
+      const names: Array<string>=[];
       //listing all files using forEach
       files.forEach(function (file) {
           // Do whatever you want to do with the file
-          console.log(file); 
+          names.push(file);
       });
-  });
-    res.json("Hello World!");});
-
-  router.post("/uploaddata",  upload.single("avatar"),function(req, res, next){
-    console.log(req.body);
-    res.status(201).send({ message: "Data Uploaded" });
-  } 
-  );
-  router.post("/uploadconfig", upload.single("avatar"), function(req, res, next){
-    res.status(201).send({ message: "Image uploaded" });
-  } 
-  );
+      res.json(names);
+  });});
 
     /**
      * Primary app routes.
