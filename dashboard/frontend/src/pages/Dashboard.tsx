@@ -5,8 +5,8 @@ import { IonContent, IonHeader, IonPage, IonTitle, IonToolbar, IonCheckbox, IonT
 	} from '@ionic/react';
 import { locate, calendar } from 'ionicons/icons';
 import './Dashboard.css';
-import {doesFileExist} from '../components/Function';
-import {EmbeddedMap ,SaveConfigButton} from '../components/MapComponents';
+import {doesFileExist, fetchData} from '../components/Function';
+import {EmbeddedMap ,SaveConfigButton, DownloadConfigButton, UploadConfigButton} from '../components/MapComponents';
 import nycTrips from '../components/data/nyc-trips.csv';
 import config from '../components/data/nyc-config.json';
 import ReactFileReader from 'react-file-reader';
@@ -20,7 +20,7 @@ const checkboxList = [
 const Dashboard: React.FC = () => {
     const [data,setData]=useState<any>(nycTrips);
     const [conf,setConf]=useState<object>(config);
-    const [name,setName]=useState<string>("default");
+    const [name,setName]=useState<string>("input file name");
     const [list,setList]=useState<Array<string>>([]);
     const [current,setCurrent]=useState<string>('nyc-trips');
 
@@ -67,7 +67,7 @@ const Dashboard: React.FC = () => {
     const handleUpload = async (files:any) => {
         const url = process.env.REACT_APP_BACKEND+'/uploaddata'
         var reader = new FileReader();
-        reader.onload = async function(e) {
+        reader.onload = async function() {
             // Use reader.result
                 var fd = new FormData()
                 fd.append('name', name)
@@ -78,10 +78,15 @@ const Dashboard: React.FC = () => {
                 method: 'POST',
                 body: fd
                 })
-                setName("default")
+                setName("iput file name")
                 await fetchData(setList)
         }
-        reader.readAsArrayBuffer(files[0]);
+        if(files[0]){
+            reader.readAsArrayBuffer(files[0]);
+        }
+        else{
+            return
+        }
     }
 
     useEffect(() => {
@@ -108,7 +113,7 @@ const Dashboard: React.FC = () => {
       <IonContent fullscreen>
       <IonGrid>
         <IonRow>
-			<IonCol sizeLg="2" offsetLg="0.8" sizeSm="4.5" offsetSm="1" size="12">
+			<IonCol sizeLg="2.5" offsetLg="0.4" sizeSm="4.5" offsetSm="1" size="12">
 				<IonCard>
                     <IonCardHeader>
                         <IonCardTitle>Num of Reviews</IonCardTitle>
@@ -129,7 +134,7 @@ const Dashboard: React.FC = () => {
 					</IonCardContent>
 				</IonCard>
 			</IonCol>
-            <IonCol sizeLg="2" offsetLg="0.8" sizeSm="4.5" offsetSm="1" size="12">
+            <IonCol sizeLg="2.5" offsetLg="0.4" sizeSm="4.5" offsetSm="1" size="12">
 				<IonCard>
                     <IonCardHeader>
                         <IonCardTitle>Num of Reviews</IonCardTitle>
@@ -150,7 +155,7 @@ const Dashboard: React.FC = () => {
 					</IonCardContent>
 				</IonCard>
 			</IonCol>
-            <IonCol sizeLg="2" offsetLg="0.8" sizeSm="4.5" offsetSm="1" size="12">
+            <IonCol sizeLg="2.5" offsetLg="0.4" sizeSm="4.5" offsetSm="1" size="12">
 				<IonCard>
                     <IonCardHeader>
                         <IonCardTitle>Num of Reviews</IonCardTitle>
@@ -171,7 +176,7 @@ const Dashboard: React.FC = () => {
 					</IonCardContent>
 				</IonCard>
 			</IonCol>
-            <IonCol sizeLg="2" offsetLg="0.8" sizeSm="4.5" offsetSm="1" size="12">
+            <IonCol sizeLg="2.5" offsetLg="0.4" sizeSm="4.5" offsetSm="1" size="12">
 				<IonCard>
                     <IonCardHeader>
                         <IonCardTitle>Num of Reviews</IonCardTitle>
@@ -196,7 +201,7 @@ const Dashboard: React.FC = () => {
         </IonRow>
 
         <IonRow>
-			<IonCol sizeMd="2" offsetMd="0" size="5" offset="1">
+			<IonCol sizeLg="2" offsetLg="0" sizeSm="4.5" offsetSm="1" size="6">
 				<IonList>
                 <IonItem>Graph</IonItem>
 
@@ -208,35 +213,36 @@ const Dashboard: React.FC = () => {
                     ))}
                 </IonList>
 			</IonCol>
-            <IonCol sizeMd="2" offsetMd="0" pushMd="8" size="5" offset="1">
+            <IonCol sizeLg="2" offsetLg="0" pushLg="8" sizeSm="4.5" offsetSm="1" size="6">
                 <IonList>
                     <IonItem>Dataset</IonItem>
-                    {(list.length===0 || !list)?<IonItem>No Data Yet</IonItem>:
+                    {(Object.keys(list).length===0 || !list)?<IonItem>No Data Yet</IonItem>:
                         Object.keys(list).map((key)=>(<IonItem key={list[key]}>
                             <IonText className="data" onClick={()=>handleClick(list[key])}>{list[key].split('.')[0]}</IonText>
                             <IonButton slot="end" color="danger" onClick={()=>handleDelete(list[key])}>Delete</IonButton>
                             </IonItem>))
                     }          
-                    <IonItem>
+                    <IonItemDivider>Map Config</IonItemDivider>                 
                         <SaveConfigButton name={current}></SaveConfigButton>
-                    </IonItem>
+                        <DownloadConfigButton name={current}></DownloadConfigButton>
+                        <UploadConfigButton name={current}></UploadConfigButton>
+                
+                    <IonItemDivider>Data Upload</IonItemDivider>
                     <IonItem>
-                        <ReactFileReader handleFiles={handleFiles} fileTypes={'.csv'}>
-                            <IonButton>Tempo Upload</IonButton>
-                        </ReactFileReader>
-                    </IonItem>
-                    <IonItemDivider></IonItemDivider>
-                    <IonItem>
-                        <IonLabel>FileName</IonLabel>
                         <IonInput placeholder={name} value={name} onIonChange={handleChange} required></IonInput>
                         <ReactFileReader handleFiles={handleUpload} fileTypes={'.csv'}>
                         <IonButton>Upload</IonButton>
                         </ReactFileReader>
                     </IonItem>
-                       
+                    <IonItemDivider>Tempo Upload</IonItemDivider>
+                    <IonItem>
+                        <ReactFileReader handleFiles={handleFiles} fileTypes={'.csv'}>
+                            <IonButton>Upload</IonButton>
+                        </ReactFileReader>
+                    </IonItem>
                     </IonList>
 			</IonCol>
-            <IonCol sizeMd="8" size="12" pullMd="2" className="canvas">
+            <IonCol sizeLg="8" size="12" pullLg="2" className="canvas">
                 <EmbeddedMap csv={data} conf={conf}></EmbeddedMap>
 				
 			</IonCol>
@@ -273,19 +279,3 @@ const Dashboard: React.FC = () => {
 };
 
 export default Dashboard;
-
-
-async function fetchData(setList:Function) {
-    const url=process.env.REACT_APP_BACKEND+'/getdatalist'
-    // const token = await  getAccessTokenSilently()
-    // var myHeaders = new Headers()
-    // myHeaders.append("Authorization", `Bearer ${token}`)
-    // var requestOptions = {
-    // method: 'GET',
-    // headers: myHeaders,
-    // redirect: 'follow'
-    // }
-    fetch(url).then(response => response.json())
-    .then(data => {
-        setList(data)
-    })}

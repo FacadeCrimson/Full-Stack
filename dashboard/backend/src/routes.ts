@@ -11,10 +11,9 @@ import * as contactController from "./controllers/contact";
 // API keys and Passport configuration
 import * as passportConfig from "./config/passport";
 
-import path from "path";
-import fs from "fs";
-
 // file upload
+import fs from "fs";
+import path from "path";
 import multer from "multer";
 const storage = multer.diskStorage({
   destination: function (req, file, cb) {
@@ -28,7 +27,11 @@ const storage = multer.diskStorage({
     cb(null, dir);
   },
   filename: function (req, file, cb) {
-    cb(null, `${req.body.name}.csv`);
+    if(req.body.type==="data"){
+      cb(null, `${req.body.name}.csv`);
+    }else if(req.body.type==="config"){
+      cb(null, `${req.body.name}.json`);
+    }
   }
 });
 const upload = multer({ storage: storage });
@@ -39,13 +42,12 @@ export default function(app: any){
 
   router.post("/uploaddata",  upload.single("file"),function(req, res, next){
     res.status(201).send({ message: "Data Uploaded" });
-  } 
-  );
+  });
 
-  router.post("/uploadconfig", upload.single("file"), function(req, res, next){
+  router.post("/uploadconfig", function(req, res, next){
     const dir = path.join(__dirname, "/public/map/config/");
     if (!fs.existsSync(dir)) {fs.mkdirSync(dir,{recursive: true});}
-    const file=dir+req.body.name+".json"
+    const file=dir+req.body.name+".json";
     if(fs.existsSync(file)){
         fs.unlink(file, (err) => {
         if (err) {
@@ -56,8 +58,7 @@ export default function(app: any){
     function(err){if(err)console.error(err);return;}
     );
     res.status(201).send({ message: "Config Uploaded" });
-  } 
-  );
+  });
 
   router.get("/deletedata", function(req, res, next){
     const file = path.join(__dirname, "/public/map/data/"+req.query.name);
@@ -66,16 +67,15 @@ export default function(app: any){
         console.error(err);
         return;}});
     res.status(201).send({ message: "Data Deleted" });
-  } 
-  );
+  });
 
   router.get("/getdatalist", function(req,res){
       //passsing directoryPath and callback function
-    const directoryPath = path.join(__dirname, "/public/map/data/");
-    if(!fs.existsSync(directoryPath)){
-      res.json({});
+    const dir = path.join(__dirname, "/public/map/data/");
+    if(!fs.existsSync(dir)){
+      res.json([]);
     }
-    fs.readdir(directoryPath, function (err, files) {
+    fs.readdir(dir, function (err, files) {
       //handling error
       if (err) {
           return console.log("Unable to scan directory: " + err);
