@@ -55,22 +55,18 @@ const Dashboard: React.FC = () => {
         setCurrent(fname)
     }
 
-    const handleFiles = (files:any) => {
-        var reader = new FileReader();
-        reader.onload = function(e) {
-            // Use reader.result
-            setData(reader.result)
-        }
-        reader.readAsText(files[0]);
-    }
-
     const handleUpload = async (files:any) => {
         const url = process.env.REACT_APP_BACKEND+'/uploaddata'
         var reader = new FileReader();
+        let filename = ""
         reader.onload = async function() {
             // Use reader.result
                 var fd = new FormData()
-                fd.append('name', name)
+                if(name!=="input file name"){
+                    fd.append('name', name)
+                }else{
+                    fd.append('name', filename)
+                }
                 fd.append('type', "data")
                 fd.append('file', new Blob([reader.result as ArrayBuffer]))
 
@@ -78,10 +74,11 @@ const Dashboard: React.FC = () => {
                 method: 'POST',
                 body: fd
                 })
-                setName("iput file name")
+                setName("input file name")
                 await fetchData(setList)
         }
         if(files[0]){
+            filename=files[0].name
             reader.readAsArrayBuffer(files[0]);
         }
         else{
@@ -232,12 +229,6 @@ const Dashboard: React.FC = () => {
                         <IonInput placeholder={name} value={name} onIonChange={handleChange} required></IonInput>
                         <ReactFileReader handleFiles={handleUpload} fileTypes={'.csv'}>
                         <IonButton>Upload</IonButton>
-                        </ReactFileReader>
-                    </IonItem>
-                    <IonItemDivider>Tempo Upload</IonItemDivider>
-                    <IonItem>
-                        <ReactFileReader handleFiles={handleFiles} fileTypes={'.csv'}>
-                            <IonButton>Upload</IonButton>
                         </ReactFileReader>
                     </IonItem>
                     </IonList>

@@ -44,7 +44,7 @@ export default function(app: any){
     res.status(201).send({ message: "Data Uploaded" });
   });
 
-  router.post("/uploadconfig", function(req, res, next){
+  router.post("/uploadconfig", upload.single("file"),function(req, res, next){
     const dir = path.join(__dirname, "/public/map/config/");
     if (!fs.existsSync(dir)) {fs.mkdirSync(dir,{recursive: true});}
     const file=dir+req.body.name+".json";

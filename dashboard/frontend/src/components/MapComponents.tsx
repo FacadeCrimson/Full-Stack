@@ -30,7 +30,6 @@ export const SaveConfigButton: React.FC<ContainerProps2> = ({name}) => {
     const handleSave = async ()=>{
         const newConfig = KeplerGlSchema.getConfigToSave(store.getState().keplerGl.map)
         const url = process.env.REACT_APP_BACKEND+'/uploadconfig'
-
         var fd = new FormData()
         fd.append('name', name)
         fd.append('type', "config")
