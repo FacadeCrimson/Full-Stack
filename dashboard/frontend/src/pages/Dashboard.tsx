@@ -110,7 +110,7 @@ const Dashboard: React.FC = () => {
       <IonContent fullscreen>
       <IonGrid>
         <IonRow>
-			<IonCol sizeLg="2.5" offsetLg="0.4" sizeSm="4.5" offsetSm="1" size="12">
+			<IonCol sizeLg="2.5" offsetLg="0.4" sizeSm="4.5" offsetSm="1" size="10" offset="1">
 				<IonCard>
                     <IonCardHeader>
                         <IonCardTitle>Num of Reviews</IonCardTitle>
@@ -131,7 +131,7 @@ const Dashboard: React.FC = () => {
 					</IonCardContent>
 				</IonCard>
 			</IonCol>
-            <IonCol sizeLg="2.5" offsetLg="0.4" sizeSm="4.5" offsetSm="1" size="12">
+            <IonCol sizeLg="2.5" offsetLg="0.4" sizeSm="4.5" offsetSm="1" size="10" offset="1">
 				<IonCard>
                     <IonCardHeader>
                         <IonCardTitle>Num of Reviews</IonCardTitle>
@@ -152,7 +152,7 @@ const Dashboard: React.FC = () => {
 					</IonCardContent>
 				</IonCard>
 			</IonCol>
-            <IonCol sizeLg="2.5" offsetLg="0.4" sizeSm="4.5" offsetSm="1" size="12">
+            <IonCol sizeLg="2.5" offsetLg="0.4" sizeSm="4.5" offsetSm="1" size="10" offset="1">
 				<IonCard>
                     <IonCardHeader>
                         <IonCardTitle>Num of Reviews</IonCardTitle>
@@ -173,7 +173,7 @@ const Dashboard: React.FC = () => {
 					</IonCardContent>
 				</IonCard>
 			</IonCol>
-            <IonCol sizeLg="2.5" offsetLg="0.4" sizeSm="4.5" offsetSm="1" size="12">
+            <IonCol sizeLg="2.5" offsetLg="0.4" sizeSm="4.5" offsetSm="1" size="10" offset="1">
 				<IonCard>
                     <IonCardHeader>
                         <IonCardTitle>Num of Reviews</IonCardTitle>
