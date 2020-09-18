@@ -1,6 +1,7 @@
 import React from 'react';
 import { IonContent, IonHeader, IonPage, IonTitle, IonToolbar, IonButtons, IonMenuToggle, IonIcon, IonButton, IonMenu, IonList, IonListHeader, IonLabel, IonItem } from '@ionic/react';
 import './Tab2.css';
+import Category from '../components/CategoryGrid'
 
 const Tab2: React.FC = () => {
   return (<IonPage class="ion-page" id="main-content">
@@ -43,6 +44,7 @@ const Tab2: React.FC = () => {
     <IonContent class="ion-padding">
       <h1>Main Content</h1>
       <p>Click the icon in the top left to toggle the menu.</p>
+      <Category></Category>
     </IonContent>
   </IonPage>
   );
