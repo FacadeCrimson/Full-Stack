@@ -12,19 +12,29 @@ interface ContainerProps {
 
 const Category: React.FC<ContainerProps> = ({filter}) => {
   useEffect(()=>{
-    const categories=document.getElementsByClassName(filter) as HTMLCollectionOf<HTMLElement>
+    const categories=document.getElementsByClassName("category") as HTMLCollectionOf<HTMLElement>
+    if(filter===""){
+      for(var i = 0; i < categories.length; i++) { 
+        categories[i].classList.remove('ion-hide');
+      }
+      return
+    }
     for(var i = 0; i < categories.length; i++) {
-      const shouldShow = categories[i].id.toLowerCase().indexOf(filter) > -1;
-      categories[i].style.display = shouldShow ? 'block' : 'none';
-  }
+      if(categories[i].id.toLowerCase().indexOf(filter) <= -1){
+        categories[i].classList.add('ion-hide');
+      }else{
+        categories[i].classList.remove('ion-hide');
+      }
+    }
+    return
   },[filter])
 
   return (
       <IonContent fullscreen>
         <IonGrid>
             <IonRow>
-                <IonCol sizeLg="3" offsetLg="0" sizeSm="6" offsetSm="0" size="10" offset="1" className="ion-text-center">
-                    <IonCard href="/category/music" className="category ion-activated" id="music">
+                <IonCol sizeLg="3" offsetLg="0" sizeSm="6" offsetSm="0" size="10" offset="1" className="category ion-text-center" id="music">
+                    <IonCard href="/category/music" className="ion-activated">
                       <IonCardHeader id="header">
                         <IonIcon icon={headset} id="pic"></IonIcon>
                       </IonCardHeader>   
@@ -33,33 +43,33 @@ const Category: React.FC<ContainerProps> = ({filter}) => {
                         </IonItem>
                     </IonCard>
                 </IonCol>
-                <IonCol sizeLg="3" offsetLg="0" sizeSm="6" offsetSm="0" size="10" offset="1" className="ion-text-center">
-                  <IonCard href="/category/music" className="category ion-activated"> 
+                <IonCol sizeLg="3" offsetLg="0" sizeSm="6" offsetSm="0" size="10" offset="1" className="category ion-text-center" id="photo">
+                  <IonCard href="/category/music" className="ion-activated"> 
                     <IonCardHeader id="header">
                       <IonIcon icon={camera} id="pic"></IonIcon>
                       </IonCardHeader>
                         <IonItem className="ion-text-center">
-                           <IonLabel id="title">Music</IonLabel>
+                           <IonLabel id="title">Photo</IonLabel>
                         </IonItem>
                     </IonCard>
                 </IonCol>
-                <IonCol sizeLg="3" offsetLg="0" sizeSm="6" offsetSm="0" size="10" offset="1" className="ion-text-center">
-                  <IonCard href="/category/music" className="category ion-activated">
+                <IonCol sizeLg="3" offsetLg="0" sizeSm="6" offsetSm="0" size="10" offset="1" className="category ion-text-center" id="shopping">
+                  <IonCard href="/category/music" className="ion-activated">
                     <IonCardHeader id="header">
                       <IonIcon icon={cart} id="pic"></IonIcon>
                       </IonCardHeader>
                         <IonItem className="ion-text-center">
-                           <IonLabel id="title">Music</IonLabel>
+                           <IonLabel id="title">Shopping</IonLabel>
                         </IonItem>
                     </IonCard>
                 </IonCol>
-                <IonCol sizeLg="3" offsetLg="0" sizeSm="6" offsetSm="0" size="10" offset="1" className="ion-text-center">
-                    <IonCard href="/category/music" className="category ion-activated">
+                <IonCol sizeLg="3" offsetLg="0" sizeSm="6" offsetSm="0" size="10" offset="1" className="category ion-text-center" id="gift">
+                    <IonCard href="/category/music" className="ion-activated">
                     <IonCardHeader id="header">
                       <IonIcon icon={gift} id="pic"></IonIcon>
                       </IonCardHeader>
                         <IonItem className="ion-text-center">
-                           <IonLabel id="title">Music</IonLabel>
+                           <IonLabel id="title">Gift</IonLabel>
                         </IonItem>
                     </IonCard>
                 </IonCol>

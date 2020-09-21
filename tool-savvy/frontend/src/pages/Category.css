@@ -1,0 +1,11 @@
+
+.subcategorycontainer{
+    overflow-x: scroll !important;
+    flex-wrap:nowrap;
+    overflow-y: hidden;
+    word-wrap: break-word;
+    height:200px;
+    align-items:center
+} 
+
+.subcategorycontainer::-webkit-scrollbar { display: none;}

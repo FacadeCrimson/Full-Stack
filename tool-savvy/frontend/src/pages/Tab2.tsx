@@ -59,7 +59,7 @@ const Tab2: React.FC = () => {
         
         <IonFooter>
         <IonToolbar>
-          Search Text: {searchText ?? '(none)'}
+          Search Text: {filter ?? '(none)'}
         </IonToolbar>
         </IonFooter>
     </IonContent>
