@@ -1,21 +1,23 @@
 import React,{useState,useEffect} from 'react';
-import { IonContent, IonHeader, IonPage, IonTitle, IonToolbar, IonCheckbox, IonText, IonSelect, IonSelectOption, IonButton, IonInput,
+import { IonContent, IonHeader, IonPage, IonTitle, IonToolbar, IonText, IonSelect, IonSelectOption, IonButton, IonInput,
 	IonCard, IonCardHeader, IonCardSubtitle, IonCardTitle, IonCardContent, IonChip, IonList,IonItemDivider,
-	IonItem, IonIcon, IonLabel, IonGrid, IonRow, IonCol
+	IonItem, IonIcon, IonLabel, IonGrid, IonRow, IonCol,IonRadioGroup,IonRadio,
 	} from '@ionic/react';
-import { locate, calendar } from 'ionicons/icons';
 import './Dashboard.css';
 import {doesFileExist, fetchData} from '../components/Function';
 import {EmbeddedMap ,SaveConfigButton, DownloadConfigButton, UploadConfigButton} from '../components/MapComponents';
 import nycTrips from '../components/data/nyc-trips.csv';
 import config from '../components/data/nyc-config.json';
 import ReactFileReader from 'react-file-reader';
+import {StatisticCard} from '../components/StatisticCard'
+import {LeafletMap} from '../components/Leaflet'
 
-const checkboxList = [
-    { val: 'Pie Chart', isChecked: true },
-    { val: 'Bar Chart', isChecked: false },
-    { val: 'Line Chart', isChecked: false }
-  ];
+enum graphList {
+    Kepler="Kepler Map",
+    Leaflet="Leaflet Map",
+    Pie="Pie Chart",
+    Line="Line Chart"
+}
 
 const Dashboard: React.FC = () => {
     const [data,setData]=useState<any>(nycTrips);
@@ -89,6 +91,8 @@ const Dashboard: React.FC = () => {
     useEffect(() => {
         fetchData(setList)
       }, [current])
+    
+    const [graph,setGraph] = useState<graphList>(graphList.Kepler)
 
   return (
     <IonPage>
@@ -109,105 +113,22 @@ const Dashboard: React.FC = () => {
       </IonHeader>
       <IonContent fullscreen>
       <IonGrid>
-        <IonRow>
-			<IonCol sizeLg="2.5" offsetLg="0.4" sizeSm="4.5" offsetSm="1" size="10" offset="1">
-				<IonCard>
-                    <IonCardHeader>
-                        <IonCardTitle>Num of Reviews</IonCardTitle>
-                        <IonCardSubtitle>115</IonCardSubtitle>
-                    </IonCardHeader>
-					<IonItem>
-					    <IonChip>
-                            <IonIcon icon={locate} className="small"></IonIcon>
-                            <IonLabel color="danger">&#9662; 4%</IonLabel>
-                        </IonChip>
-                        <IonChip>
-                            <IonIcon icon={calendar} className="small"></IonIcon>
-                            <IonLabel color="success">&#9652; 5%</IonLabel>
-                        </IonChip>
-					</IonItem>
-					<IonCardContent>
-					
-					</IonCardContent>
-				</IonCard>
-			</IonCol>
-            <IonCol sizeLg="2.5" offsetLg="0.4" sizeSm="4.5" offsetSm="1" size="10" offset="1">
-				<IonCard>
-                    <IonCardHeader>
-                        <IonCardTitle>Num of Reviews</IonCardTitle>
-                        <IonCardSubtitle>115</IonCardSubtitle>
-                    </IonCardHeader>
-					<IonItem>
-					    <IonChip>
-                            <IonIcon icon={locate}></IonIcon>
-                            <IonLabel color="danger">&#9662; 4%</IonLabel>
-                        </IonChip>
-                        <IonChip>
-                            <IonIcon icon={calendar}></IonIcon>
-                            <IonLabel color="success">&#9652; 5%</IonLabel>
-                        </IonChip>
-					</IonItem>
-					<IonCardContent>
-					
-					</IonCardContent>
-				</IonCard>
-			</IonCol>
-            <IonCol sizeLg="2.5" offsetLg="0.4" sizeSm="4.5" offsetSm="1" size="10" offset="1">
-				<IonCard>
-                    <IonCardHeader>
-                        <IonCardTitle>Num of Reviews</IonCardTitle>
-                        <IonCardSubtitle>115</IonCardSubtitle>
-                    </IonCardHeader>
-					<IonItem>
-					    <IonChip>
-                            <IonIcon icon={locate}></IonIcon>
-                            <IonLabel color="danger">&#9662; 4%</IonLabel>
-                        </IonChip>
-                        <IonChip>
-                            <IonIcon icon={calendar}></IonIcon>
-                            <IonLabel color="success">&#9652; 5%</IonLabel>
-                        </IonChip>
-					</IonItem>
-					<IonCardContent>
-					
-					</IonCardContent>
-				</IonCard>
-			</IonCol>
-            <IonCol sizeLg="2.5" offsetLg="0.4" sizeSm="4.5" offsetSm="1" size="10" offset="1">
-				<IonCard>
-                    <IonCardHeader>
-                        <IonCardTitle>Num of Reviews</IonCardTitle>
-                        <IonCardSubtitle>115</IonCardSubtitle>
-                    </IonCardHeader>
-					<IonItem>
-					    <IonChip>
-                            <IonIcon icon={locate}></IonIcon>
-                            <IonLabel color="danger">&#9662; 4%</IonLabel>
-                        </IonChip>
-                        <IonChip>
-                            <IonIcon icon={calendar}></IonIcon>
-                            <IonLabel color="success">&#9652; 5%</IonLabel>
-                        </IonChip>
-					</IonItem>
-					<IonCardContent>
-					
-					</IonCardContent>
-				</IonCard>
-			</IonCol>
-          
-        </IonRow>
-
+        <StatisticCard></StatisticCard>
         <IonRow>
 			<IonCol sizeLg="2" offsetLg="0" sizeSm="4.5" offsetSm="1" size="6">
 				<IonList>
-                <IonItem>Graph</IonItem>
+                    <IonRadioGroup value={graph} onIonChange={e => setGraph(e.detail.value)}>
+                        <IonItem>Graph</IonItem>
+                        {
+                             Object.keys(graphList).map((key, i) => (
+                                <IonItem key={i}>
+                                <IonLabel>{graphList[key]}</IonLabel>
+                                <IonRadio slot="end" value={graphList[key]} />
+                                </IonItem>
+                            ))
+                        }
 
-                    {Object.keys(checkboxList).map((key, i) => (
-                        <IonItem key={i}>
-                        <IonLabel>{checkboxList[key].val}</IonLabel>
-                        <IonCheckbox slot="end" value={checkboxList[key].val} checked={checkboxList[key].isChecked} />
-                        </IonItem>
-                    ))}
+                    </IonRadioGroup>
                 </IonList>
 			</IonCol>
             <IonCol sizeLg="2" offsetLg="0" pushLg="8" sizeSm="4.5" offsetSm="1" size="6">
@@ -234,8 +155,9 @@ const Dashboard: React.FC = () => {
                     </IonList>
 			</IonCol>
             <IonCol sizeLg="8" size="12" pullLg="2" className="canvas">
-                <EmbeddedMap csv={data} conf={conf}></EmbeddedMap>
-				
+                {
+                    switchGraph(graph,data,conf)
+                    }
 			</IonCol>
            
         </IonRow>
@@ -270,3 +192,18 @@ const Dashboard: React.FC = () => {
 };
 
 export default Dashboard;
+
+function switchGraph(graph:graphList, data:string, conf:object){
+    switch(graph){
+        case "Kepler Map":
+            return <EmbeddedMap csv={data} conf={conf}></EmbeddedMap>
+        case "Leaflet Map":
+            return <LeafletMap></LeafletMap>
+        case "Pie Chart":
+            return <></>
+        case "Line Chart":
+            return <></>
+        default:
+            return <EmbeddedMap csv={data} conf={conf}></EmbeddedMap>
+    }
+}

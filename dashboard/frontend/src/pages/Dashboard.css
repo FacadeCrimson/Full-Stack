@@ -14,3 +14,5 @@ ion-col.canvas{
 .data:hover{
     cursor:pointer;
 }
+
+#mapid { height: 100%; }
