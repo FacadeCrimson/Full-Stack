@@ -198,7 +198,7 @@ function switchGraph(graph:graphList, data:string, conf:object){
         case "Kepler Map":
             return <EmbeddedMap csv={data} conf={conf}></EmbeddedMap>
         case "Leaflet Map":
-            return <LeafletMap></LeafletMap>
+            return <LeafletMap markersData={markers}></LeafletMap>
         case "Pie Chart":
             return <></>
         case "Line Chart":
@@ -207,3 +207,14 @@ function switchGraph(graph:graphList, data:string, conf:object){
             return <EmbeddedMap csv={data} conf={conf}></EmbeddedMap>
     }
 }
+
+export interface markerData{
+    latLng:[number,number]
+    title:string
+}
+
+const markers:markerData[] = [
+    {latLng:[51.509, -0.08], title:"number1"},
+    {latLng:[51.503, -0.06], title:"number2"},
+    {latLng:[51.51, -0.047], title:"number3"},
+]
