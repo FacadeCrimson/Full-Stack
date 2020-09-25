@@ -1,7 +1,7 @@
 import React,{useState,useEffect} from 'react';
 import { IonContent, IonHeader, IonPage, IonTitle, IonToolbar, IonText, IonSelect, IonSelectOption, IonButton, IonInput,
-	IonCard, IonCardHeader, IonCardSubtitle, IonCardTitle, IonCardContent, IonChip, IonList,IonItemDivider,
-	IonItem, IonIcon, IonLabel, IonGrid, IonRow, IonCol,IonRadioGroup,IonRadio,
+	IonCard, IonCardHeader, IonCardTitle, IonList,IonItemDivider,
+	IonItem, IonLabel, IonGrid, IonRow, IonCol,IonRadioGroup,IonRadio,
 	} from '@ionic/react';
 import './Dashboard.css';
 import {doesFileExist, fetchData} from '../components/Function';
@@ -10,11 +10,13 @@ import nycTrips from '../components/data/nyc-trips.csv';
 import config from '../components/data/nyc-config.json';
 import ReactFileReader from 'react-file-reader';
 import {StatisticCard} from '../components/StatisticCard'
-import {LeafletMap} from '../components/Leaflet'
+import {Leaflet1, Leaflet2} from '../components/Leaflet'
+import {store} from '../components/Kepler';
 
 enum graphList {
     Kepler="Kepler Map",
     Leaflet="Leaflet Map",
+    Leaflet2="Leaflet Map2",
     Pie="Pie Chart",
     Line="Line Chart"
 }
@@ -141,8 +143,8 @@ const Dashboard: React.FC = () => {
                             </IonItem>))
                     }          
                     <IonItemDivider>Map Config</IonItemDivider>                 
-                        <SaveConfigButton name={current}></SaveConfigButton>
-                        <DownloadConfigButton name={current}></DownloadConfigButton>
+                        <SaveConfigButton store={store} name={current}></SaveConfigButton>
+                        <DownloadConfigButton store={store} name={current}></DownloadConfigButton>
                         <UploadConfigButton name={current}></UploadConfigButton>
                 
                     <IonItemDivider>Data Upload</IonItemDivider>
@@ -196,15 +198,17 @@ export default Dashboard;
 function switchGraph(graph:graphList, data:string, conf:object){
     switch(graph){
         case "Kepler Map":
-            return <EmbeddedMap csv={data} conf={conf}></EmbeddedMap>
+            return <EmbeddedMap store={store} data={data} conf={conf}></EmbeddedMap>
         case "Leaflet Map":
-            return <LeafletMap markersData={markers}></LeafletMap>
+            return <Leaflet1 markersData={markers}></Leaflet1>
+        case "Leaflet Map2":
+            return <Leaflet2 data={data}></Leaflet2>
         case "Pie Chart":
             return <></>
         case "Line Chart":
             return <></>
         default:
-            return <EmbeddedMap csv={data} conf={conf}></EmbeddedMap>
+            return <EmbeddedMap store={store} data={data} conf={conf}></EmbeddedMap>
     }
 }
 

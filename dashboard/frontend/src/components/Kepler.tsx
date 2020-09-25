@@ -34,6 +34,14 @@ const reducers = (function createReducers() {
     });
 }());
 
+const rootReducer = (state:any, action:any) => {   
+	// Clear all data in redux store to initial.
+	if(action.type === "RESET_MAP")
+	   state = undefined;
+	
+	return reducers(state, action);
+ };
+
 const middleWares = (function createMiddlewares() {
 	return enhanceReduxMiddleware([
 		// Add other middlewares here
@@ -47,24 +55,23 @@ const enhancers = (function craeteEnhancers() {
 export const store = (function createrReduxStore() {
 	const initialState = {};
 	return createStore(
-		reducers,
+		rootReducer,
 		initialState,
 		compose(enhancers)
 	);
 }());
 
-export const Kepler = (function createReactReduxProvider() {
-	return React.createElement(
-	Provider,
-	{store},
-	<AutoSizer>
-		{({height, width}:any) => (
-			<KeplerGl
-				mapboxApiAccessToken={process.env.REACT_APP_MAPBOX_TOKEN}
-				id="map"
-				width={width}
-				height={height}
-			/>  
-		)}  
-	</AutoSizer>)
-}());
+export const Kepler: React.FC = () => {
+	return <Provider store={store}>
+				<AutoSizer>
+				{({height, width}:any) => (
+					<KeplerGl
+						mapboxApiAccessToken={process.env.REACT_APP_MAPBOX_TOKEN}
+						id="map"
+						width={width}
+						height={height}
+					/>  
+				)}  
+			</AutoSizer>
+		</Provider>
+}

@@ -1,32 +1,36 @@
 import React, { useEffect} from 'react';
-import ReactDOM from 'react-dom';
-import {store, Kepler} from './Kepler';
+import {Kepler} from './Kepler';
 import {customize} from './KeplerLoadData';
 import {IonButton, IonItem, IonIcon, IonItemDivider} from '@ionic/react';
-import {KeplerGlSchema} from 'kepler.gl';
+import {KeplerGlSchema,resetMapConfig} from 'kepler.gl';
 import {downloadJsonFile} from './Function'
 import {helpCircleOutline} from 'ionicons/icons'
 import ReactFileReader from 'react-file-reader';
+import { Store } from 'redux';
 
 interface ContainerProps1 {
-    csv: string;
+    store:Store;
+    data: string;
     conf:object;
 }
 
-export const EmbeddedMap: React.FC<ContainerProps1> = ({csv,conf}) => {
+export const EmbeddedMap: React.FC<ContainerProps1> = ({store,data,conf}) => {
     useEffect(()=>{
-        customize(store,csv,conf);
-        ReactDOM.render(Kepler, document.getElementById('map'));
-      })
+        customize(store,data,conf);
+        return function cleanup() {
+          store.dispatch(resetMapConfig())
+        };
+    })
 
-    return (<div id="map"></div>);
+    return (<div id="map"><Kepler></Kepler></div>);
 };
 
 interface ContainerProps2 {
-  name:string
+  store:Store;
+  name:string;
 }
 
-export const SaveConfigButton: React.FC<ContainerProps2> = ({name}) => {
+export const SaveConfigButton: React.FC<ContainerProps2> = ({store,name}) => {
     const handleSave = async ()=>{
         const newConfig = KeplerGlSchema.getConfigToSave(store.getState().keplerGl.map)
         const url = process.env.REACT_APP_BACKEND+'/uploadconfig'
@@ -65,7 +69,7 @@ export const SaveConfigButton: React.FC<ContainerProps2> = ({name}) => {
            
   }
   
-export const DownloadConfigButton: React.FC<ContainerProps2> = ({name}) => {
+export const DownloadConfigButton: React.FC<ContainerProps2> = ({store,name}) => {
     const handleDownload = ()=>{
          const mapConfig = KeplerGlSchema.getConfigToSave(store.getState().keplerGl.map)
          downloadJsonFile(mapConfig, name+'.json');
@@ -92,7 +96,11 @@ export const DownloadConfigButton: React.FC<ContainerProps2> = ({name}) => {
          </>
   }
 
-export const UploadConfigButton: React.FC<ContainerProps2> = ({name}) => {
+interface ContainerProps3 {
+  name:string;
+}
+
+export const UploadConfigButton: React.FC<ContainerProps3> = ({name}) => {
     const handleUpload = async (files:any)=>{
          const url = process.env.REACT_APP_BACKEND+'/uploadconfig'
          var reader = new FileReader();

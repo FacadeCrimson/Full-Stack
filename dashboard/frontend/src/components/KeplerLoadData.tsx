@@ -14,12 +14,10 @@ export const customize =function(store:Store,csv:string,conf:object) {
       }
     };
     const config=conf;
-
     const loadedData = KeplerGlSchema.load(
       dataset,
       config
     );
-
     store.dispatch(addDataToMap({
       datasets: dataset,
       config: loadedData.config,
