@@ -18,7 +18,7 @@ enum graphList {
     Kepler="Kepler Map",
     Leaflet="Leaflet Map",
     Leaflet2="Leaflet Map2",
-    Pie="Pie Chart",
+    Pie="Density Chart",
     Line="Line Chart"
 }
 
@@ -196,7 +196,8 @@ const Dashboard: React.FC = () => {
 
                     <IonItemDivider>Passenger Count</IonItemDivider>
                         <IonItem>
-                            <IonRange pin={true} dualKnobs={true} min={0} max={60} step={3} snaps={true} onIonChange={e => setRangeValue(e.detail.value as any)} />
+                            <IonRange pin={true} dualKnobs={true} min={0} max={6} step={1} debounce={600}
+                            snaps={true} onIonChange={e => setRangeValue(e.detail.value as any)} />
                         </IonItem>
                         <IonItem>
                             <IonLabel>Value: lower: {rangeValue.lower} upper: {rangeValue.upper}</IonLabel>
@@ -208,7 +209,7 @@ const Dashboard: React.FC = () => {
 			</IonCol>
             <IonCol sizeLg="8" size="12" pullLg="2" className="canvas">
                 {
-                    switchGraph(graph,data,conf)
+                    switchGraph(graph,data,conf,rangeValue)
                     }
 			</IonCol>
            
@@ -245,7 +246,7 @@ const Dashboard: React.FC = () => {
 
 export default Dashboard;
 
-function switchGraph(graph:graphList, data:string, conf:object){
+function switchGraph(graph:graphList, data:string, conf:object, rangeValue:any){
     switch(graph){
         case "Kepler Map":
             return <EmbeddedMap store={store} data={data} conf={conf}></EmbeddedMap>
@@ -253,8 +254,8 @@ function switchGraph(graph:graphList, data:string, conf:object){
             return <Leaflet1 markersData={markers}></Leaflet1>
         case "Leaflet Map2":
             return <Leaflet2 data={data}></Leaflet2>
-        case "Pie Chart":
-            return <GraphWrapper></GraphWrapper>
+        case "Density Chart":
+            return <GraphWrapper data={data} rangeValue={rangeValue}></GraphWrapper>
         case "Line Chart":
             return <></>
         default:
