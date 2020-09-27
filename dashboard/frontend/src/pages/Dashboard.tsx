@@ -1,7 +1,7 @@
 import React,{useState,useEffect} from 'react';
 import { IonContent, IonHeader, IonPage, IonTitle, IonToolbar, IonText, IonSelect, IonSelectOption, IonButton, IonInput,
 	IonCard, IonCardHeader, IonCardTitle, IonList,IonItemDivider,
-	IonItem, IonLabel, IonGrid, IonRow, IonCol,IonRadioGroup,IonRadio,
+	IonItem, IonLabel, IonGrid, IonRow, IonCol,IonRadioGroup,IonRadio, IonRange,IonIcon
 	} from '@ionic/react';
 import './Dashboard.css';
 import {doesFileExist, fetchData} from '../components/Function';
@@ -11,6 +11,7 @@ import config from '../components/data/nyc-config.json';
 import ReactFileReader from 'react-file-reader';
 import {StatisticCard} from '../components/StatisticCard'
 import {Leaflet1, Leaflet2} from '../components/Leaflet'
+import {GraphWrapper} from '../components/D3Graph'
 import {store} from '../components/Kepler';
 
 enum graphList {
@@ -95,6 +96,13 @@ const Dashboard: React.FC = () => {
       }, [current])
     
     const [graph,setGraph] = useState<graphList>(graphList.Kepler)
+    const [topic,setTopic] = useState<string[]>([])
+    const [subcat,setSubcat] = useState<string[]>([])
+
+    const [rangeValue, setRangeValue] = useState<{
+      lower: number;
+      upper: number;
+    }>({ lower: 0, upper: 0 })
 
   return (
     <IonPage>
@@ -103,11 +111,12 @@ const Dashboard: React.FC = () => {
           <IonTitle>Dashboard</IonTitle>
           
           <IonItem slot="end">
-            <IonSelect interface="popover">
+              <IonLabel>Time Period</IonLabel>
+            <IonSelect interface="popover" className="select" placeholder="All Time">
                 <IonSelectOption value="week">Last Week</IonSelectOption>
                 <IonSelectOption value="month">Last Month</IonSelectOption>
                 <IonSelectOption value="year">Last Year</IonSelectOption>
-                <IonSelectOption value="all">From Inception</IonSelectOption>
+                <IonSelectOption value="all">All Time</IonSelectOption>
             </IonSelect>
           </IonItem>
           
@@ -135,7 +144,8 @@ const Dashboard: React.FC = () => {
 			</IonCol>
             <IonCol sizeLg="2" offsetLg="0" pushLg="8" sizeSm="4.5" offsetSm="1" size="6">
                 <IonList>
-                    <IonItem>Dataset</IonItem>
+                    {(graph==="Kepler Map")?<>
+                        <IonItem>Dataset</IonItem>
                     {(Object.keys(list).length===0 || !list)?<IonItem>No Data Yet</IonItem>:
                         Object.keys(list).map((key)=>(<IonItem key={list[key]}>
                             <IonText className="data" onClick={()=>handleClick(list[key])}>{list[key].split('.')[0]}</IonText>
@@ -154,7 +164,47 @@ const Dashboard: React.FC = () => {
                         <IonButton>Upload</IonButton>
                         </ReactFileReader>
                     </IonItem>
-                    </IonList>
+                    </>
+                    :<>
+                    <IonItem>Filter</IonItem>
+                    <IonItem>
+                        <IonLabel>Topic</IonLabel>
+                        <IonSelect multiple={true} interface="popover" className="select" slot="end" value={topic} onIonChange={e => setTopic(e.detail.value)}>
+                        <IonSelectOption value="bacon">Bacon</IonSelectOption>
+                        <IonSelectOption value="olives">Black Olives</IonSelectOption>
+                        <IonSelectOption value="xcheese">Extra Cheese</IonSelectOption>
+                        <IonSelectOption value="peppers">Green Peppers</IonSelectOption>
+                        <IonSelectOption value="mushrooms">Mushrooms</IonSelectOption>
+                        <IonSelectOption value="onions">Onions</IonSelectOption>
+                        <IonSelectOption value="pepperoni">Pepperoni</IonSelectOption>
+                        <IonSelectOption value="pineapple">Pineapple</IonSelectOption>
+                        <IonSelectOption value="sausage">Sausage</IonSelectOption>
+                        <IonSelectOption value="Spinach">Spinach</IonSelectOption>
+                    </IonSelect>
+                    </IonItem>
+
+                    <IonItem>
+                        <IonLabel>Subcategory</IonLabel>
+                        <IonSelect multiple={true} interface="popover" className="select" slot="end" value={subcat} onIonChange={e => setSubcat(e.detail.value)}>
+                        <IonSelectOption value="bird">Bird</IonSelectOption>
+                        <IonSelectOption value="cat">Cat</IonSelectOption>
+                        <IonSelectOption value="dog">Dog</IonSelectOption>
+                        <IonSelectOption value="honeybadger">Honey Badger</IonSelectOption>
+                        </IonSelect>
+                    </IonItem>
+
+
+                    <IonItemDivider>Passenger Count</IonItemDivider>
+                        <IonItem>
+                            <IonRange pin={true} dualKnobs={true} min={0} max={60} step={3} snaps={true} onIonChange={e => setRangeValue(e.detail.value as any)} />
+                        </IonItem>
+                        <IonItem>
+                            <IonLabel>Value: lower: {rangeValue.lower} upper: {rangeValue.upper}</IonLabel>
+                        </IonItem>
+                    </>
+                    }
+            
+                </IonList>
 			</IonCol>
             <IonCol sizeLg="8" size="12" pullLg="2" className="canvas">
                 {
@@ -204,7 +254,7 @@ function switchGraph(graph:graphList, data:string, conf:object){
         case "Leaflet Map2":
             return <Leaflet2 data={data}></Leaflet2>
         case "Pie Chart":
-            return <></>
+            return <GraphWrapper></GraphWrapper>
         case "Line Chart":
             return <></>
         default:

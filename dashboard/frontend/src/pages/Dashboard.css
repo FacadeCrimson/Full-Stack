@@ -16,3 +16,21 @@ ion-col.canvas{
 }
 
 #mapid { height: 100%; }
+
+.select {
+    width:180px;
+    text-align:end;
+    /* Applies to the value and placeholder color */
+    color: #545ca7;
+  
+    /* Set a different placeholder color */
+    --placeholder-color: #971e49;
+  
+    --placeholder-opacity: 1;
+  }
+
+  /* Set the icon color and opacity */
+  .select::part(icon) {
+    color: #971e49;
+    opacity: 1;
+  }

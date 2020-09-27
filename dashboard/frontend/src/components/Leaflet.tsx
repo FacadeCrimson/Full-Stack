@@ -24,6 +24,9 @@ interface input{
 export const LeafletMap:React.FC<ContainerProps1>=({mapRef,center})=>{
 
     useEffect(()=>{
+        if(mapRef.current){
+            mapRef.current.remove()
+        }
         mapRef.current = L.map('mapid').setView(center, 13);
         L.tileLayer('https://api.mapbox.com/styles/v1/{id}/tiles/{z}/{x}/{y}?access_token='+process.env.REACT_APP_MAPBOX_TOKEN, {
         attribution: 'Map data &copy; <a href="https://www.openstreetmap.org/">OpenStreetMap</a> contributors, <a href="https://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>, Imagery © <a href="https://www.mapbox.com/">Mapbox</a>',
@@ -81,7 +84,7 @@ export const Leaflet1:React.FC<ContainerProps2>=({markersData})=>{
     const layerRef = useRef<LayerGroup|null>(null);
     useEffect(() => {
     layerRef.current = L.layerGroup().addTo(mapRef.current as Map);
-    }, []);
+    });
 
     useEffect(
     () => {
@@ -93,9 +96,7 @@ export const Leaflet1:React.FC<ContainerProps2>=({markersData})=>{
         layerRef.current as LayerGroup
         );
     });
-    },
-    [markersData]
-    );
+    },);
 
     useEffect(
     () => {
@@ -112,9 +113,7 @@ export const Leaflet1:React.FC<ContainerProps2>=({markersData})=>{
         ]).addTo(mapRef.current as Map);
         circle.bindPopup("I am a circle.");
         polygon.bindPopup("I am a polygon.");
-    },
-    []
-    );
+    },);
     return <LeafletMap mapRef={mapRef} center={[51.505, -0.09]}></LeafletMap>
 }
 
