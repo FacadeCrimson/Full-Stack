@@ -18,7 +18,7 @@ interface ContainerProps2{
 
 export const DensityGraph:React.FC<ContainerProps1>=({height,width,data,rangeValue})=>{
     const ref = useRef<any>()
-    const margin={left:40,bottom:20,top:10}
+    const margin={left:40,bottom:20,top:10,right:20}
     const newData= csvParse(data)
     // var dataMax = max(newData, function(d) { return d.passenger_count; });
     // var dataMin = min(newData, function(d) { return d.passenger_count; });
@@ -31,7 +31,7 @@ export const DensityGraph:React.FC<ContainerProps1>=({height,width,data,rangeVal
     const processData = (function process() {
     // add the x Axis
     var x = scaleLinear()
-            .range([0, width-margin.left])
+            .range([0, width-margin.left-margin.right])
             .domain([0, 100])      
     svg.append("g")
     .attr("transform", "translate("+margin.left+"," + (height-margin.bottom) + ")")

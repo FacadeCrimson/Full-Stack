@@ -74,9 +74,7 @@ export const LeafletMap:React.FC<ContainerProps1>=({mapRef,center})=>{
             alert(e.message);
         }
 
-    return <div id="mapid">
-            
-            </div>
+    return <div id="mapid"></div>
 }
 
 export const Leaflet1:React.FC<ContainerProps2>=({markersData})=>{

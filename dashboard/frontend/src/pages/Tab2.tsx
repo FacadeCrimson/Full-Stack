@@ -1,7 +1,10 @@
 import React from 'react';
-import { IonContent, IonHeader, IonPage, IonTitle, IonToolbar, IonButtons, IonMenuToggle, IonIcon, IonButton, IonMenu, IonList, IonListHeader, IonLabel, IonItem } from '@ionic/react';
+import { IonContent, IonHeader, IonPage, IonTitle, IonToolbar, IonButtons, IonMenuToggle, 
+  IonIcon, IonButton, IonMenu, IonList, IonListHeader, IonLabel, IonItem,
+  IonRow, IonGrid, IonCol } from '@ionic/react';
 import './Tab2.css';
 import { menu, home } from 'ionicons/icons';
+import {Circles,AnimatedCircles,ChartWithDimensions} from '../components/D3Explore'
 
 const Tab2: React.FC = () => {
   return (
@@ -43,11 +46,35 @@ const Tab2: React.FC = () => {
       </IonToolbar>
     </IonHeader>
     <IonContent class="ion-padding">
-      <h1>Main Content</h1>
-      <p>Click the icon in the top left to toggle the menu.</p>
+    <IonGrid>
+        <IonRow>
+          <IonCol size="12"  sizeMd="3" offsetMd="1">
+            <Circles></Circles>
+          </IonCol>
+          <IonCol size="12"  sizeMd="3" offsetMd="1">
+              <AnimatedCircles></AnimatedCircles>
+          </IonCol>
+          <IonCol size="12"  sizeMd="3" offsetMd="1">
+            <ChartWithDimensions {...chartSettings}></ChartWithDimensions>
+          </IonCol>
+          <IonCol size="12"  sizeMd="3" offsetMd="1">
+        
+          </IonCol>
+        </IonRow>
+      </IonGrid>
     </IonContent>
   </IonPage>
   );
 };
 
 export default Tab2;
+
+
+const chartSettings={
+  width: 200,
+  height: 200,
+  marginTop: 50,
+  marginRight: 50,
+  marginBottom: 50,
+  marginLeft: 50,
+}
