@@ -1,7 +1,10 @@
-import L,{ LayerGroup, Map} from 'leaflet'
+import L,{ Map} from 'leaflet'
 import React, { useEffect,useRef } from 'react';
 import {markerData} from '../pages/Dashboard'
 import {processCsvData} from 'kepler.gl';
+import {select,geoTransform,geoPath} from 'd3'
+import VanAreas from './data/VancouverAreaSize.json'
+import './Leaflet.css'
 
 interface ContainerProps1 {
     mapRef:any
@@ -37,21 +40,24 @@ export const LeafletMap:React.FC<ContainerProps1>=({mapRef,center})=>{
         accessToken: process.env.REACT_APP_MAPBOX_TOKEN
         }).addTo(mapRef.current);
 
-        mapRef.current.on('click', onMapClick);
+        let timer = 0
+        let prevent = false
+        mapRef.current.on('click', function(e:any) {
+             timer = setTimeout(function() {
+              if (!prevent) {
+                onMapClick(e)
+              }
+              prevent = false;
+            }, 200);
+          })
+          .on("dblclick", function() {
+            clearTimeout(timer);
+            prevent = true;
+            // doDoubleClickAction();
+          });
         mapRef.current.on('locationfound', onLocationFound);
         mapRef.current.on('locationerror', onLocationError);
     },)
-
-    // const marker = L.marker([51.5, -0.09])
-    // const markerRef = useRef<Marker|null>(marker);
-    // useEffect(() => {
-    //   if (markerRef.current) {
-    //     markerRef.current.setLatLng(markerPosition);
-    //   } else {
-    //     markerRef.current = L.marker(markerPosition).addTo(mapRef.current as Map);
-    //   }
-    // },
-    // [markerPosition]);
 
     function onMapClick(e:any) {
         var popup = L.popup();
@@ -79,40 +85,53 @@ export const LeafletMap:React.FC<ContainerProps1>=({mapRef,center})=>{
 
 export const Leaflet1:React.FC<ContainerProps2>=({markersData})=>{
     const mapRef = useRef<Map|null>(null);
-    const layerRef = useRef<LayerGroup|null>(null);
     useEffect(() => {
-    layerRef.current = L.layerGroup().addTo(mapRef.current as Map);
-    });
+        if(mapRef.current){
+            L.svg().addTo(mapRef.current)
+            //Create selection using D3
+            const overlay = select(mapRef.current.getPanes().overlayPane)
+            const svg = overlay.select('svg').attr("pointer-events", "auto")
+            // create a group that is hidden during zooming
+            const g = svg.append('g').attr('class', 'leaflet-zoom-hide')
 
-    useEffect(
-    () => {
-        if(layerRef.current){
-            layerRef.current.clearLayers();
+            // Use Leaflets projection API for drawing svg path (creates a stream of projected points)
+            const projectPoint = function(this:any,x:number, y:number){
+            if(mapRef.current){
+                const point = mapRef.current.latLngToLayerPoint(new L.LatLng(y, x))
+                    this.stream.point(point.x, point.y)
+                
+            }}
+
+            // Use d3's custom geo transform method to implement the above
+            const projection = geoTransform({point: projectPoint})
+            // creates geopath from projected points (SVG)
+            const pathCreator = geoPath().projection(projection)
+
+            const areaPaths = g.selectAll('path')
+            .data(VanAreas.features)
+            .enter()
+            .append('path')
+            .attr('fill-opacity', 0.3)
+            .attr('stroke', 'black')
+            .attr('stroke-width', 2.5)
+            .on("mouseover", function(d){
+                    select(this).attr("fill", "red")
+                })
+            .on("mouseout", function(d){
+                    select(this).attr("fill", "black")
+                })
+
+            // Function to place svg based on zoom
+            const onZoom = () => areaPaths.attr('d', pathCreator as any)
+            // initialize positioning
+            onZoom()
+            // reset whenever map is moved
+            if(mapRef.current)
+            mapRef.current.on('zoomend', onZoom)
         }
-        markersData.forEach(marker => {
-        L.marker(marker.latLng, { title: marker.title }).addTo(
-        layerRef.current as LayerGroup
-        );
-    });
-    },);
-
-    useEffect(
-    () => {
-        var circle = L.circle([51.508, -0.11], {
-            color: 'red',
-            fillColor: '#f03',
-            fillOpacity: 0.5,
-            radius: 500
-        }).addTo(mapRef.current as Map);
-        var polygon = L.polygon([
-            [51.509, -0.08],
-            [51.503, -0.06],
-            [51.51, -0.047]
-        ]).addTo(mapRef.current as Map);
-        circle.bindPopup("I am a circle.");
-        polygon.bindPopup("I am a polygon.");
-    },);
-    return <LeafletMap mapRef={mapRef} center={[51.505, -0.09]}></LeafletMap>
+    }
+    );
+    return <LeafletMap mapRef={mapRef} center={[49.2527, -123.1207]}></LeafletMap>
 }
 
 export const Leaflet2:React.FC<ContainerProps3>=({data})=>{
