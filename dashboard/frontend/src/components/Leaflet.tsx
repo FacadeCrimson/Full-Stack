@@ -1,14 +1,17 @@
-import L,{ Map} from 'leaflet'
+import L,{ Map,LayerGroup} from 'leaflet'
 import React, { useEffect,useRef } from 'react';
 import {markerData} from '../pages/Dashboard'
 import {processCsvData} from 'kepler.gl';
 import {select,geoTransform,geoPath} from 'd3'
 import VanAreas from './data/VancouverAreaSize.json'
 import './Leaflet.css'
+import LongBeach from './data/LongBeach.json'
+import DC from './data/DC.json'
 
 interface ContainerProps1 {
     mapRef:any
     center:[number,number]
+    zoom:number
 }
 
 interface ContainerProps2 {
@@ -24,13 +27,13 @@ interface input{
     rows:[[number,string,string,number,number,number,number,number,number,number,number,number]]
 }
 
-export const LeafletMap:React.FC<ContainerProps1>=({mapRef,center})=>{
+export const LeafletMap:React.FC<ContainerProps1>=({mapRef,center,zoom})=>{
 
     useEffect(()=>{
         if(mapRef.current){
             mapRef.current.remove()
         }
-        mapRef.current = L.map('mapid').setView(center, 13);
+        mapRef.current = L.map('mapid').setView(center, zoom);
         L.tileLayer('https://api.mapbox.com/styles/v1/{id}/tiles/{z}/{x}/{y}?access_token='+process.env.REACT_APP_MAPBOX_TOKEN, {
         attribution: 'Map data &copy; <a href="https://www.openstreetmap.org/">OpenStreetMap</a> contributors, <a href="https://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>, Imagery © <a href="https://www.mapbox.com/">Mapbox</a>',
         maxZoom: 18,
@@ -131,7 +134,7 @@ export const Leaflet1:React.FC<ContainerProps2>=({markersData})=>{
         }
     }
     );
-    return <LeafletMap mapRef={mapRef} center={[49.2527, -123.1207]}></LeafletMap>
+    return <LeafletMap mapRef={mapRef} center={[49.2527, -123.1207]} zoom={12}></LeafletMap>
 }
 
 export const Leaflet2:React.FC<ContainerProps3>=({data})=>{
@@ -146,5 +149,78 @@ export const Leaflet2:React.FC<ContainerProps3>=({data})=>{
         );
     });
     }, );
-    return <LeafletMap mapRef={mapRef} center={[40.718584, -73.964572]}></LeafletMap>
+    return <LeafletMap mapRef={mapRef} center={[40.718584, -73.964572]} zoom={13}></LeafletMap>
+}
+
+
+export const Leaflet3:React.FC<ContainerProps2>=({markersData})=>{
+    const mapRef = useRef<Map|null>(null);
+    useEffect(() => {
+        if(mapRef.current){
+            L.svg().addTo(mapRef.current)
+            //Create selection using D3
+            const overlay = select(mapRef.current.getPanes().overlayPane)
+            const svg = overlay.select('svg').attr("pointer-events", "auto")
+            // create a group that is hidden during zooming
+            const g = svg.append('g').attr('class', 'leaflet-zoom-hide')
+
+            // Use Leaflets projection API for drawing svg path (creates a stream of projected points)
+            const projectPoint = function(this:any,x:number, y:number){
+            if(mapRef.current){
+                const point = mapRef.current.latLngToLayerPoint(new L.LatLng(y, x))
+                    this.stream.point(point.x, point.y)
+                
+            }}
+
+            // Use d3's custom geo transform method to implement the above
+            const projection = geoTransform({point: projectPoint})
+            // creates geopath from projected points (SVG)
+            const pathCreator = geoPath().projection(projection)
+
+            const areaPaths = g.selectAll('path')
+            .data(LongBeach.features)
+            .enter()
+            .append('path')
+            .attr('fill-opacity', 0.2)
+            .attr('stroke', 'black')
+            .attr('stroke-width', 1.5)
+            .on("mouseover", function(d){
+                    select(this).attr("fill", "red")
+                })
+            .on("mouseout", function(d){
+                    select(this).attr("fill", "black")
+                })
+
+            // Function to place svg based on zoom
+            const onZoom = () => areaPaths.attr('d', pathCreator as any)
+            // initialize positioning
+            onZoom()
+            // reset whenever map is moved
+            if(mapRef.current)
+            mapRef.current.on('zoomend', onZoom)
+        }
+    }
+    );
+    return <LeafletMap mapRef={mapRef} center={[33.797548, -118.16346]} zoom={12}></LeafletMap>
+}
+
+
+export const Leaflet4:React.FC<ContainerProps2>=({markersData})=>{
+    const mapRef = useRef<Map|null>(null);
+    const layerRef = useRef<LayerGroup|null>(null);
+    useEffect(() => {
+        layerRef.current = L.layerGroup().addTo(mapRef.current as Map)
+    }
+    );
+    useEffect(()=>{
+        DC.data.geoSearch.forEach((row:any) => {
+            L.marker([row.latitude,row.longitude]).addTo(
+                layerRef.current as LayerGroup
+            ).bindPopup(()=>{return `<h5>Address: ${row.address.addressLine1}</h5>
+            <h5>State:${row.address.stateCode}</h5><h5>Phone${row.phoneNumber}</h5>
+            <h5>Postal:${row.address.postalCode}</h5><h5>City:${row.address.city}</h5>`})
+        });
+
+    })
+    return <LeafletMap mapRef={mapRef} center={[38.89511, -77.03637]} zoom={13}></LeafletMap>
 }

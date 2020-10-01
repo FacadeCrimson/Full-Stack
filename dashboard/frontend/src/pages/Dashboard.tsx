@@ -10,14 +10,16 @@ import nycTrips from '../components/data/nyc-trips.csv';
 import config from '../components/data/nyc-config.json';
 import ReactFileReader from 'react-file-reader';
 import {StatisticCard} from '../components/StatisticCard'
-import {Leaflet1, Leaflet2} from '../components/Leaflet'
+import {Leaflet1, Leaflet2,Leaflet3,Leaflet4} from '../components/Leaflet'
 import {GraphWrapper} from '../components/D3Graph'
 import {store} from '../components/Kepler';
 
 enum graphList {
     Kepler="Kepler Map",
-    Leaflet="Leaflet Map",
-    Leaflet2="Leaflet Map2",
+    Leaflet="Vancouver",
+    Leaflet2="New York",
+    Leaflet3="Long Beach",
+    Leaflet4="Capital One",
     Pie="Density Chart",
     Line="Line Chart"
 }
@@ -165,6 +167,30 @@ const Dashboard: React.FC = () => {
                         </ReactFileReader>
                     </IonItem>
                     </>
+
+                    :(graph==="Long Beach")?<>
+                    <IonItem>Filter</IonItem>
+                    <IonItem>
+                        <IonLabel>Topic</IonLabel>
+                        <IonSelect multiple={true} interface="popover" className="select" slot="end" value={topic} onIonChange={e => setTopic(e.detail.value)}>
+                            {["PARKING","PRICE","STAFF","CLEANLINESS","ATMOSPHERE","CROWDEDNESS","PUBLIC_TRANSPORTATION"].map((data)=>{
+                                return <IonSelectOption value={data}>{data}</IonSelectOption>
+                            })}
+                        </IonSelect>
+                    </IonItem>
+
+                    <IonItem>
+                        <IonLabel>Subcategory</IonLabel>
+                        <IonSelect multiple={true} interface="popover" className="select" slot="end" value={subcat} onIonChange={e => setSubcat(e.detail.value)}>
+                        <IonSelectOption value="bird">Bird</IonSelectOption>
+                        <IonSelectOption value="cat">Cat</IonSelectOption>
+                        <IonSelectOption value="dog">Dog</IonSelectOption>
+                        <IonSelectOption value="honeybadger">Honey Badger</IonSelectOption>
+                        </IonSelect>
+                    </IonItem>
+                    
+                    </>
+
                     :<>
                     <IonItem>Filter</IonItem>
                     <IonItem>
@@ -250,10 +276,14 @@ function switchGraph(graph:graphList, data:string, conf:object, rangeValue:any){
     switch(graph){
         case "Kepler Map":
             return <EmbeddedMap store={store} data={data} conf={conf}></EmbeddedMap>
-        case "Leaflet Map":
+        case "Vancouver":
             return <Leaflet1 markersData={markers}></Leaflet1>
-        case "Leaflet Map2":
+        case "New York":
             return <Leaflet2 data={data}></Leaflet2>
+        case "Long Beach":
+            return <Leaflet3 markersData={markers}></Leaflet3>
+        case "Capital One":
+            return <Leaflet4 markersData={markers}></Leaflet4>
         case "Density Chart":
             return <GraphWrapper data={data} rangeValue={rangeValue}></GraphWrapper>
         case "Line Chart":

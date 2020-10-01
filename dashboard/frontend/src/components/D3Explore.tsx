@@ -48,7 +48,7 @@ export const AnimatedCircles = () => {
         .join(
           enter => (
             enter.append("circle")
-                .attr("cx", (d,i) => i * 15 + 10)
+                .attr("cx", (d) => d * 15 + 10)
                 .attr("cy", 10)
                 .attr("r", 0)
                 .attr("fill", "cornflowerblue")
@@ -81,8 +81,10 @@ export const AnimatedCircles = () => {
     )
   }
 
+  const circleList = [0,1,2,3,4,5]
+
   const generateCircles = () => (
-    shuffle(["a","b","c","d","e","f"]).slice(0, Math.floor(Math.random()*7))
+    shuffle(circleList).slice(0, Math.floor(Math.random()*7))
     .sort()
   )
 
