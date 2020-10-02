@@ -3,10 +3,9 @@ import React, { useEffect,useRef } from 'react';
 import {markerData} from '../pages/Dashboard'
 import {processCsvData} from 'kepler.gl';
 import {select,geoTransform,geoPath} from 'd3'
-import VanAreas from './data/VancouverAreaSize.json'
 import './Leaflet.css'
 import LongBeach from './data/LongBeach.json'
-import DC from './data/DC.json'
+import DMV from './data/DMV.json'
 
 interface ContainerProps1 {
     mapRef:any
@@ -87,73 +86,7 @@ export const LeafletMap:React.FC<ContainerProps1>=({mapRef,center,zoom})=>{
 }
 
 export const Leaflet1:React.FC<ContainerProps2>=({markersData})=>{
-    const mapRef = useRef<Map|null>(null);
-    useEffect(() => {
-        if(mapRef.current){
-            L.svg().addTo(mapRef.current)
-            //Create selection using D3
-            const overlay = select(mapRef.current.getPanes().overlayPane)
-            const svg = overlay.select('svg').attr("pointer-events", "auto")
-            // create a group that is hidden during zooming
-            const g = svg.append('g').attr('class', 'leaflet-zoom-hide')
-
-            // Use Leaflets projection API for drawing svg path (creates a stream of projected points)
-            const projectPoint = function(this:any,x:number, y:number){
-            if(mapRef.current){
-                const point = mapRef.current.latLngToLayerPoint(new L.LatLng(y, x))
-                    this.stream.point(point.x, point.y)
-                
-            }}
-
-            // Use d3's custom geo transform method to implement the above
-            const projection = geoTransform({point: projectPoint})
-            // creates geopath from projected points (SVG)
-            const pathCreator = geoPath().projection(projection)
-
-            const areaPaths = g.selectAll('path')
-            .data(VanAreas.features)
-            .enter()
-            .append('path')
-            .attr('fill-opacity', 0.3)
-            .attr('stroke', 'black')
-            .attr('stroke-width', 2.5)
-            .on("mouseover", function(d){
-                    select(this).attr("fill", "red")
-                })
-            .on("mouseout", function(d){
-                    select(this).attr("fill", "black")
-                })
-
-            // Function to place svg based on zoom
-            const onZoom = () => areaPaths.attr('d', pathCreator as any)
-            // initialize positioning
-            onZoom()
-            // reset whenever map is moved
-            if(mapRef.current)
-            mapRef.current.on('zoomend', onZoom)
-        }
-    }
-    );
-    return <LeafletMap mapRef={mapRef} center={[49.2527, -123.1207]} zoom={12}></LeafletMap>
-}
-
-export const Leaflet2:React.FC<ContainerProps3>=({data})=>{
-    const mapRef = useRef<Map|null>(null);
-    const csv = processCsvData(data) as input;
-    useEffect(
-    () => {
-        var myRenderer = L.canvas({ padding: 0.5 });
-        csv.rows.forEach(marker => {
-        L.circleMarker([marker[6],marker[5]], { renderer: myRenderer,color: '#3388ff' }).addTo(
-        mapRef.current as Map
-        );
-    });
-    }, );
-    return <LeafletMap mapRef={mapRef} center={[40.718584, -73.964572]} zoom={13}></LeafletMap>
-}
-
-
-export const Leaflet3:React.FC<ContainerProps2>=({markersData})=>{
+   
     const mapRef = useRef<Map|null>(null);
     useEffect(() => {
         if(mapRef.current){
@@ -204,6 +137,33 @@ export const Leaflet3:React.FC<ContainerProps2>=({markersData})=>{
     return <LeafletMap mapRef={mapRef} center={[33.797548, -118.16346]} zoom={12}></LeafletMap>
 }
 
+export const Leaflet2:React.FC<ContainerProps3>=({data})=>{
+    const mapRef = useRef<Map|null>(null);
+    const csv = processCsvData(data) as input;
+    useEffect(
+    () => {
+        var myRenderer = L.canvas({ padding: 0.5 });
+        csv.rows.forEach(marker => {
+        L.circleMarker([marker[6],marker[5]], { renderer: myRenderer,color: '#3388ff' }).addTo(
+        mapRef.current as Map
+        );
+    });
+    }, );
+    return <LeafletMap mapRef={mapRef} center={[40.718584, -73.964572]} zoom={13}></LeafletMap>
+}
+
+
+export const Leaflet3:React.FC<ContainerProps2>=({markersData})=>{
+    const mapRef = useRef<Map|null>(null);
+    // useEffect(() => {
+    //     if(mapRef.current){
+
+    //     }
+    // }
+    // );
+    return <LeafletMap mapRef={mapRef} center={[33.797548, -118.16346]} zoom={12}></LeafletMap>
+}
+
 
 export const Leaflet4:React.FC<ContainerProps2>=({markersData})=>{
     const mapRef = useRef<Map|null>(null);
@@ -213,7 +173,7 @@ export const Leaflet4:React.FC<ContainerProps2>=({markersData})=>{
     }
     );
     useEffect(()=>{
-        DC.data.geoSearch.forEach((row:any) => {
+        DMV.data.geoSearch.forEach((row:any) => {
             L.marker([row.latitude,row.longitude]).addTo(
                 layerRef.current as LayerGroup
             ).bindPopup(()=>{return `<h5>Address: ${row.address.addressLine1}</h5>

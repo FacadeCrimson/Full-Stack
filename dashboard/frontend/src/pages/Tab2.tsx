@@ -1,14 +1,17 @@
-import React from 'react';
-import { IonContent, IonHeader, IonPage, IonTitle, IonToolbar, IonButtons, IonMenuToggle, 
-  IonIcon, IonButton, IonMenu, IonList, IonListHeader, IonLabel, IonItem,
+import React,{useState,useEffect} from 'react';
+import { IonContent, IonHeader, IonPage, IonTitle, IonToolbar, IonButtons, IonMenuToggle, IonChip,
+  IonIcon, IonButton, IonMenu, IonList, IonListHeader, IonLabel, IonItem, IonSelect, IonSelectOption, IonSearchbar, IonPopover, IonItemDivider,
   IonRow, IonGrid, IonCol } from '@ionic/react';
 import './Tab2.css';
-import { menu, home } from 'ionicons/icons';
+import { menu, home, closeCircle } from 'ionicons/icons';
 import {Circles,AnimatedCircles,ChartWithDimensions} from '../components/D3Explore'
+import {subSubGroup} from '../components/FilterList'
+import {MultiSelector} from '../components/MultiSelector'
 
 const Tab2: React.FC = () => {
+  const useShowPopover = useState(false);
   return (
-  <IonPage class="ion-page" id="main-content">
+  <IonPage className="ion-page" id="main-content">
         <IonMenu content-id="main-content">
             <IonHeader>
               <IonToolbar color="primary">
@@ -62,6 +65,12 @@ const Tab2: React.FC = () => {
           </IonCol>
         </IonRow>
       </IonGrid>
+        <IonItem>Filter</IonItem>
+        <IonItem>
+            <IonLabel>Sub-subgroup</IonLabel>
+            <IonButton slot="end" onClick={() => useShowPopover[1](true)}>&#9662;</IonButton>
+        </IonItem>
+        <MultiSelector data={subSubGroup} useShowPopover={useShowPopover}></MultiSelector>
     </IonContent>
   </IonPage>
   );
@@ -78,3 +87,6 @@ const chartSettings={
   marginBottom: 50,
   marginLeft: 50,
 }
+
+
+          // <IonSelect multiple={true} interface="popover" className="select" slot="end" value={ssg} onIonChange={e => setSsg(e.detail.value)}>

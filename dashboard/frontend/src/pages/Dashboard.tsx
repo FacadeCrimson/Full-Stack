@@ -16,7 +16,7 @@ import {store} from '../components/Kepler';
 
 enum graphList {
     Kepler="Kepler Map",
-    Leaflet="Vancouver",
+    Leaflet="Long Beach Areas",
     Leaflet2="New York",
     Leaflet3="Long Beach",
     Leaflet4="Capital One",
@@ -276,7 +276,7 @@ function switchGraph(graph:graphList, data:string, conf:object, rangeValue:any){
     switch(graph){
         case "Kepler Map":
             return <EmbeddedMap store={store} data={data} conf={conf}></EmbeddedMap>
-        case "Vancouver":
+        case "Long Beach Areas":
             return <Leaflet1 markersData={markers}></Leaflet1>
         case "New York":
             return <Leaflet2 data={data}></Leaflet2>
