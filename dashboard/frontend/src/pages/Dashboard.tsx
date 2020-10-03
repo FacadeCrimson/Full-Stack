@@ -1,8 +1,7 @@
 import React,{useState,useEffect} from 'react';
-import { IonContent, IonHeader, IonPage, IonTitle, IonToolbar, IonText, IonSelect, IonSelectOption, IonButton, IonInput,
-	IonCard, IonCardHeader, IonCardTitle, IonList,IonItemDivider,
-	IonItem, IonLabel, IonGrid, IonRow, IonCol,IonRadioGroup,IonRadio, IonRange,IonIcon
-	} from '@ionic/react';
+import { IonContent, IonHeader, IonPage, IonTitle, IonToolbar, IonText, IonSelect, IonSelectOption, 
+        IonButton, IonInput, IonCard, IonCardHeader, IonCardTitle, IonList,IonItemDivider, IonItem, 
+        IonLabel, IonGrid, IonRow, IonCol,IonRadioGroup,IonRadio, IonRange} from '@ionic/react';
 import './Dashboard.css';
 import {doesFileExist, fetchData} from '../components/Function';
 import {EmbeddedMap ,SaveConfigButton, DownloadConfigButton, UploadConfigButton} from '../components/MapComponents';
@@ -13,6 +12,8 @@ import {StatisticCard} from '../components/StatisticCard'
 import {Leaflet1, Leaflet2,Leaflet3,Leaflet4} from '../components/Leaflet'
 import {GraphWrapper} from '../components/D3Graph'
 import {store} from '../components/Kepler';
+import {MultiSelector} from '../components/MultiSelector'
+import {subSubGroup, subGroup, parentGroup, topics} from '../components/FilterList'
 
 enum graphList {
     Kepler="Kepler Map",
@@ -25,6 +26,7 @@ enum graphList {
 }
 
 const Dashboard: React.FC = () => {
+    const [timeRange,setTimeRange] = useState<string>('all')
     const [data,setData]=useState<any>(nycTrips);
     const [conf,setConf]=useState<object>(config);
     const [name,setName]=useState<string>("input file name");
@@ -106,6 +108,12 @@ const Dashboard: React.FC = () => {
       upper: number;
     }>({ lower: 0, upper: 0 })
 
+    const useShowPopover1 = useState(false);
+    const useShowPopover2 = useState(false);
+    const useShowPopover3 = useState(false);
+    const useShowPopover4 = useState(false);
+    const [cluster, setCluster] = useState(0)
+
   return (
     <IonPage>
       <IonHeader>
@@ -114,7 +122,7 @@ const Dashboard: React.FC = () => {
           
           <IonItem slot="end">
               <IonLabel>Time Period</IonLabel>
-            <IonSelect interface="popover" className="select" placeholder="All Time">
+            <IonSelect interface="popover" className="select" placeholder="All Time" onIonChange={e => setTimeRange(e.detail.value)}>
                 <IonSelectOption value="week">Last Week</IonSelectOption>
                 <IonSelectOption value="month">Last Month</IonSelectOption>
                 <IonSelectOption value="year">Last Year</IonSelectOption>
@@ -172,23 +180,29 @@ const Dashboard: React.FC = () => {
                     <IonItem>Filter</IonItem>
                     <IonItem>
                         <IonLabel>Topic</IonLabel>
-                        <IonSelect multiple={true} interface="popover" className="select" slot="end" value={topic} onIonChange={e => setTopic(e.detail.value)}>
-                            {["PARKING","PRICE","STAFF","CLEANLINESS","ATMOSPHERE","CROWDEDNESS","PUBLIC_TRANSPORTATION"].map((data)=>{
-                                return <IonSelectOption value={data}>{data}</IonSelectOption>
-                            })}
-                        </IonSelect>
+                        <IonButton slot="end" onClick={() => useShowPopover1[1](true)}>&#9662;</IonButton>
                     </IonItem>
+                    <MultiSelector data={topics} useShowPopover={useShowPopover1}></MultiSelector>
+                    <IonItem>
+                        <IonLabel>Parent Group</IonLabel>
+                        <IonButton slot="end" onClick={() => useShowPopover2[1](true)}>&#9662;</IonButton>
+                    </IonItem>
+                    <MultiSelector data={parentGroup} useShowPopover={useShowPopover2}></MultiSelector>
+                    <IonItem>
+                        <IonLabel>Sub Group</IonLabel>
+                        <IonButton slot="end" onClick={() => useShowPopover3[1](true)}>&#9662;</IonButton>
+                    </IonItem>
+                    <MultiSelector data={subGroup} useShowPopover={useShowPopover3}></MultiSelector>
 
                     <IonItem>
-                        <IonLabel>Subcategory</IonLabel>
-                        <IonSelect multiple={true} interface="popover" className="select" slot="end" value={subcat} onIonChange={e => setSubcat(e.detail.value)}>
-                        <IonSelectOption value="bird">Bird</IonSelectOption>
-                        <IonSelectOption value="cat">Cat</IonSelectOption>
-                        <IonSelectOption value="dog">Dog</IonSelectOption>
-                        <IonSelectOption value="honeybadger">Honey Badger</IonSelectOption>
-                        </IonSelect>
+                        <IonLabel>Sub-subgroup</IonLabel>
+                        <IonButton slot="end" onClick={() => useShowPopover4[1](true)}>&#9662;</IonButton>
                     </IonItem>
-                    
+                    <MultiSelector data={subSubGroup} useShowPopover={useShowPopover4}></MultiSelector>
+                    <IonItem>
+                            <IonRange pin={true} value ={cluster} min={0} max={299} step={1} debounce={600}
+                             onIonChange={e => setCluster(e.detail.value as number)} />
+                    </IonItem>
                     </>
 
                     :<>
@@ -196,26 +210,12 @@ const Dashboard: React.FC = () => {
                     <IonItem>
                         <IonLabel>Topic</IonLabel>
                         <IonSelect multiple={true} interface="popover" className="select" slot="end" value={topic} onIonChange={e => setTopic(e.detail.value)}>
-                        <IonSelectOption value="bacon">Bacon</IonSelectOption>
-                        <IonSelectOption value="olives">Black Olives</IonSelectOption>
-                        <IonSelectOption value="xcheese">Extra Cheese</IonSelectOption>
-                        <IonSelectOption value="peppers">Green Peppers</IonSelectOption>
-                        <IonSelectOption value="mushrooms">Mushrooms</IonSelectOption>
-                        <IonSelectOption value="onions">Onions</IonSelectOption>
-                        <IonSelectOption value="pepperoni">Pepperoni</IonSelectOption>
-                        <IonSelectOption value="pineapple">Pineapple</IonSelectOption>
-                        <IonSelectOption value="sausage">Sausage</IonSelectOption>
-                        <IonSelectOption value="Spinach">Spinach</IonSelectOption>
                     </IonSelect>
                     </IonItem>
 
                     <IonItem>
                         <IonLabel>Subcategory</IonLabel>
                         <IonSelect multiple={true} interface="popover" className="select" slot="end" value={subcat} onIonChange={e => setSubcat(e.detail.value)}>
-                        <IonSelectOption value="bird">Bird</IonSelectOption>
-                        <IonSelectOption value="cat">Cat</IonSelectOption>
-                        <IonSelectOption value="dog">Dog</IonSelectOption>
-                        <IonSelectOption value="honeybadger">Honey Badger</IonSelectOption>
                         </IonSelect>
                     </IonItem>
 
@@ -277,13 +277,13 @@ function switchGraph(graph:graphList, data:string, conf:object, rangeValue:any){
         case "Kepler Map":
             return <EmbeddedMap store={store} data={data} conf={conf}></EmbeddedMap>
         case "Long Beach Areas":
-            return <Leaflet1 markersData={markers}></Leaflet1>
+            return <Leaflet1></Leaflet1>
         case "New York":
             return <Leaflet2 data={data}></Leaflet2>
         case "Long Beach":
-            return <Leaflet3 markersData={markers}></Leaflet3>
+            return <Leaflet3></Leaflet3>
         case "Capital One":
-            return <Leaflet4 markersData={markers}></Leaflet4>
+            return <Leaflet4></Leaflet4>
         case "Density Chart":
             return <GraphWrapper data={data} rangeValue={rangeValue}></GraphWrapper>
         case "Line Chart":
@@ -292,14 +292,3 @@ function switchGraph(graph:graphList, data:string, conf:object, rangeValue:any){
             return <EmbeddedMap store={store} data={data} conf={conf}></EmbeddedMap>
     }
 }
-
-export interface markerData{
-    latLng:[number,number]
-    title:string
-}
-
-const markers:markerData[] = [
-    {latLng:[51.509, -0.08], title:"number1"},
-    {latLng:[51.503, -0.06], title:"number2"},
-    {latLng:[51.51, -0.047], title:"number3"},
-]

@@ -8,7 +8,7 @@ export const parentGroup = ['Retail Trade', 'Manufacturing', 'Accommodation and 
 'Health Care and Social Assistance',
 'Agriculture, Forestry, Fishing and Hunting',
 'Other Services (except Public Administration)',
-'Public Administration', 'Educational Services', '']
+'Public Administration', 'Educational Services']
 export const subGroup = ['Motor Vehicle and Parts Dealers ',
 'Computer and Electronic Product Manufacturing ',
 'General Merchandise Stores ',
@@ -55,7 +55,7 @@ export const subGroup = ['Motor Vehicle and Parts Dealers ',
 'Securities, Commodity Contracts, and Other Financial Investments and Related Activities ',
 'Justice, Public Order, and Safety Activities ',
 'Monetary Authorities-Central Bank ', 'Telecommunications ',
-'Crop Production ', 'Social Assistance ','']
+'Crop Production ', 'Social Assistance ']
 export const subSubGroup = ['New Car Dealers ',
 'Analytical Laboratory Instrument Manufacturing ',
 'Department Stores ', 'Full-Service Restaurants ',
@@ -230,6 +230,6 @@ export const subSubGroup = ['New Car Dealers ',
 'Painting and Wall Covering Contractors',
 'All Other Miscellaneous Manufacturing ',
 'Footwear and Leather Goods Repair', 'Gasoline Stations ',
-'Residential Property Managers ','']
+'Residential Property Managers ']
 
-export const topic =["PARKING","PRICE","STAFF","CLEANLINESS","ATMOSPHERE","CROWDEDNESS","PUBLIC_TRANSPORTATION"]
+export const topics =["PARKING","PRICE","STAFF","CLEANLINESS","ATMOSPHERE","CROWDEDNESS","PUBLIC_TRANSPORTATION"]
