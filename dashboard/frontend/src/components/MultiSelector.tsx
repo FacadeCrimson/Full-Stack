@@ -1,4 +1,4 @@
-import React, {useState,useEffect,useRef} from 'react'
+import React, {useState,useEffect} from 'react'
 import { IonChip, IonIcon,IonList, IonLabel, IonItem, IonSearchbar, IonPopover,} from '@ionic/react';
 import { closeCircle } from 'ionicons/icons';
 import './MultiSelector.css'
@@ -6,25 +6,26 @@ import './MultiSelector.css'
 interface ContainerProps {
     data:string[]
     useShowPopover:[boolean,Function]
+    filter:any
+    name:string
 }
 
-export const MultiSelector:React.FC<ContainerProps>=({data, useShowPopover})=>{
-    const select = useRef<Set<string>>(new Set())
+export const MultiSelector:React.FC<ContainerProps>=({data, useShowPopover,filter,name})=>{
     const [selected,setSelected] = useState<number>(0)
     const [searchText, setSearchText] = useState('');
-    const [filter, setFilter] = useState('');
+    const [target, setTarget] = useState('');
     useEffect(()=>{
         const query = searchText.toLowerCase();
-        setFilter(query)
+        setTarget(query)
     },[searchText])
     
     const handleAdd=(item:string)=>{
-        if(select.current.has(item)){
-            select.current.delete(item)
+        if(filter.current[name].has(item)){
+            filter.current[name].delete(item)
             setSelected(a=>a-1)
         }
         else{
-            select.current.add(item) 
+            filter.current[name].add(item) 
             setSelected(a=>a+1)
         }
     }
@@ -35,7 +36,7 @@ export const MultiSelector:React.FC<ContainerProps>=({data, useShowPopover})=>{
     onDidDismiss={e => useShowPopover[1](false)}>
       <IonSearchbar value={searchText} onIonChange={e => setSearchText(e.detail.value!)} debounce={1000}></IonSearchbar>           
         <p>
-            {[...select.current].map((item)=>{
+            {[...filter.current[name]].map((item)=>{
             return <IonChip outline key={item} color="primary">
             <IonLabel>{item}</IonLabel>
             <IonIcon icon={closeCircle} onClick={()=>{handleAdd(item)}}></IonIcon>
@@ -44,11 +45,11 @@ export const MultiSelector:React.FC<ContainerProps>=({data, useShowPopover})=>{
         </p>
       <IonList id="filterlist">
         {data.map((item)=>{
-          if(item.toLowerCase().indexOf(filter) <= -1){
+          if(item.toLowerCase().indexOf(target) <= -1){
             return null
           }
           else{
-            if(select.current.has(item)){
+            if(filter.current[name].has(item)){
               return <IonItem key={item} className="listitem" color="secondary" onClick={()=>{handleAdd(item)}}>{item}</IonItem>
             }
             else{return <IonItem key={item} className="listitem" onClick={()=>(handleAdd(item))}>{item}</IonItem>}

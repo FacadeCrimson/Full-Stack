@@ -1,4 +1,4 @@
-import React,{useState,useEffect} from 'react';
+import React,{useState,useEffect,useRef} from 'react';
 import { IonContent, IonHeader, IonPage, IonTitle, IonToolbar, IonText, IonSelect, IonSelectOption, 
         IonButton, IonInput, IonCard, IonCardHeader, IonCardTitle, IonList,IonItemDivider, IonItem, 
         IonLabel, IonGrid, IonRow, IonCol,IonRadioGroup,IonRadio, IonRange} from '@ionic/react';
@@ -112,7 +112,9 @@ const Dashboard: React.FC = () => {
     const useShowPopover2 = useState(false);
     const useShowPopover3 = useState(false);
     const useShowPopover4 = useState(false);
-    const [cluster, setCluster] = useState(0)
+    const [cluster, setCluster] = useState(-1)
+
+    let filter = useRef({"topics":new Set(),"parentGroup":new Set(),"subGroup":new Set(),"subSubGroup":new Set(),"cluster":cluster,"time":timeRange})
 
   return (
     <IonPage>
@@ -122,10 +124,10 @@ const Dashboard: React.FC = () => {
           
           <IonItem slot="end">
               <IonLabel>Time Period</IonLabel>
-            <IonSelect interface="popover" className="select" placeholder="All Time" onIonChange={e => setTimeRange(e.detail.value)}>
-                <IonSelectOption value="week">Last Week</IonSelectOption>
-                <IonSelectOption value="month">Last Month</IonSelectOption>
-                <IonSelectOption value="year">Last Year</IonSelectOption>
+            <IonSelect interface="popover" className="select" placeholder="All Time" onIonChange={e => {filter.current.time=e.detail.value;setTimeRange(e.detail.value)}}>
+                <IonSelectOption value="day">Last Week</IonSelectOption>
+                <IonSelectOption value="week">Last Month</IonSelectOption>
+                <IonSelectOption value="month">Last Year</IonSelectOption>
                 <IonSelectOption value="all">All Time</IonSelectOption>
             </IonSelect>
           </IonItem>
@@ -182,26 +184,27 @@ const Dashboard: React.FC = () => {
                         <IonLabel>Topic</IonLabel>
                         <IonButton slot="end" onClick={() => useShowPopover1[1](true)}>&#9662;</IonButton>
                     </IonItem>
-                    <MultiSelector data={topics} useShowPopover={useShowPopover1}></MultiSelector>
+                    <MultiSelector data={topics} name="topics" useShowPopover={useShowPopover1} filter={filter}></MultiSelector>
                     <IonItem>
                         <IonLabel>Parent Group</IonLabel>
                         <IonButton slot="end" onClick={() => useShowPopover2[1](true)}>&#9662;</IonButton>
                     </IonItem>
-                    <MultiSelector data={parentGroup} useShowPopover={useShowPopover2}></MultiSelector>
+                    <MultiSelector data={parentGroup} name="parentGroup" useShowPopover={useShowPopover2} filter={filter}></MultiSelector>
                     <IonItem>
                         <IonLabel>Sub Group</IonLabel>
                         <IonButton slot="end" onClick={() => useShowPopover3[1](true)}>&#9662;</IonButton>
                     </IonItem>
-                    <MultiSelector data={subGroup} useShowPopover={useShowPopover3}></MultiSelector>
+                    <MultiSelector data={subGroup} name="subGroup" useShowPopover={useShowPopover3} filter={filter}></MultiSelector>
 
                     <IonItem>
                         <IonLabel>Sub-subgroup</IonLabel>
                         <IonButton slot="end" onClick={() => useShowPopover4[1](true)}>&#9662;</IonButton>
                     </IonItem>
-                    <MultiSelector data={subSubGroup} useShowPopover={useShowPopover4}></MultiSelector>
+                    <MultiSelector data={subSubGroup} name="subSubGroup" useShowPopover={useShowPopover4} filter={filter}></MultiSelector>
+                    <IonItemDivider>Cluster <IonButton slot="end" onClick={() => {filter.current.cluster=-1;setCluster(-1)}}>Reset</IonButton></IonItemDivider>
                     <IonItem>
-                            <IonRange pin={true} value ={cluster} min={0} max={299} step={1} debounce={600}
-                             onIonChange={e => setCluster(e.detail.value as number)} />
+                            <IonRange pin={true} value ={cluster} min={-1} max={299} step={1} debounce={600}
+                             onIonChange={e => {filter.current.cluster=e.detail.value as number;setCluster(e.detail.value as number)}} />
                     </IonItem>
                     </>
 
@@ -235,7 +238,7 @@ const Dashboard: React.FC = () => {
 			</IonCol>
             <IonCol sizeLg="8" size="12" pullLg="2" className="canvas">
                 {
-                    switchGraph(graph,data,conf,rangeValue)
+                    switchGraph(graph,data,conf,rangeValue,filter.current)
                     }
 			</IonCol>
            
@@ -272,7 +275,7 @@ const Dashboard: React.FC = () => {
 
 export default Dashboard;
 
-function switchGraph(graph:graphList, data:string, conf:object, rangeValue:any){
+function switchGraph(graph:graphList, data:string, conf:object, rangeValue:any,filter:any){
     switch(graph){
         case "Kepler Map":
             return <EmbeddedMap store={store} data={data} conf={conf}></EmbeddedMap>
@@ -281,7 +284,7 @@ function switchGraph(graph:graphList, data:string, conf:object, rangeValue:any){
         case "New York":
             return <Leaflet2 data={data}></Leaflet2>
         case "Long Beach":
-            return <Leaflet3></Leaflet3>
+            return <Leaflet3 filter={filter}></Leaflet3>
         case "Capital One":
             return <Leaflet4></Leaflet4>
         case "Density Chart":

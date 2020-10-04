@@ -1,5 +1,5 @@
-import React,{useEffect,useRef,useState,useMemo} from 'react'
-import {select, shuffle, scaleLinear} from 'd3'
+import React,{useEffect,useRef,useState} from 'react'
+import {select, shuffle} from 'd3'
 import useInterval from './useInterval'
 
 export const Circles:React.FC = () => {
@@ -99,11 +99,6 @@ export const AnimatedCircles = () => {
 
   export const ChartWithDimensions:React.FC<chartSettings> = (chartSettings) => {
     const dms = combineChartDimensions(chartSettings)
-    const xScale = useMemo(() => (
-      scaleLinear()
-      .domain([0, 100])
-      .range([0, dms.boundedWidth])
-    ), [dms.boundedWidth])
     return (
       <div
         className="Chart__wrapper"

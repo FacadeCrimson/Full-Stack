@@ -8,7 +8,7 @@ export const StatisticCard:React.FC=()=>{
     <IonCol sizeLg="2.5" offsetLg="0.4" sizeSm="4.5" offsetSm="1" size="10" offset="1">
         <IonCard>
             <IonCardHeader>
-                <IonCardTitle>Num of Reviews</IonCardTitle>
+                <IonCardTitle>Business Final Score Percentile</IonCardTitle>
                 <IonCardSubtitle>115</IonCardSubtitle>
             </IonCardHeader>
             <IonItem>
@@ -29,7 +29,7 @@ export const StatisticCard:React.FC=()=>{
     <IonCol sizeLg="2.5" offsetLg="0.4" sizeSm="4.5" offsetSm="1" size="10" offset="1">
         <IonCard>
             <IonCardHeader>
-                <IonCardTitle>Num of Reviews</IonCardTitle>
+                <IonCardTitle>Business Topic Final Score Percentile</IonCardTitle>
                 <IonCardSubtitle>115</IonCardSubtitle>
             </IonCardHeader>
             <IonItem>
@@ -50,7 +50,7 @@ export const StatisticCard:React.FC=()=>{
     <IonCol sizeLg="2.5" offsetLg="0.4" sizeSm="4.5" offsetSm="1" size="10" offset="1">
         <IonCard>
             <IonCardHeader>
-                <IonCardTitle>Num of Reviews</IonCardTitle>
+                <IonCardTitle>Sent Score Pred Label'</IonCardTitle>
                 <IonCardSubtitle>115</IonCardSubtitle>
             </IonCardHeader>
             <IonItem>
@@ -71,7 +71,7 @@ export const StatisticCard:React.FC=()=>{
     <IonCol sizeLg="2.5" offsetLg="0.4" sizeSm="4.5" offsetSm="1" size="10" offset="1">
         <IonCard>
             <IonCardHeader>
-                <IonCardTitle>Num of Reviews</IonCardTitle>
+                <IonCardTitle>Average Review</IonCardTitle>
                 <IonCardSubtitle>115</IonCardSubtitle>
             </IonCardHeader>
             <IonItem>

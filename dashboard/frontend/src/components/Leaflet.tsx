@@ -1,7 +1,8 @@
 import L,{ Map,LayerGroup} from 'leaflet'
 import React, { useEffect,useRef } from 'react';
 import {processCsvData} from 'kepler.gl';
-import {select,geoTransform,geoPath,csv,json,nest} from 'd3'
+import {select,geoTransform,geoPath,csv,json} from 'd3'
+import {nest} from 'd3-collection'
 import './Leaflet.css'
 
 interface ContainerProps1 {
@@ -11,7 +12,7 @@ interface ContainerProps1 {
 }
 
 interface ContainerProps2 {
-
+    filter:any
 }
 
 interface ContainerProps3 {
@@ -82,7 +83,7 @@ export const LeafletMap:React.FC<ContainerProps1>=({mapRef,center,zoom})=>{
     return <div id="mapid"></div>
 }
 
-export const Leaflet1:React.FC<ContainerProps2>=()=>{
+export const Leaflet1:React.FC=()=>{
    
     const mapRef = useRef<Map|null>(null);
     useEffect(() => {
@@ -154,7 +155,7 @@ export const Leaflet2:React.FC<ContainerProps3>=({data})=>{
 }
 
 
-export const Leaflet3:React.FC<ContainerProps2>=()=>{
+export const Leaflet3:React.FC<ContainerProps2>=({filter})=>{
     const mapRef = useRef<Map|null>(null);
     useEffect(() => {
         async function showLB(){
@@ -163,34 +164,43 @@ export const Leaflet3:React.FC<ContainerProps2>=()=>{
                 const overlay = select(mapRef.current.getPanes().overlayPane)
                 const svg = overlay.select('svg').attr("pointer-events", "auto")
                 const g = svg.append('g').attr('class', 'leaflet-zoom-hide')
-
+                console.log(filter)
                 const LB = await csv('/data/LongBeach.csv')
+                const LB1 = LB.filter(function(a){
+                    return (filter.topics.size===0 || filter.topics.has(a.topic)) &&
+                    ((filter.subSubGroup.has(a.sub_sub_group)) || (filter.subSubGroup.size===0)) &&
+                    ((filter.subGroup.has(a.sub_group)) || (filter.subGroup.size===0)) &&
+                    ((filter.parentGroup.has(a.parent_group) || (filter.parentGroup.size===0))) &&
+                    ((filter.time === 'all') || (a.review_data?.indexOf(filter.time)!>-1))
+                })
+                console.log(LB1[1])
                 const entries = nest()
                             .key(function(d:any) { return d.latlong; })
-                            .entries(LB);
+                            .entries(LB1);
 
-                const Dots = g.selectAll('circle')
+                const data = g.selectAll('circle')
                             .attr("class", "points")
-                            .data(entries) 
-                            .join('circle')
+                            .data(entries)
+                            
+                let Dots = data.join('circle')
                                 .attr("id", "dotties")
                                 .attr("fill", "steelblue") 
                                 .attr("stroke", "black")
                                 .attr("cx", d => mapRef.current!.latLngToLayerPoint(JSON.parse(d.key)).x)
                                 .attr("cy", d => mapRef.current!.latLngToLayerPoint(JSON.parse(d.key)).y) 
                                 .attr("r", 5)
-                                // .on('mouseover', function() { //function to add mouseover event
-                                //     select(this).transition() //D3 selects the object we have moused over in order to perform operations on it
-                                //       .duration(150) //how long we are transitioning between the two states (works like keyframes)
-                                //       .attr("fill", "red") //change the fill
-                                //       .attr('r', 10) //change radius
-                                //   })
-                                //   .on('mouseout', function() { //reverse the action based on when we mouse off the the circle
-                                //     select(this).transition()
-                                //       .duration(150)
-                                //       .attr("fill", "steelblue")
-                                //       .attr('r', 5)
-                                //   });
+                                .on('mouseover', function() { //function to add mouseover event
+                                    select(this).transition() //D3 selects the object we have moused over in order to perform operations on it
+                                      .duration(150) //how long we are transitioning between the two states (works like keyframes)
+                                      .attr("fill", "red") //change the fill
+                                      .attr('r', 10) //change radius
+                                  })
+                                  .on('mouseout', function() { //reverse the action based on when we mouse off the the circle
+                                    select(this).transition()
+                                      .duration(150)
+                                      .attr("fill", "steelblue")
+                                      .attr('r', 5)
+                                  });
                 const update = () => Dots
                 .attr("cx", d => mapRef.current!.latLngToLayerPoint(JSON.parse(d.key)).x)
                 .attr("cy", d => mapRef.current!.latLngToLayerPoint(JSON.parse(d.key)).y) 
@@ -202,11 +212,11 @@ export const Leaflet3:React.FC<ContainerProps2>=()=>{
         showLB()
     }
     );
-    return <LeafletMap mapRef={mapRef} center={[33.797548, -118.16346]} zoom={12}></LeafletMap>
+    return <LeafletMap mapRef={mapRef} center={[33.797548, -118.16346]} zoom={11}></LeafletMap>
 }
 
 
-export const Leaflet4:React.FC<ContainerProps2>=()=>{
+export const Leaflet4:React.FC=()=>{
     const mapRef = useRef<Map|null>(null);
     const layerRef = useRef<LayerGroup|null>(null);
     useEffect(() => {
