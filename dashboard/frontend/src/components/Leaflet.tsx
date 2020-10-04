@@ -1,7 +1,9 @@
+/* tslint:disable */
 import L,{ Map,LayerGroup} from 'leaflet'
 import React, { useEffect,useRef } from 'react';
 import {processCsvData} from 'kepler.gl';
-import {select,geoTransform,geoPath,csv,json} from 'd3'
+import {select,geoTransform,geoPath,csv,json,scaleSequential,interpolateRdBu} from 'd3'
+import {event} from 'd3-selection';
 import {nest} from 'd3-collection'
 import './Leaflet.css'
 
@@ -13,6 +15,7 @@ interface ContainerProps1 {
 
 interface ContainerProps2 {
     filter:any
+    result:any
 }
 
 interface ContainerProps3 {
@@ -155,7 +158,7 @@ export const Leaflet2:React.FC<ContainerProps3>=({data})=>{
 }
 
 
-export const Leaflet3:React.FC<ContainerProps2>=({filter})=>{
+export const Leaflet3:React.FC<ContainerProps2>=({filter,result})=>{
     const mapRef = useRef<Map|null>(null);
     useEffect(() => {
         async function showLB(){
@@ -164,42 +167,90 @@ export const Leaflet3:React.FC<ContainerProps2>=({filter})=>{
                 const overlay = select(mapRef.current.getPanes().overlayPane)
                 const svg = overlay.select('svg').attr("pointer-events", "auto")
                 const g = svg.append('g').attr('class', 'leaflet-zoom-hide')
-                console.log(filter)
+
                 const LB = await csv('/data/LongBeach.csv')
                 const LB1 = LB.filter(function(a){
                     return (filter.topics.size===0 || filter.topics.has(a.topic)) &&
                     ((filter.subSubGroup.has(a.sub_sub_group)) || (filter.subSubGroup.size===0)) &&
                     ((filter.subGroup.has(a.sub_group)) || (filter.subGroup.size===0)) &&
                     ((filter.parentGroup.has(a.parent_group) || (filter.parentGroup.size===0))) &&
+                    ((filter.cluster === -1) || (filter.cluster === +a.Cluster!)) &&
                     ((filter.time === 'all') || (a.review_data?.indexOf(filter.time)!>-1))
                 })
-                console.log(LB1[1])
                 const entries = nest()
                             .key(function(d:any) { return d.latlong; })
                             .entries(LB1);
+                //calculate number for result
+                const n = entries.length
+                let sum_ar = 0
+                let sum_bfsp = 0
+                let sum_btfsp = 0
+                let sum_sspl = 0
+                 for(let i of entries){
+                     if(i.values[0] && !isNaN(i.values[0].avg_review)){
+                         sum_ar+=(+i.values[0].avg_review)
+                     }
+                     if(i.values[0] && !isNaN(i.values[0].business_final_score_percentile)){
+                         sum_bfsp+=(+i.values[0].business_final_score_percentile)
+                     }
+                     if(i.values[0] && !isNaN(i.values[0].business_topic_final_score_percentile)){
+                        sum_btfsp+=(+i.values[0].business_topic_final_score_percentile)
+                    }
+                    if(i.values[0] && !isNaN(i.values[0].sent_score_pred_label)){
+                        sum_sspl+=(+i.values[0].sent_score_pred_label)
+                    }
+                }
 
-                const data = g.selectAll('circle')
-                            .attr("class", "points")
-                            .data(entries)
+                result.ar = Math.round((sum_ar/n + Number.EPSILON) * 100) / 100
+                result.bfsp = Math.round((sum_bfsp/n + Number.EPSILON) * 100) / 100
+                result.btfsp = Math.round((sum_btfsp/n + Number.EPSILON) * 100) / 100
+                result.sspl = Math.round((sum_sspl/n + Number.EPSILON) * 100) / 100
+
+                let div =  select("body").append("div")	
+                            .attr("class", "tooltip")				
+                            .style("opacity", 0);
+                let color = scaleSequential(interpolateRdBu)
                             
-                let Dots = data.join('circle')
-                                .attr("id", "dotties")
-                                .attr("fill", "steelblue") 
-                                .attr("stroke", "black")
+                        
+                let Dots = g.selectAll('circle')
+                                .data(entries)
+                                .join('circle')
                                 .attr("cx", d => mapRef.current!.latLngToLayerPoint(JSON.parse(d.key)).x)
                                 .attr("cy", d => mapRef.current!.latLngToLayerPoint(JSON.parse(d.key)).y) 
+                                .attr("class", "points")
+                                .attr("data",d=>d.values[0].Percentage_of_renting)
+                                .attr("fill", d=> color(d.values[0].business_final_score_percentile)) 
+                                .attr("stroke", "black")
                                 .attr("r", 5)
-                                .on('mouseover', function() { //function to add mouseover event
+                                .on('mouseover', function(e:any,d:any) { //function to add mouseover event
                                     select(this).transition() //D3 selects the object we have moused over in order to perform operations on it
                                       .duration(150) //how long we are transitioning between the two states (works like keyframes)
                                       .attr("fill", "red") //change the fill
                                       .attr('r', 10) //change radius
+                                    div.transition()		
+                                      .duration(200)		
+                                      .style("opacity", .9)
+                                    div.html(`<h6>Name: ${d.values[0].name_only}</h6>`+
+                                             `<h6>Address: ${d.values[0].address_only}</h6>`+
+                                             `<p>Estimate median household income: ${d.values[0].Estimate_Median_household_income}</p>`+
+                                             `<p>Estimate total income: ${d.values[0].Estimate_Total_Income}</p>`+
+                                             `<p>Estimate total eligible to work: ${d.values[0].Estimate_Total_eligible_to_work}</p>`+
+                                             `<p>Estimate total mortgage units: ${d.values[0].Estimate_Total_mortgage_units}</p>`+
+                                             `<p>Median housing value: ${d.values[0].Median_Housing_Value}</p>`+
+                                             `<p>Estimate total rent: ${d.values[0].Estimate_Total_rent}</p>`+
+                                             `<p>Percentage of renting: ${d.values[0].Percentage_of_renting}</p>`)
+                                      .style("left", (e.pageX) + "px")		
+                                      .style("top", (e.pageY - 28) + "px");	
+                                      
                                   })
                                   .on('mouseout', function() { //reverse the action based on when we mouse off the the circle
                                     select(this).transition()
                                       .duration(150)
-                                      .attr("fill", "steelblue")
+                                      .attr("fill", (d:any)=> color(d.values[0].business_final_score_percentile))
                                       .attr('r', 5)
+                                      div.transition()		
+                                        .duration(500)		
+                                        .style("opacity", 0);	
                                   });
                 const update = () => Dots
                 .attr("cx", d => mapRef.current!.latLngToLayerPoint(JSON.parse(d.key)).x)

@@ -3,13 +3,17 @@ import { IonCard, IonCardHeader, IonCardSubtitle, IonCardTitle, IonCardContent, 
     } from '@ionic/react';
 import { locate, calendar } from 'ionicons/icons';
 
-export const StatisticCard:React.FC=()=>{
+interface ContainerProps{
+    result:any
+}
+
+export const StatisticCard:React.FC<ContainerProps>=({result})=>{
     return <IonRow>
     <IonCol sizeLg="2.5" offsetLg="0.4" sizeSm="4.5" offsetSm="1" size="10" offset="1">
         <IonCard>
             <IonCardHeader>
-                <IonCardTitle>Business Final Score Percentile</IonCardTitle>
-                <IonCardSubtitle>115</IonCardSubtitle>
+                <IonCardTitle>Business Score Percentile</IonCardTitle>
+                <IonCardSubtitle>{result.bfsp}</IonCardSubtitle>
             </IonCardHeader>
             <IonItem>
                 <IonChip>
@@ -29,8 +33,8 @@ export const StatisticCard:React.FC=()=>{
     <IonCol sizeLg="2.5" offsetLg="0.4" sizeSm="4.5" offsetSm="1" size="10" offset="1">
         <IonCard>
             <IonCardHeader>
-                <IonCardTitle>Business Topic Final Score Percentile</IonCardTitle>
-                <IonCardSubtitle>115</IonCardSubtitle>
+                <IonCardTitle>Business Topic Score Percentile</IonCardTitle>
+                <IonCardSubtitle>{result.btfsp}</IonCardSubtitle>
             </IonCardHeader>
             <IonItem>
                 <IonChip>
@@ -50,8 +54,8 @@ export const StatisticCard:React.FC=()=>{
     <IonCol sizeLg="2.5" offsetLg="0.4" sizeSm="4.5" offsetSm="1" size="10" offset="1">
         <IonCard>
             <IonCardHeader>
-                <IonCardTitle>Sent Score Pred Label'</IonCardTitle>
-                <IonCardSubtitle>115</IonCardSubtitle>
+                <IonCardTitle>Sentiment Score Pred Label</IonCardTitle>
+                <IonCardSubtitle>{result.sspl}</IonCardSubtitle>
             </IonCardHeader>
             <IonItem>
                 <IonChip>
@@ -72,7 +76,7 @@ export const StatisticCard:React.FC=()=>{
         <IonCard>
             <IonCardHeader>
                 <IonCardTitle>Average Review</IonCardTitle>
-                <IonCardSubtitle>115</IonCardSubtitle>
+                <IonCardSubtitle>{result.ar}</IonCardSubtitle>
             </IonCardHeader>
             <IonItem>
                 <IonChip>

@@ -16,13 +16,12 @@ import {MultiSelector} from '../components/MultiSelector'
 import {subSubGroup, subGroup, parentGroup, topics} from '../components/FilterList'
 
 enum graphList {
+    Leaflet3="Long Beach",
     Kepler="Kepler Map",
     Leaflet="Long Beach Areas",
     Leaflet2="New York",
-    Leaflet3="Long Beach",
     Leaflet4="Capital One",
     Pie="Density Chart",
-    Line="Line Chart"
 }
 
 const Dashboard: React.FC = () => {
@@ -115,6 +114,7 @@ const Dashboard: React.FC = () => {
     const [cluster, setCluster] = useState(-1)
 
     let filter = useRef({"topics":new Set(),"parentGroup":new Set(),"subGroup":new Set(),"subSubGroup":new Set(),"cluster":cluster,"time":timeRange})
+    let result = useRef({"ar":0,"bfsp":0,"btfsp":0,"sspl":0})
 
   return (
     <IonPage>
@@ -136,7 +136,7 @@ const Dashboard: React.FC = () => {
       </IonHeader>
       <IonContent fullscreen>
       <IonGrid>
-        <StatisticCard></StatisticCard>
+        <StatisticCard result={result.current}></StatisticCard>
         <IonRow>
 			<IonCol sizeLg="2" offsetLg="0" sizeSm="4.5" offsetSm="1" size="6">
 				<IonList>
@@ -238,7 +238,7 @@ const Dashboard: React.FC = () => {
 			</IonCol>
             <IonCol sizeLg="8" size="12" pullLg="2" className="canvas">
                 {
-                    switchGraph(graph,data,conf,rangeValue,filter.current)
+                    switchGraph(graph,data,conf,rangeValue,filter.current,result.current)
                     }
 			</IonCol>
            
@@ -275,7 +275,7 @@ const Dashboard: React.FC = () => {
 
 export default Dashboard;
 
-function switchGraph(graph:graphList, data:string, conf:object, rangeValue:any,filter:any){
+function switchGraph(graph:graphList, data:string, conf:object, rangeValue:any,filter:any,result:any){
     switch(graph){
         case "Kepler Map":
             return <EmbeddedMap store={store} data={data} conf={conf}></EmbeddedMap>
@@ -284,13 +284,11 @@ function switchGraph(graph:graphList, data:string, conf:object, rangeValue:any,f
         case "New York":
             return <Leaflet2 data={data}></Leaflet2>
         case "Long Beach":
-            return <Leaflet3 filter={filter}></Leaflet3>
+            return <Leaflet3 filter={filter} result={result}></Leaflet3>
         case "Capital One":
             return <Leaflet4></Leaflet4>
         case "Density Chart":
             return <GraphWrapper data={data} rangeValue={rangeValue}></GraphWrapper>
-        case "Line Chart":
-            return <></>
         default:
             return <EmbeddedMap store={store} data={data} conf={conf}></EmbeddedMap>
     }
