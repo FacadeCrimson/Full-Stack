@@ -11,7 +11,6 @@ interface ContainerProps {
 }
 
 export const MultiSelector:React.FC<ContainerProps>=({data, useShowPopover,filter,name})=>{
-    const [selected,setSelected] = useState<number>(0)
     const [searchText, setSearchText] = useState('');
     const [target, setTarget] = useState('');
     useEffect(()=>{
@@ -20,42 +19,42 @@ export const MultiSelector:React.FC<ContainerProps>=({data, useShowPopover,filte
     },[searchText])
     
     const handleAdd=(item:string)=>{
-        if(filter.current[name].has(item)){
-            filter.current[name].delete(item)
-            setSelected(a=>a-1)
+        if(filter[0][name].has(item)){
+            filter[1]({...filter[0],name:filter[0][name].delete(item)})
         }
         else{
-            filter.current[name].add(item) 
-            setSelected(a=>a+1)
+          filter[1]({...filter[0],name:filter[0][name].add(item)})
         }
     }
 
     return <IonPopover
     isOpen={useShowPopover[0]}
     cssClass='my-custom-class'
-    onDidDismiss={e => useShowPopover[1](false)}>
-      <IonSearchbar value={searchText} onIonChange={e => setSearchText(e.detail.value!)} debounce={1000}></IonSearchbar>           
+    onDidDismiss={e => useShowPopover[1](false)}
+    id={name}>
+      <IonSearchbar value={searchText} onIonChange={e => setSearchText(e.detail.value!)} debounce={1000}></IonSearchbar>    
+      <IonItem>{filter[0][name].size} selected</IonItem>       
         <p>
-            {[...filter.current[name]].map((item)=>{
+            {[...filter[0][name]].map((item)=>{
             return <IonChip outline key={item} color="primary">
             <IonLabel>{item}</IonLabel>
             <IonIcon icon={closeCircle} onClick={()=>{handleAdd(item)}}></IonIcon>
             </IonChip>
             })}
         </p>
+        
       <IonList id="filterlist">
         {data.map((item)=>{
           if(item.toLowerCase().indexOf(target) <= -1){
             return null
           }
           else{
-            if(filter.current[name].has(item)){
+            if(filter[0][name].has(item)){
               return <IonItem key={item} className="listitem" color="secondary" onClick={()=>{handleAdd(item)}}>{item}</IonItem>
             }
             else{return <IonItem key={item} className="listitem" onClick={()=>(handleAdd(item))}>{item}</IonItem>}
           }
         })}
-        <IonItem>{selected} selected</IonItem>
       </IonList>
     </IonPopover>
 }

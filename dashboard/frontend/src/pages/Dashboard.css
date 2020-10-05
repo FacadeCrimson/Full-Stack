@@ -1,6 +1,7 @@
 
-#map{
-    position: absolute; width: 100%; overflow: hidden; height:800px;
+#keplermap{
+    /* setting height to container height plus 1 to prevent resizing after state change */
+    position: absolute; width: 100%; overflow: hidden; height:801px;
 }
 
 ion-col.canvas{

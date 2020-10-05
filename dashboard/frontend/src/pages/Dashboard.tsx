@@ -1,4 +1,4 @@
-import React,{useState,useEffect,useRef} from 'react';
+import React,{useState,useEffect} from 'react';
 import { IonContent, IonHeader, IonPage, IonTitle, IonToolbar, IonText, IonSelect, IonSelectOption, 
         IonButton, IonInput, IonCard, IonCardHeader, IonCardTitle, IonList,IonItemDivider, IonItem, 
         IonLabel, IonGrid, IonRow, IonCol,IonRadioGroup,IonRadio, IonRange} from '@ionic/react';
@@ -14,6 +14,8 @@ import {GraphWrapper} from '../components/D3Graph'
 import {store} from '../components/Kepler';
 import {MultiSelector} from '../components/MultiSelector'
 import {subSubGroup, subGroup, parentGroup, topics} from '../components/FilterList'
+import {csv} from 'd3'
+import {nest} from 'd3-collection'
 
 enum graphList {
     Leaflet3="Long Beach",
@@ -25,7 +27,6 @@ enum graphList {
 }
 
 const Dashboard: React.FC = () => {
-    const [timeRange,setTimeRange] = useState<string>('all')
     const [data,setData]=useState<any>(nycTrips);
     const [conf,setConf]=useState<object>(config);
     const [name,setName]=useState<string>("input file name");
@@ -111,10 +112,55 @@ const Dashboard: React.FC = () => {
     const useShowPopover2 = useState(false);
     const useShowPopover3 = useState(false);
     const useShowPopover4 = useState(false);
-    const [cluster, setCluster] = useState(-1)
 
-    let filter = useRef({"topics":new Set(),"parentGroup":new Set(),"subGroup":new Set(),"subSubGroup":new Set(),"cluster":cluster,"time":timeRange})
-    let result = useRef({"ar":0,"bfsp":0,"btfsp":0,"sspl":0})
+    const [filter,setFilter] = useState({"topics":new Set(),"parentGroup":new Set(),"subGroup":new Set(),"subSubGroup":new Set(),"cluster":-1,"time":"all"})
+    const [result,setResult] = useState({"ar":0,"bfsp":0,"btfsp":0,"sspl":0})
+    const [entries,setEntries] = useState<any>(null)
+    
+    useEffect(()=>{
+        async function preProcess(){
+
+            const LB = await csv('/data/LongBeach.csv')
+            const LB1 = LB.filter(function(a){
+                return (filter.topics.size===0 || filter.topics.has(a.topic)) &&
+                ((filter.subSubGroup.has(a.sub_sub_group)) || (filter.subSubGroup.size===0)) &&
+                ((filter.subGroup.has(a.sub_group)) || (filter.subGroup.size===0)) &&
+                ((filter.parentGroup.has(a.parent_group) || (filter.parentGroup.size===0))) &&
+                ((filter.cluster === -1) || (filter.cluster === +a.Cluster!)) &&
+                ((filter.time === 'all') || (a.review_data?.indexOf(filter.time)!>-1))
+            })
+            const entries = nest()
+                        .key(function(d:any) { return d.latlong; })
+                        .entries(LB1);
+            //calculate number for result
+            const n = entries.length
+            let sum_ar = 0
+            let sum_bfsp = 0
+            let sum_btfsp = 0
+            let sum_sspl = 0
+             for(let i of entries){
+                 if(i.values[0] && !isNaN(i.values[0].avg_review)){
+                     sum_ar+=(+i.values[0].avg_review)
+                 }
+                 if(i.values[0] && !isNaN(i.values[0].business_final_score_percentile)){
+                     sum_bfsp+=(+i.values[0].business_final_score_percentile)
+                 }
+                 if(i.values[0] && !isNaN(i.values[0].business_topic_final_score_percentile)){
+                    sum_btfsp+=(+i.values[0].business_topic_final_score_percentile)
+                }
+                if(i.values[0] && !isNaN(i.values[0].sent_score_pred_label)){
+                    sum_sspl+=(+i.values[0].sent_score_pred_label)
+                }
+            }
+            const newResult = {"ar":Math.round((sum_ar/n + Number.EPSILON) * 100) / 100,
+                                "bfsp":Math.round((sum_bfsp/n + Number.EPSILON) * 100) / 100,
+                                "btfsp":Math.round((sum_btfsp/n + Number.EPSILON) * 100) / 100,
+                                "sspl":Math.round((sum_sspl/n + Number.EPSILON) * 100) / 100}
+            setEntries(entries)
+            setResult(newResult)
+        }
+        preProcess()
+    },[filter])
 
   return (
     <IonPage>
@@ -124,7 +170,7 @@ const Dashboard: React.FC = () => {
           
           <IonItem slot="end">
               <IonLabel>Time Period</IonLabel>
-            <IonSelect interface="popover" className="select" placeholder="All Time" onIonChange={e => {filter.current.time=e.detail.value;setTimeRange(e.detail.value)}}>
+            <IonSelect interface="popover" className="select" placeholder="All Time" onIonChange={e => {setFilter({...filter,"time":e.detail.value});}}>
                 <IonSelectOption value="day">Last Week</IonSelectOption>
                 <IonSelectOption value="week">Last Month</IonSelectOption>
                 <IonSelectOption value="month">Last Year</IonSelectOption>
@@ -136,7 +182,7 @@ const Dashboard: React.FC = () => {
       </IonHeader>
       <IonContent fullscreen>
       <IonGrid>
-        <StatisticCard result={result.current}></StatisticCard>
+        <StatisticCard result={result}></StatisticCard>
         <IonRow>
 			<IonCol sizeLg="2" offsetLg="0" sizeSm="4.5" offsetSm="1" size="6">
 				<IonList>
@@ -184,27 +230,27 @@ const Dashboard: React.FC = () => {
                         <IonLabel>Topic</IonLabel>
                         <IonButton slot="end" onClick={() => useShowPopover1[1](true)}>&#9662;</IonButton>
                     </IonItem>
-                    <MultiSelector data={topics} name="topics" useShowPopover={useShowPopover1} filter={filter}></MultiSelector>
+                    <MultiSelector data={topics} name="topics" useShowPopover={useShowPopover1} filter={[filter,setFilter]}></MultiSelector>
                     <IonItem>
                         <IonLabel>Parent Group</IonLabel>
                         <IonButton slot="end" onClick={() => useShowPopover2[1](true)}>&#9662;</IonButton>
                     </IonItem>
-                    <MultiSelector data={parentGroup} name="parentGroup" useShowPopover={useShowPopover2} filter={filter}></MultiSelector>
+                    <MultiSelector data={parentGroup} name="parentGroup" useShowPopover={useShowPopover2} filter={[filter,setFilter]}></MultiSelector>
                     <IonItem>
                         <IonLabel>Sub Group</IonLabel>
                         <IonButton slot="end" onClick={() => useShowPopover3[1](true)}>&#9662;</IonButton>
                     </IonItem>
-                    <MultiSelector data={subGroup} name="subGroup" useShowPopover={useShowPopover3} filter={filter}></MultiSelector>
+                    <MultiSelector data={subGroup} name="subGroup" useShowPopover={useShowPopover3} filter={[filter,setFilter]}></MultiSelector>
 
                     <IonItem>
                         <IonLabel>Sub-subgroup</IonLabel>
                         <IonButton slot="end" onClick={() => useShowPopover4[1](true)}>&#9662;</IonButton>
                     </IonItem>
-                    <MultiSelector data={subSubGroup} name="subSubGroup" useShowPopover={useShowPopover4} filter={filter}></MultiSelector>
-                    <IonItemDivider>Cluster <IonButton slot="end" onClick={() => {filter.current.cluster=-1;setCluster(-1)}}>Reset</IonButton></IonItemDivider>
+                    <MultiSelector data={subSubGroup} name="subSubGroup" useShowPopover={useShowPopover4} filter={[filter,setFilter]}></MultiSelector>
+                    <IonItemDivider>Cluster <IonButton slot="end" onClick={() => {setFilter({...filter,"cluster":-1});}}>Reset</IonButton></IonItemDivider>
                     <IonItem>
-                            <IonRange pin={true} value ={cluster} min={-1} max={299} step={1} debounce={600}
-                             onIonChange={e => {filter.current.cluster=e.detail.value as number;setCluster(e.detail.value as number)}} />
+                            <IonRange pin={true} value ={filter['cluster']} min={-1} max={299} step={1} debounce={600}
+                             onIonChange={e => {setFilter({...filter,"cluster":e.detail.value as number});}} />
                     </IonItem>
                     </>
 
@@ -238,7 +284,7 @@ const Dashboard: React.FC = () => {
 			</IonCol>
             <IonCol sizeLg="8" size="12" pullLg="2" className="canvas">
                 {
-                    switchGraph(graph,data,conf,rangeValue,filter.current,result.current)
+                    switchGraph(graph,data,conf,rangeValue,entries)
                     }
 			</IonCol>
            
@@ -275,7 +321,7 @@ const Dashboard: React.FC = () => {
 
 export default Dashboard;
 
-function switchGraph(graph:graphList, data:string, conf:object, rangeValue:any,filter:any,result:any){
+function switchGraph(graph:graphList, data:string, conf:object, rangeValue:any,entries:any){
     switch(graph){
         case "Kepler Map":
             return <EmbeddedMap store={store} data={data} conf={conf}></EmbeddedMap>
@@ -284,7 +330,7 @@ function switchGraph(graph:graphList, data:string, conf:object, rangeValue:any,f
         case "New York":
             return <Leaflet2 data={data}></Leaflet2>
         case "Long Beach":
-            return <Leaflet3 filter={filter} result={result}></Leaflet3>
+            return <Leaflet3 entries={entries}></Leaflet3>
         case "Capital One":
             return <Leaflet4></Leaflet4>
         case "Density Chart":

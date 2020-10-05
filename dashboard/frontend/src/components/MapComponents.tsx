@@ -22,7 +22,7 @@ export const EmbeddedMap: React.FC<ContainerProps1> = ({store,data,conf}) => {
         };
     })
 
-    return (<div id="map"><Kepler></Kepler></div>);
+    return (<div id="keplermap"><Kepler></Kepler></div>);
 };
 
 interface ContainerProps2 {
