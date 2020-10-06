@@ -2,7 +2,7 @@
 import L,{ Map,LayerGroup} from 'leaflet'
 import React, { useEffect,useRef } from 'react';
 import {processCsvData} from 'kepler.gl';
-import {select,geoTransform,geoPath,json,scaleSequential,interpolateRdBu} from 'd3'
+import {select,geoTransform,geoPath,json,scaleSequential,interpolateSpectral,schemeSpectral} from 'd3'
 import './Leaflet.css'
 
 interface ContainerProps1 {
@@ -157,6 +157,28 @@ export const Leaflet2:React.FC<ContainerProps3>=({data})=>{
 
 export const Leaflet3:React.FC<ContainerProps2>=({entries})=>{
     const mapRef = useRef<Map|null>(null);
+    useEffect(()=>{
+        const mapContainer = select('#mapid')
+        const svg1=mapContainer.append('svg').attr('class','legend leaflet-top leaflet-right').attr('width',200).attr('height',30)
+        let defs = svg1.append("defs")
+        let linearGradient = defs.append("linearGradient")
+                                .attr("id", "linear-gradient")
+                                .attr("x1", "0%")
+                                .attr("y1", "0%")
+                                .attr("x2", "100%")
+                                .attr("y2", "0%");
+        //Append multiple color stops by using D3's data/enter step
+        linearGradient.selectAll("stop")
+        .data(schemeSpectral[11] as any)
+        .enter().append("stop")
+        .attr("offset", function(d,i) { return `${i*0.1}` })
+        .attr("stop-color", function(d:any) { return d });
+            
+        svg1.append('rect')
+        .attr('width',200)
+        .attr('height',20)
+        .attr('fill',"url(#linear-gradient)")
+    })
     useEffect(() => {
             if(mapRef.current){
                 L.svg().addTo(mapRef.current)
@@ -167,8 +189,7 @@ export const Leaflet3:React.FC<ContainerProps2>=({entries})=>{
                 let div =  select("body").append("div")	
                             .attr("class", "tooltip")				
                             .style("opacity", 0);
-                let color = scaleSequential(interpolateRdBu)
-                            
+                let color = scaleSequential(interpolateSpectral)
                         
                 let Dots = g.selectAll('circle')
                                 .data(entries)

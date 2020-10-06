@@ -97,7 +97,7 @@ export const AnimatedCircles = () => {
     marginLeft: number,
   }
 
-  export const ChartWithDimensions:React.FC<chartSettings> = (chartSettings) => {
+export const ChartWithDimensions:React.FC<chartSettings> = (chartSettings) => {
     const dms = combineChartDimensions(chartSettings)
     return (
       <div
