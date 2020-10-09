@@ -1,8 +1,8 @@
 /* tslint:disable */
 import L,{ Map,LayerGroup} from 'leaflet'
-import React, { useEffect,useRef } from 'react';
+import React, { useEffect,useRef,useMemo } from 'react';
 import {processCsvData} from 'kepler.gl';
-import {select,geoTransform,geoPath,json,scaleSequential,interpolateSpectral,schemeSpectral} from 'd3'
+import {select,geoTransform,geoPath,json,scaleSequential,interpolateSpectral,schemeSpectral,scaleLinear} from 'd3'
 import './Leaflet.css'
 
 interface ContainerProps1 {
@@ -157,9 +157,19 @@ export const Leaflet2:React.FC<ContainerProps3>=({data})=>{
 
 export const Leaflet3:React.FC<ContainerProps2>=({entries})=>{
     const mapRef = useRef<Map|null>(null);
+    const ticks = useMemo(() => {
+        const xScale = scaleLinear()
+          .domain([0, 1])
+          .range([0, 200])
+        return xScale.ticks()
+          .map(value => ({
+            value,
+            xOffset: xScale(value)
+          }))
+      }, [])
     useEffect(()=>{
         const mapContainer = select('#mapid')
-        const svg1=mapContainer.append('svg').attr('class','legend leaflet-top leaflet-right').attr('width',200).attr('height',30)
+        const svg1=mapContainer.append('svg').attr('class','legend leaflet-top leaflet-right').attr('width',220).attr('height',30).attr('id',"")
         let defs = svg1.append("defs")
         let linearGradient = defs.append("linearGradient")
                                 .attr("id", "linear-gradient")
@@ -178,6 +188,13 @@ export const Leaflet3:React.FC<ContainerProps2>=({entries})=>{
         .attr('width',200)
         .attr('height',20)
         .attr('fill',"url(#linear-gradient)")
+        .attr('transform',`translate(10, 0)`)
+    
+        for(let { value, xOffset }  of ticks){
+            let element = svg1.append('g').attr('key',value).attr('transform',`translate(${xOffset+10}, 0)`)
+            element.append('line').attr('y2','6').attr('stroke','black')
+            element.append('text').attr('key',value).attr('font-size','10px').attr('text-anchor','middle').attr('transform',`translate(0, 20)`).text(value)
+        }
     })
     useEffect(() => {
             if(mapRef.current){
@@ -209,15 +226,29 @@ export const Leaflet3:React.FC<ContainerProps2>=({entries})=>{
                                     div.transition()		
                                       .duration(200)		
                                       .style("opacity", .9)
-                                    div.html(`<h6>Name: ${d.values[0].name_only}</h6>`+
-                                             `<h6>Address: ${d.values[0].address_only}</h6>`+
-                                             `<p>Estimate median household income: ${d.values[0].Estimate_Median_household_income}</p>`+
-                                             `<p>Estimate total income: ${d.values[0].Estimate_Total_Income}</p>`+
-                                             `<p>Estimate total eligible to work: ${d.values[0].Estimate_Total_eligible_to_work}</p>`+
-                                             `<p>Estimate total mortgage units: ${d.values[0].Estimate_Total_mortgage_units}</p>`+
-                                             `<p>Median housing value: ${d.values[0].Median_Housing_Value}</p>`+
-                                             `<p>Estimate total rent: ${d.values[0].Estimate_Total_rent}</p>`+
-                                             `<p>Percentage of renting: ${d.values[0].Percentage_of_renting}</p>`)
+                                    div.html(`<p>Name: ${d.values[0].name_only}</p>`+
+                                             `<p>Address: ${d.values[0].address_only}</p>`+
+                                             (d.values[0].Estimate_Median_household_income?`<p>Estimate median household income: ${d.values[0].Estimate_Median_household_income}</p>`+
+                                             `<svg height=10 width=280 class="tooltipgraph"><rect height=10 width=${xScale1(d.values[0].Estimate_Median_household_income)} fill="black"></rect></svg>`:
+                                             '<p>No estimate median household income data.</p>')+
+                                             (d.values[0].Estimate_Total_Income?`<p>Estimate total income: ${d.values[0].Estimate_Total_Income}</p>`+
+                                             `<svg height=10 width=280 class="tooltipgraph"><rect height=10 width=${xScale2(d.values[0].Estimate_Total_Income)} fill="black"></rect></svg>`:
+                                             '<p>No estimate total income data.</p>')+
+                                             (d.values[0].Estimate_Total_eligible_to_work?`<p>Estimate total eligible to work: ${d.values[0].Estimate_Total_eligible_to_work}</p>`+
+                                             `<svg height=10 width=280 class="tooltipgraph"><rect height=10 width=${xScale3(d.values[0].Estimate_Total_eligible_to_work)} fill="black"></rect></svg>`:
+                                             '<p>No estimate total elegible to work data.</p>')+
+                                             (d.values[0].Estimate_Total_mortgage_units?`<p>Estimate total mortgage units: ${d.values[0].Estimate_Total_mortgage_units}</p>`+
+                                             `<svg height=10 width=280 class="tooltipgraph"><rect height=10 width=${xScale4(d.values[0].Estimate_Total_mortgage_units)} fill="black"></rect></svg>`:
+                                             '<p>No estimate total mortgage units data.</p>')+
+                                             (d.values[0].Median_Housing_Value?`<p>Median housing value: ${d.values[0].Median_Housing_Value}</p>`+
+                                             `<svg height=10 width=280 class="tooltipgraph"><rect height=10 width=${xScale5(d.values[0].Median_Housing_Value)} fill="black"></rect></svg>`:
+                                             '<p>No median housing value data.</p>')+
+                                             (d.values[0].Estimate_Total_rent?`<p>Estimate total rent: ${d.values[0].Estimate_Total_rent}</p>`+
+                                             `<svg height=10 width=280 class="tooltipgraph"><rect height=10 width=${xScale6(d.values[0].Estimate_Total_rent)} fill="black"></rect></svg>`:
+                                             '<p>No estimate total rent data.</p>')+
+                                             (d.values[0].Percentage_of_renting?`<p>Percentage of renting: ${d.values[0].Percentage_of_renting}</p>`+
+                                             `<svg height=10 width=280 class="tooltipgraph"><rect height=10 width=${xScale7(d.values[0].Percentage_of_renting)} fill="black"></rect></svg>`:
+                                             '<p>No percentage of renting data.</p>'))
                                       .style("left", (e.pageX) + "px")		
                                       .style("top", (e.pageY - 28) + "px");	
                                       
@@ -266,3 +297,25 @@ export const Leaflet4:React.FC=()=>{
     })
     return <LeafletMap mapRef={mapRef} center={[38.89511, -77.03637]} zoom={13}></LeafletMap>
 }
+
+const xScale1 = scaleLinear()
+.domain([0, 182250])
+.range([0, 280])
+const xScale2 = scaleLinear()
+.domain([0, 3685])
+.range([0, 280])
+const xScale3 = scaleLinear()
+.domain([0, 2821])
+.range([0, 280])
+const xScale4 = scaleLinear()
+.domain([0, 1063])
+.range([0, 280])
+const xScale5 = scaleLinear()
+.domain([0, 1466200])
+.range([0, 280])
+const xScale6 = scaleLinear()
+.domain([0, 1254])
+.range([0, 280])
+const xScale7 = scaleLinear()
+.domain([0, 100])
+.range([0, 280])

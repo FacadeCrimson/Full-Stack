@@ -14,7 +14,7 @@ import {GraphWrapper} from '../components/D3Graph'
 import {store} from '../components/Kepler';
 import {MultiSelector} from '../components/MultiSelector'
 import {subSubGroup, subGroup, parentGroup, topics} from '../components/FilterList'
-import {csv} from 'd3'
+import {csv,min,max} from 'd3'
 import {nest} from 'd3-collection'
 
 enum graphList {
@@ -121,6 +121,8 @@ const Dashboard: React.FC = () => {
         async function preProcess(){
 
             const LB = await csv('/data/LongBeach.csv')
+            // console.log(min(LB,d=>parseFloat((d.Percentage_of_renting as string).substring(0,(d.Percentage_of_renting as any).length-1))),
+            // max(LB,d=>parseFloat((d.Percentage_of_renting as string).substring(0,(d.Percentage_of_renting as any).length-1))))
             const LB1 = LB.filter(function(a){
                 return (filter.topics.size===0 || filter.topics.has(a.topic)) &&
                 ((filter.subSubGroup.has(a.sub_sub_group)) || (filter.subSubGroup.size===0)) &&
