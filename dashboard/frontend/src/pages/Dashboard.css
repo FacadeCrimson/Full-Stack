@@ -16,6 +16,10 @@ ion-col.canvas{
     cursor:pointer;
 }
 
+.chip{
+    margin:auto;
+}
+
 #mapid { height: 100%; }
 
 .select {

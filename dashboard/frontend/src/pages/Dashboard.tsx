@@ -1,4 +1,4 @@
-import React,{useState,useEffect} from 'react';
+import React,{useState,useEffect,useRef} from 'react';
 import { IonContent, IonHeader, IonPage, IonTitle, IonToolbar, IonText, IonSelect, IonSelectOption, 
         IonButton, IonInput, IonCard, IonCardHeader, IonCardTitle, IonList,IonItemDivider, IonItem, 
         IonLabel, IonGrid, IonRow, IonCol,IonRadioGroup,IonRadio, IonRange} from '@ionic/react';
@@ -14,7 +14,7 @@ import {GraphWrapper} from '../components/D3Graph'
 import {store} from '../components/Kepler';
 import {MultiSelector} from '../components/MultiSelector'
 import {subSubGroup, subGroup, parentGroup, topics} from '../components/FilterList'
-import {csv,min,max} from 'd3'
+import {csv} from 'd3'
 import {nest} from 'd3-collection'
 
 enum graphList {
@@ -116,13 +116,28 @@ const Dashboard: React.FC = () => {
     const [filter,setFilter] = useState({"topics":new Set(),"parentGroup":new Set(),"subGroup":new Set(),"subSubGroup":new Set(),"cluster":-1,"time":"all"})
     const [result,setResult] = useState({"ar":0,"bfsp":0,"btfsp":0,"sspl":0})
     const [entries,setEntries] = useState<any>(null)
-    
+    let prevResult=useRef(result)
+    let totalResult:any= useRef(null)
+
+    useEffect(()=>{
+        async function preProcess(){
+            const LB = await csv('/data/LongBeach.csv')
+            const entries = nest()
+                        .key(function(d:any) { return d.latlong; })
+                        .entries(LB);
+            totalResult.current = calc(entries)
+        }
+        preProcess()
+    },[])
+
     useEffect(()=>{
         async function preProcess(){
 
             const LB = await csv('/data/LongBeach.csv')
             // console.log(min(LB,d=>parseFloat((d.Percentage_of_renting as string).substring(0,(d.Percentage_of_renting as any).length-1))),
             // max(LB,d=>parseFloat((d.Percentage_of_renting as string).substring(0,(d.Percentage_of_renting as any).length-1))))
+            
+            
             const LB1 = LB.filter(function(a){
                 return (filter.topics.size===0 || filter.topics.has(a.topic)) &&
                 ((filter.subSubGroup.has(a.sub_sub_group)) || (filter.subSubGroup.size===0)) &&
@@ -134,36 +149,15 @@ const Dashboard: React.FC = () => {
             const entries = nest()
                         .key(function(d:any) { return d.latlong; })
                         .entries(LB1);
-            //calculate number for result
-            const n = entries.length
-            let sum_ar = 0
-            let sum_bfsp = 0
-            let sum_btfsp = 0
-            let sum_sspl = 0
-             for(let i of entries){
-                 if(i.values[0] && !isNaN(i.values[0].avg_review)){
-                     sum_ar+=(+i.values[0].avg_review)
-                 }
-                 if(i.values[0] && !isNaN(i.values[0].business_final_score_percentile)){
-                     sum_bfsp+=(+i.values[0].business_final_score_percentile)
-                 }
-                 if(i.values[0] && !isNaN(i.values[0].business_topic_final_score_percentile)){
-                    sum_btfsp+=(+i.values[0].business_topic_final_score_percentile)
-                }
-                if(i.values[0] && !isNaN(i.values[0].sent_score_pred_label)){
-                    sum_sspl+=(+i.values[0].sent_score_pred_label)
-                }
-            }
-            const newResult = {"ar":Math.round((sum_ar/n + Number.EPSILON) * 100) / 100,
-                                "bfsp":Math.round((sum_bfsp/n + Number.EPSILON) * 100) / 100,
-                                "btfsp":Math.round((sum_btfsp/n + Number.EPSILON) * 100) / 100,
-                                "sspl":Math.round((sum_sspl/n + Number.EPSILON) * 100) / 100}
+            
+            const newResult = calc(entries)
             setEntries(entries)
             setResult(newResult)
         }
         preProcess()
     },[filter])
 
+    
   return (
     <IonPage>
       <IonHeader>
@@ -184,7 +178,7 @@ const Dashboard: React.FC = () => {
       </IonHeader>
       <IonContent fullscreen>
       <IonGrid>
-        <StatisticCard result={result}></StatisticCard>
+        <StatisticCard result={result} prevResult={prevResult} totalResult={totalResult}></StatisticCard>
         <IonRow>
 			<IonCol sizeLg="2" offsetLg="0" sizeSm="4.5" offsetSm="1" size="6">
 				<IonList>
@@ -230,30 +224,30 @@ const Dashboard: React.FC = () => {
                     <IonItem>Filter</IonItem>
                     <IonItem>
                         <IonLabel>Topic</IonLabel>
-                        <IonButton slot="end" onClick={() => useShowPopover1[1](true)}>&#9662;</IonButton>
+                        <IonButton slot="end" onClick={() => {prevResult.current=result;useShowPopover1[1](true)}}>&#9662;</IonButton>
                     </IonItem>
                     <MultiSelector data={topics} name="topics" useShowPopover={useShowPopover1} filter={[filter,setFilter]}></MultiSelector>
                     <IonItem>
-                        <IonLabel>Parent Group</IonLabel>
-                        <IonButton slot="end" onClick={() => useShowPopover2[1](true)}>&#9662;</IonButton>
+                        <IonLabel>Industry Group</IonLabel>
+                        <IonButton slot="end" onClick={() => {prevResult.current=result;useShowPopover2[1](true)}}>&#9662;</IonButton>
                     </IonItem>
                     <MultiSelector data={parentGroup} name="parentGroup" useShowPopover={useShowPopover2} filter={[filter,setFilter]}></MultiSelector>
                     <IonItem>
-                        <IonLabel>Sub Group</IonLabel>
-                        <IonButton slot="end" onClick={() => useShowPopover3[1](true)}>&#9662;</IonButton>
+                        <IonLabel>Industry Sub-group</IonLabel>
+                        <IonButton slot="end" onClick={() => {prevResult.current=result;useShowPopover3[1](true)}}>&#9662;</IonButton>
                     </IonItem>
                     <MultiSelector data={subGroup} name="subGroup" useShowPopover={useShowPopover3} filter={[filter,setFilter]}></MultiSelector>
 
-                    <IonItem>
+                    {/* <IonItem>
                         <IonLabel>Sub-subgroup</IonLabel>
-                        <IonButton slot="end" onClick={() => useShowPopover4[1](true)}>&#9662;</IonButton>
+                        <IonButton slot="end" onClick={() => {prevResult.current=result;useShowPopover4[1](true)}}>&#9662;</IonButton>
                     </IonItem>
                     <MultiSelector data={subSubGroup} name="subSubGroup" useShowPopover={useShowPopover4} filter={[filter,setFilter]}></MultiSelector>
                     <IonItemDivider>Cluster <IonButton slot="end" onClick={() => {setFilter({...filter,"cluster":-1});}}>Reset</IonButton></IonItemDivider>
                     <IonItem>
                             <IonRange pin={true} value ={filter['cluster']} min={-1} max={299} step={1} debounce={600}
                              onIonChange={e => {setFilter({...filter,"cluster":e.detail.value as number});}} />
-                    </IonItem>
+                    </IonItem> */}
                     </>
 
                     :<>
@@ -340,4 +334,30 @@ function switchGraph(graph:graphList, data:string, conf:object, rangeValue:any,e
         default:
             return <EmbeddedMap store={store} data={data} conf={conf}></EmbeddedMap>
     }
+}
+
+function calc(entries:any):any{
+    const n = entries.length
+    let sum_ar = 0
+    let sum_bfsp = 0
+    let sum_rw = 0
+    let sum_sspl = 0
+     for(let i of entries){
+         if(i.values[0] && !isNaN(i.values[0].avg_review)){
+             sum_ar+=(+i.values[0].avg_review)
+         }
+         if(i.values[0] && !isNaN(i.values[0].business_final_score_percentile)){
+             sum_bfsp+=(+i.values[0].business_final_score_percentile)
+         }
+         if(i.values[0] && !isNaN(i.values[0].business_topic_final_score_percentile)){
+            sum_rw+=(+i.values[0].num_reviews)
+        }
+        if(i.values[0] && !isNaN(i.values[0].sent_score_pred_label)){
+            sum_sspl+=(+i.values[0].sent_score_pred_label)
+        }
+    }
+    return{"ar":Math.round((sum_ar/n + Number.EPSILON) * 100) / 100,
+            "bfsp":Math.round((sum_bfsp/n + Number.EPSILON) * 100) / 100,
+            "btfsp":Math.round((sum_rw/n + Number.EPSILON) * 100) / 100,
+            "sspl":Math.round((sum_sspl/n + Number.EPSILON) * 100) / 100}
 }

@@ -1,5 +1,5 @@
 import React,{useEffect,useRef} from 'react'
-import {select,max,min,csvParse,axisBottom, scaleLinear, axisLeft,line, curveBasis, mean} from 'd3'
+import {select,csvParse,axisBottom, scaleLinear, axisLeft,line, curveBasis, mean} from 'd3'
 import AutoSizer from 'react-virtualized/dist/commonjs/AutoSizer';
 import './D3Graph.css'
 

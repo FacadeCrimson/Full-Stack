@@ -239,8 +239,9 @@ export const Leaflet3:React.FC<ContainerProps2>=({entries})=>{
                                     div.transition()		
                                       .duration(200)		
                                       .style("opacity", .9)
-                                    div.html(`<p>Name: ${d.values[0].name_only}</p>`+
-                                             `<p>Address: ${d.values[0].address_only}</p>`+
+                                    div.html(`<p><b>Name: ${d.values[0].name_only}</b></p>`+
+                                             `<p><b>Address: ${d.values[0].address_only}</b></p>`+
+                                             `<p><i>Most important: ${d.values[0].Census_1}, ${d.values[0].Census_2}</i><p>`+
                                              (d.values[0].Estimate_Median_household_income?`<p>Estimate median household income: ${d.values[0].Estimate_Median_household_income}</p>`+
                                              `<svg height=10 width=280 class="tooltipgraph"><rect height=10 width=${xScale1(d.values[0].Estimate_Median_household_income)} fill="black"></rect></svg>`:
                                              '<p>No estimate median household income data.</p>')+
