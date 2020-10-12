@@ -169,7 +169,7 @@ export const Leaflet3:React.FC<ContainerProps2>=({entries})=>{
       }, [])
     useEffect(()=>{
         const mapContainer = select('#mapid')
-        const svg1=mapContainer.append('svg').attr('class','legend leaflet-top leaflet-right').attr('width',220).attr('height',30).attr('id',"")
+        const svg1=mapContainer.append('svg').attr('class','legend leaflet-top leaflet-right').attr('width',220).attr('height',40).attr('id',"")
         let defs = svg1.append("defs")
         let linearGradient = defs.append("linearGradient")
                                 .attr("id", "linear-gradient")
@@ -183,13 +183,27 @@ export const Leaflet3:React.FC<ContainerProps2>=({entries})=>{
         .enter().append("stop")
         .attr("offset", function(d,i) { return `${i*0.1}` })
         .attr("stop-color", function(d:any) { return d });
-            
+        
+
+        svg1.append('rect')
+        .attr('width',220)
+        .attr('height',40)
+        .attr('fill',"white")
+        .style("opacity", 0.9)
+        .attr('transform',`translate(0,0)`)
+
         svg1.append('rect')
         .attr('width',200)
         .attr('height',20)
+        .attr('z-index',5)
         .attr('fill',"url(#linear-gradient)")
         .attr('transform',`translate(10, 0)`)
-    
+
+        svg1.append('text')
+        .text('Business Score Percentile')
+        .attr('transform',`translate(25, 35)`)
+        .attr('font-size','15px')
+
         for(let { value, xOffset }  of ticks){
             let element = svg1.append('g').attr('key',value).attr('transform',`translate(${xOffset+10}, 0)`)
             element.append('line').attr('y2','6').attr('stroke','black')
@@ -221,7 +235,6 @@ export const Leaflet3:React.FC<ContainerProps2>=({entries})=>{
                                 .on('mouseover', function(e:any,d:any) { //function to add mouseover event
                                     select(this).transition() //D3 selects the object we have moused over in order to perform operations on it
                                       .duration(150) //how long we are transitioning between the two states (works like keyframes)
-                                      .attr("fill", "red") //change the fill
                                       .attr('r', 10) //change radius
                                     div.transition()		
                                       .duration(200)		
