@@ -1,7 +1,7 @@
 import React,{useState,useEffect,useRef} from 'react';
 import { IonContent, IonHeader, IonPage, IonTitle, IonToolbar, IonText, IonSelect, IonSelectOption, 
-        IonButton, IonInput, IonCard, IonCardHeader, IonCardTitle, IonList,IonItemDivider, IonItem, 
-        IonLabel, IonGrid, IonRow, IonCol,IonRadioGroup,IonRadio, IonRange} from '@ionic/react';
+        IonButton, IonInput, IonCard, IonCardHeader, IonCardTitle, IonCardContent, IonList,IonItemDivider, IonItem,
+        IonLabel, IonGrid, IonRow, IonCol,IonRadioGroup,IonRadio} from '@ionic/react';
 import './Dashboard.css';
 import {doesFileExist, fetchData} from '../components/Function';
 import {EmbeddedMap ,SaveConfigButton, DownloadConfigButton, UploadConfigButton} from '../components/MapComponents';
@@ -9,21 +9,20 @@ import nycTrips from '../components/data/nyc-trips.csv';
 import config from '../components/data/nyc-config.json';
 import ReactFileReader from 'react-file-reader';
 import {StatisticCard} from '../components/StatisticCard'
-import {Leaflet1, Leaflet2,Leaflet3,Leaflet4} from '../components/Leaflet'
+import {Leaflet1, Leaflet3,Leaflet4} from '../components/Leaflet'
 import {GraphWrapper} from '../components/D3Graph'
 import {store} from '../components/Kepler';
 import {MultiSelector} from '../components/MultiSelector'
-import {subSubGroup, subGroup, parentGroup, topics} from '../components/FilterList'
+import {subGroup, parentGroup, topics} from '../components/FilterList'
 import {csv} from 'd3'
 import {nest} from 'd3-collection'
-
 enum graphList {
+    Introduction="Introduction",
     Leaflet3="Long Beach",
-    Kepler="Kepler Map",
-    Leaflet="Long Beach Areas",
-    Leaflet2="New York",
-    Leaflet4="Capital One",
     Pie="Density Chart",
+    Leaflet="Long Beach Areas",
+    Kepler="Kepler Map",
+    Leaflet4="Capital One",
 }
 
 const Dashboard: React.FC = () => {
@@ -99,9 +98,7 @@ const Dashboard: React.FC = () => {
         fetchData(setList)
       }, [current])
     
-    const [graph,setGraph] = useState<graphList>(graphList.Kepler)
-    const [topic,setTopic] = useState<string[]>([])
-    const [subcat,setSubcat] = useState<string[]>([])
+    const [graph,setGraph] = useState<graphList>(graphList.Introduction)
 
     const [rangeValue, setRangeValue] = useState<{
       lower: number;
@@ -111,7 +108,7 @@ const Dashboard: React.FC = () => {
     const useShowPopover1 = useState(false);
     const useShowPopover2 = useState(false);
     const useShowPopover3 = useState(false);
-    const useShowPopover4 = useState(false);
+    // const useShowPopover4 = useState(false);
 
     const [filter,setFilter] = useState({"topics":new Set(),"parentGroup":new Set(),"subGroup":new Set(),"subSubGroup":new Set(),"cluster":-1,"time":"all"})
     const [result,setResult] = useState({"ar":0,"bfsp":0,"btfsp":0,"sspl":0})
@@ -220,7 +217,7 @@ const Dashboard: React.FC = () => {
                     </IonItem>
                     </>
 
-                    :(graph==="Long Beach")?<>
+                    :(graph==="Long Beach" || "Density Chart")?<>
                     <IonItem>Filter</IonItem>
                     <IonItem>
                         <IonLabel>Topic</IonLabel>
@@ -251,28 +248,15 @@ const Dashboard: React.FC = () => {
                     </>
 
                     :<>
-                    <IonItem>Filter</IonItem>
-                    <IonItem>
-                        <IonLabel>Topic</IonLabel>
-                        <IonSelect multiple={true} interface="popover" className="select" slot="end" value={topic} onIonChange={e => setTopic(e.detail.value)}>
-                    </IonSelect>
-                    </IonItem>
 
-                    <IonItem>
-                        <IonLabel>Subcategory</IonLabel>
-                        <IonSelect multiple={true} interface="popover" className="select" slot="end" value={subcat} onIonChange={e => setSubcat(e.detail.value)}>
-                        </IonSelect>
-                    </IonItem>
-
-
-                    <IonItemDivider>Passenger Count</IonItemDivider>
+                    {/* <IonItemDivider>Passenger Count</IonItemDivider>
                         <IonItem>
                             <IonRange pin={true} dualKnobs={true} min={0} max={6} step={1} debounce={600}
                             snaps={true} onIonChange={e => setRangeValue(e.detail.value as any)} />
                         </IonItem>
                         <IonItem>
                             <IonLabel>Value: lower: {rangeValue.lower} upper: {rangeValue.upper}</IonLabel>
-                        </IonItem>
+                        </IonItem> */}
                     </>
                     }
             
@@ -319,12 +303,26 @@ export default Dashboard;
 
 function switchGraph(graph:graphList, data:string, conf:object, rangeValue:any,entries:any){
     switch(graph){
+        case "Introduction":
+            return <div id="intro" style={{backgroundImage: "url(/assets/rainbowharborsunset.jpg",backgroundPosition:"center top",backgroundSize:"auto 800px"}}>
+                    <IonCard id="introcard">
+                        <IonCardHeader>
+                            <IonCardTitle>Introduction<img id="logo" src="/assets/city-logo.png" alt="logo"></img></IonCardTitle>
+                        </IonCardHeader>
+                        <IonCardContent>
+                            <IonText><br></br>
+                                <p className="introtext">This is a dashboard to visualize the geospatial data for Long Beach businesses.</p>
+                            <p className="introtext">The data includes business score percentile we derive which measures the business vulnerability.</p>
+                            <p className="introtext">The most important tab in graph selector is Long Beach with all relevant data painted.</p>
+                            <p className="introtext">The Density Chart is also worth checking as it pictures the distribution of filtered data.</p>
+                            <p className="introtext">Long Beach Areas, Kepler Map and Capital One are some explorations on other data.</p></IonText>
+                        </IonCardContent>
+                    </IonCard>
+                     </div>
         case "Kepler Map":
             return <EmbeddedMap store={store} data={data} conf={conf}></EmbeddedMap>
         case "Long Beach Areas":
             return <Leaflet1></Leaflet1>
-        case "New York":
-            return <Leaflet2 data={data}></Leaflet2>
         case "Long Beach":
             return <Leaflet3 entries={entries}></Leaflet3>
         case "Capital One":
@@ -332,7 +330,7 @@ function switchGraph(graph:graphList, data:string, conf:object, rangeValue:any,e
         case "Density Chart":
             return <GraphWrapper data={data} rangeValue={rangeValue}></GraphWrapper>
         default:
-            return <EmbeddedMap store={store} data={data} conf={conf}></EmbeddedMap>
+            return <Leaflet3 entries={entries}></Leaflet3>
     }
 }
 

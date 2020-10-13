@@ -1,7 +1,6 @@
 /* tslint:disable */
 import L,{ Map,LayerGroup} from 'leaflet'
 import React, { useEffect,useRef,useMemo } from 'react';
-import {processCsvData} from 'kepler.gl';
 import {select,geoTransform,geoPath,json,scaleSequential,interpolateSpectral,schemeSpectral,scaleLinear} from 'd3'
 import './Leaflet.css'
 
@@ -138,22 +137,6 @@ export const Leaflet1:React.FC=()=>{
     );
     return <LeafletMap mapRef={mapRef} center={[33.797548, -118.16346]} zoom={12}></LeafletMap>
 }
-
-export const Leaflet2:React.FC<ContainerProps3>=({data})=>{
-    const mapRef = useRef<Map|null>(null);
-    const csv = processCsvData(data) as input;
-    useEffect(
-    () => {
-        var myRenderer = L.canvas({ padding: 0.5 });
-        csv.rows.forEach(marker => {
-        L.circleMarker([marker[6],marker[5]], { renderer: myRenderer,color: '#3388ff' }).addTo(
-        mapRef.current as Map
-        );
-    });
-    }, );
-    return <LeafletMap mapRef={mapRef} center={[40.718584, -73.964572]} zoom={13}></LeafletMap>
-}
-
 
 export const Leaflet3:React.FC<ContainerProps2>=({entries})=>{
     const mapRef = useRef<Map|null>(null);

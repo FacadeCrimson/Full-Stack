@@ -1,6 +1,6 @@
 import React, {useState, useEffect} from 'react';
 import { IonContent, IonHeader, IonPage, IonTitle, IonToolbar,
-	IonCard, IonCardHeader, IonCardSubtitle, IonCardTitle, IonCardContent,
+	IonCard, IonCardHeader, IonCardTitle, IonCardContent,
 	IonItem, IonIcon, IonLabel, IonButton, IonGrid, IonRow, IonCol
 	} from '@ionic/react';
 import { pin, wifi} from 'ionicons/icons';
@@ -37,7 +37,6 @@ const Tab1: React.FC = () => {
           
         <IonCard>
             <IonCardHeader>
-				<IonCardSubtitle>Card Subtitle</IonCardSubtitle>
 				<IonCardTitle>About</IonCardTitle>
             </IonCardHeader>
             <IonCardContent>
@@ -47,7 +46,7 @@ const Tab1: React.FC = () => {
 
 		<IonGrid>
         <IonRow>
-			<IonCol size="12"  sizeMd="3" offsetMd="1">
+			<IonCol size="12"  sizeLg="3.5" offsetLg="0.375">
           <IonCard>
             <IonItem>
             <IonIcon icon={pin} slot="start" />
@@ -58,38 +57,36 @@ const Tab1: React.FC = () => {
             </IonCardContent>
           </IonCard>
 			</IonCol>
-      <IonCol size="12"  sizeMd="3" offsetMd="1">
+      <IonCol size="12"  sizeLg="3.5" offsetLg="0.375">
           <IonCard>
             <IonItem>
             <IonIcon icon={pin} slot="start" />
             <IonButton fill="outline" slot="end">View</IonButton>
             </IonItem>
             <IonCardContent>
-            This is content, without any paragraph or header tags,
-            within an ion-cardContent element.
+            {data?data:"Nothing to display yet!"}
             </IonCardContent>
           </IonCard>
       </IonCol>
-          	<IonCol size="12"  sizeMd="3" offsetMd="1">
+          	<IonCol size="12"  sizeLg="3.5" offsetLg="0.375">
 		  		<IonCard>
 					<IonItem>
 					<IonIcon icon={pin} slot="start" />
 					<IonButton fill="outline" slot="end">View</IonButton>
 					</IonItem>
 					<IonCardContent>
-					This is content, without any paragraph or header tags,
-					within an ion-cardContent element.
+          {data?data:"Nothing to display yet!"}
 					</IonCardContent>
 				</IonCard>
           	</IonCol>
         </IonRow>
       </IonGrid>
-      <IonCard>
+      {/* <IonCard>
         <IonItem href="/test" className="ion-activated">
           <IonIcon icon={wifi} slot="start" />
           <IonLabel>Test</IonLabel>
         </IonItem>
-      </IonCard>
+      </IonCard> */}
       <IonCard>
         <IonItem href="/dashboard" className="ion-activated">
           <IonIcon icon={wifi} slot="start" />

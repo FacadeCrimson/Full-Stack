@@ -8,6 +8,24 @@ ion-col.canvas{
     height:800px;
 }
 
+#intro{
+    height:800px;
+}
+
+#introcard{
+    opacity:0.8;
+}
+
+.introtext{
+    font-size:20px !important;
+    margin:10px !important;
+}
+
+#logo{
+    height:20px;
+    float:right;
+}
+
 .select:hover{
     cursor:pointer;
 }
