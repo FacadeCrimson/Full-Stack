@@ -100,10 +100,10 @@ const Dashboard: React.FC = () => {
     
     const [graph,setGraph] = useState<graphList>(graphList.Introduction)
 
-    const [rangeValue, setRangeValue] = useState<{
-      lower: number;
-      upper: number;
-    }>({ lower: 0, upper: 0 })
+    // const [rangeValue, setRangeValue] = useState<{
+    //   lower: number;
+    //   upper: number;
+    // }>({ lower: 0, upper: 0 })
 
     const useShowPopover1 = useState(false);
     const useShowPopover2 = useState(false);
@@ -264,7 +264,7 @@ const Dashboard: React.FC = () => {
 			</IonCol>
             <IonCol sizeLg="8" size="12" pullLg="2" className="canvas">
                 {
-                    switchGraph(graph,data,conf,rangeValue,entries)
+                    switchGraph(graph,data,conf,entries)
                     }
 			</IonCol>
            
@@ -301,7 +301,7 @@ const Dashboard: React.FC = () => {
 
 export default Dashboard;
 
-function switchGraph(graph:graphList, data:string, conf:object, rangeValue:any,entries:any){
+function switchGraph(graph:graphList, data:string, conf:object,entries:any){
     switch(graph){
         case "Introduction":
             return <div id="intro" style={{backgroundImage: "url(/assets/rainbowharborsunset.jpg",backgroundPosition:"center top",backgroundSize:"auto 800px"}}>
@@ -328,7 +328,7 @@ function switchGraph(graph:graphList, data:string, conf:object, rangeValue:any,e
         case "Capital One":
             return <Leaflet4></Leaflet4>
         case "Density Chart":
-            return <GraphWrapper data={data} rangeValue={rangeValue}></GraphWrapper>
+            return <GraphWrapper entries={entries}></GraphWrapper>
         default:
             return <Leaflet3 entries={entries}></Leaflet3>
     }

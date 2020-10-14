@@ -24,8 +24,6 @@ export const StatisticCard:React.FC<ContainerProps>=({result,prevResult,totalRes
         }
         return 0
     }
-   console.log(prevResult)
-   console.log(totalResult)
     const ar=round1("ar")
     const sspl=round1("sspl")
     const btfsp=round1("btfsp")
