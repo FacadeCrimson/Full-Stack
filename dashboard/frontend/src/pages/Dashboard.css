@@ -36,6 +36,7 @@ ion-col.canvas{
 
 .chip{
     margin:auto;
+    padding-bottom:10px;
 }
 
 #mapid { height: 100%; }

@@ -181,13 +181,20 @@ const Dashboard: React.FC = () => {
 				<IonList>
                     <IonRadioGroup value={graph} onIonChange={e => setGraph(e.detail.value)}>
                         <IonItem>Graph</IonItem>
-                        {
+                        {graph!==graphList.Leaflet3?
                              Object.keys(graphList).map((key, i) => (
                                 <IonItem key={i}>
                                 <IonLabel>{graphList[key]}</IonLabel>
                                 <IonRadio slot="end" value={graphList[key]} />
                                 </IonItem>
                             ))
+                            :<>
+                             <IonItem>
+                                <IonLabel>Long Beach</IonLabel>
+                                <IonButton slot="end" onClick={()=>{setGraph(graphList.Introduction)}}>↩</IonButton>
+                            </IonItem>
+                            <GraphWrapper entries={entries} type="side"></GraphWrapper>
+                            </>
                         }
 
                     </IonRadioGroup>
@@ -328,7 +335,7 @@ function switchGraph(graph:graphList, data:string, conf:object,entries:any){
         case "Capital One":
             return <Leaflet4></Leaflet4>
         case "Density Chart":
-            return <GraphWrapper entries={entries}></GraphWrapper>
+            return <GraphWrapper entries={entries} type="density"></GraphWrapper>
         default:
             return <Leaflet3 entries={entries}></Leaflet3>
     }

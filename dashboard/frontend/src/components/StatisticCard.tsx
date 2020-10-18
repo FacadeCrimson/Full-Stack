@@ -1,5 +1,5 @@
 import React from 'react';
-import { IonCard, IonCardHeader, IonCardTitle, IonCardContent, IonChip, IonItem, IonIcon, IonLabel, IonRow, IonCol
+import { IonCard, IonCardHeader, IonCardTitle, IonChip, IonItem, IonIcon, IonLabel, IonRow, IonCol
     } from '@ionic/react';
 import { locate, calendar } from 'ionicons/icons';
 
@@ -53,9 +53,6 @@ export const StatisticCard:React.FC<ContainerProps>=({result,prevResult,totalRes
                 </IonChip>
                 </div>
             </IonItem>
-            <IonCardContent>
-            
-            </IonCardContent>
         </IonCard>
     </IonCol>
     <IonCol sizeLg="2.5" offsetLg="0.4" sizeSm="4.5" offsetSm="1" size="10" offset="1">
@@ -76,9 +73,6 @@ export const StatisticCard:React.FC<ContainerProps>=({result,prevResult,totalRes
                 </IonChip>
                 </div>
             </IonItem>
-            <IonCardContent>
-            
-            </IonCardContent>
         </IonCard>
     </IonCol>
 
@@ -100,9 +94,6 @@ export const StatisticCard:React.FC<ContainerProps>=({result,prevResult,totalRes
                 </IonChip>
                 </div>
             </IonItem>
-            <IonCardContent>
-            
-            </IonCardContent>
         </IonCard>
     </IonCol>
     <IonCol sizeLg="2.5" offsetLg="0.4" sizeSm="4.5" offsetSm="1" size="10" offset="1">
@@ -123,9 +114,6 @@ export const StatisticCard:React.FC<ContainerProps>=({result,prevResult,totalRes
                 </IonChip>
                 </div>
             </IonItem>
-            <IonCardContent>
-            
-            </IonCardContent>
         </IonCard>
     </IonCol>
   

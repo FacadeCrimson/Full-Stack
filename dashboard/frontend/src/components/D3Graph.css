@@ -1,3 +1,14 @@
 #d3graph{
     height:800px;
 }
+
+#d3sidegraph{
+    height:680px;
+    overflow:scroll;
+}
+
+#info{
+    position:absolute;
+    color:blue !important;
+    background-color: white;
+}

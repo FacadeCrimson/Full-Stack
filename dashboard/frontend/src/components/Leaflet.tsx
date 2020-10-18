@@ -244,7 +244,7 @@ export const Leaflet3:React.FC<ContainerProps2>=({entries})=>{
                                              `<svg height=10 width=280 class="tooltipgraph"><rect height=10 width=${xScale6(d.values[0].Estimate_Total_rent)} fill="black"></rect></svg>`:
                                              '<p>No estimate total rent data.</p>')+
                                              (d.values[0].Percentage_of_renting?`<p>Percentage of renting: ${d.values[0].Percentage_of_renting}</p>`+
-                                             `<svg height=10 width=280 class="tooltipgraph"><rect height=10 width=${xScale7(d.values[0].Percentage_of_renting)} fill="black"></rect></svg>`:
+                                             `<svg height=10 width=280 class="tooltipgraph"><rect height=10 width=${xScale7(parseInt(d.values[0].Percentage_of_renting))} fill="black"></rect></svg>`:
                                              '<p>No percentage of renting data.</p>'))
                                       .style("left", (e.pageX) + "px")		
                                       .style("top", (e.pageY - 28) + "px");	
