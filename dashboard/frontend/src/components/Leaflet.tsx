@@ -1,5 +1,6 @@
 /* tslint:disable */
 import L,{ Map,LayerGroup} from 'leaflet'
+import 'leaflet-draw';
 import React, { useEffect,useRef,useMemo } from 'react';
 import {select,geoTransform,geoPath,json,scaleSequential,interpolateSpectral,schemeSpectral,scaleLinear} from 'd3'
 import './Leaflet.css'
@@ -8,14 +9,12 @@ interface ContainerProps1 {
     mapRef:any
     center:[number,number]
     zoom:number
+    area?:any
 }
 
 interface ContainerProps2 {
     entries:any
-}
-
-interface ContainerProps3 {
-    data:string
+    area?:any
 }
 
 interface input{
@@ -23,7 +22,7 @@ interface input{
     rows:[[number,string,string,number,number,number,number,number,number,number,number,number]]
 }
 
-export const LeafletMap:React.FC<ContainerProps1>=({mapRef,center,zoom})=>{
+export const LeafletMap:React.FC<ContainerProps1>=({mapRef,center,zoom,area})=>{
 
     useEffect(()=>{
         if(mapRef.current){
@@ -79,6 +78,60 @@ export const LeafletMap:React.FC<ContainerProps1>=({mapRef,center,zoom})=>{
     //         alert(e.message);
     //     }
 
+        useEffect(()=>{
+            // Initialise the FeatureGroup to store editable layers
+            var editableLayers = new L.FeatureGroup();
+            mapRef.current.addLayer(editableLayers);
+
+            if(area[0]){
+                L.polygon(area[0], {color: '#97009c'}).addTo(editableLayers);
+            }
+
+            var drawPluginOptions = {
+                position: 'topright',
+                draw: {
+                    polygon: {
+                    allowIntersection: false, // Restricts shapes to simple polygons
+                    drawError: {
+                        color: '#e1e100', // Color the shape will turn when intersects
+                        message: '<strong>Oh snap!<strong> you can\'t draw that!' // Message that will show when intersect
+                    },
+                    shapeOptions: {
+                        color: '#97009c'
+                    }
+                    },
+                    // disable toolbar item by setting it to false
+                    polyline: false,
+                    circle: false, // Turns off this drawing tool
+                    rectangle: false,
+                    marker: false,
+                    circlemarker:false
+                    },
+                edit: {
+                    featureGroup: editableLayers, //REQUIRED!!
+                    remove: false
+                }};
+
+            // Initialise the draw control and pass it the FeatureGroup of editable layers
+            var drawControl = new L.Control.Draw(drawPluginOptions as any);
+            mapRef.current.addControl(drawControl);
+            mapRef.current.on('draw:drawstart', function(e:any) {
+                editableLayers.clearLayers()
+            })
+            mapRef.current.on('draw:created', function(e:any) {
+            var type = e.layerType,
+                layer = e.layer;
+            editableLayers.addLayer(layer);
+            if(area){
+                let result = []
+                for(let x of layer.getLatLngs()[0]){
+                    result.push([x.lat,x.lng])
+                }
+                area[1](result)
+            }
+        });
+        })
+        
     return <div id="mapid"></div>
 }
 
@@ -138,7 +191,7 @@ export const Leaflet1:React.FC=()=>{
     return <LeafletMap mapRef={mapRef} center={[33.797548, -118.16346]} zoom={12}></LeafletMap>
 }
 
-export const Leaflet3:React.FC<ContainerProps2>=({entries})=>{
+export const Leaflet3:React.FC<ContainerProps2>=({entries,area})=>{
     const mapRef = useRef<Map|null>(null);
     const ticks = useMemo(() => {
         const xScale = scaleLinear()
@@ -152,7 +205,7 @@ export const Leaflet3:React.FC<ContainerProps2>=({entries})=>{
       }, [])
     useEffect(()=>{
         const mapContainer = select('#mapid')
-        const svg1=mapContainer.append('svg').attr('class','legend leaflet-top leaflet-right').attr('width',220).attr('height',40).attr('id',"")
+        const svg1=mapContainer.append('svg').attr('class','legend leaflet-bottom leaflet-left').attr('width',220).attr('height',40).attr('id',"")
         let defs = svg1.append("defs")
         let linearGradient = defs.append("linearGradient")
                                 .attr("id", "linear-gradient")
@@ -268,7 +321,7 @@ export const Leaflet3:React.FC<ContainerProps2>=({entries})=>{
         }
        
     },);
-    return <LeafletMap mapRef={mapRef} center={[33.797548, -118.16346]} zoom={11}></LeafletMap>
+    return <LeafletMap mapRef={mapRef} center={[33.797548, -118.16346]} zoom={11} area={area}></LeafletMap>
 }
 
 

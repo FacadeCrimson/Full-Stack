@@ -177,6 +177,7 @@ export const SideGraph:React.FC<ContainerProps1>=({height,width,entries})=>{
         .domain([0, 1])      
         svg.append("g")
         .attr("transform", "translate("+margin.left+"," + margin.top + ")")
+        .attr("position","sticky")
         .call(axisTop(x));
 
         // var x = d3.scaleBand().rangeRound([0, width]).padding(0.1),
@@ -222,11 +223,13 @@ export const SideGraph:React.FC<ContainerProps1>=({height,width,entries})=>{
 
             for (const [index,entry] of names.entries()){
                 for(let point of data[entry]){
-                    svg.append("circle")
-                        .attr("cx", x(point))
-                        .attr("cy", y(index.toString()) as number)
-                        .attr("r", 2)
-                        .attr("opacity","0.8")
+                    svg.append("line")
+                        .attr("x1", x(point))
+                        .attr("x2", x(point))
+                        .attr("y1", (y(index.toString()) as number-4))
+                        .attr("y2", (y(index.toString()) as number+4))
+                        .attr("stroke", "black")
+                        .attr("opacity","0.6")
                         .attr('transform',"translate("+margin.left+"," + (margin.top+8) + ")")
                 }
             }

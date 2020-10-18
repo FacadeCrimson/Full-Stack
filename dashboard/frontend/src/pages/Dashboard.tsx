@@ -16,6 +16,8 @@ import {MultiSelector} from '../components/MultiSelector'
 import {subGroup, parentGroup, topics} from '../components/FilterList'
 import {csv} from 'd3'
 import {nest} from 'd3-collection'
+import {polygonContains} from 'd3-polygon'
+
 enum graphList {
     Introduction="Introduction",
     Leaflet3="Long Beach",
@@ -115,6 +117,7 @@ const Dashboard: React.FC = () => {
     const [entries,setEntries] = useState<any>(null)
     let prevResult=useRef(result)
     let totalResult:any= useRef(null)
+    const area=useState<[number,number][]|null>();
 
     useEffect(()=>{
         async function preProcess(){
@@ -143,17 +146,19 @@ const Dashboard: React.FC = () => {
                 ((filter.cluster === -1) || (filter.cluster === +a.Cluster!)) &&
                 ((filter.time === 'all') || (a.review_data?.indexOf(filter.time)!>-1))
             })
-            const entries = nest()
+            let entries = nest()
                         .key(function(d:any) { return d.latlong; })
                         .entries(LB1);
-            
+            if(area[0]){
+                entries=entries.filter(function(d){
+                    return polygonContains(area[0]!,JSON.parse(d.key))})
+            }
             const newResult = calc(entries)
             setEntries(entries)
             setResult(newResult)
         }
         preProcess()
-    },[filter])
-
+    },[filter,area[0]])
     
   return (
     <IonPage>
@@ -193,6 +198,7 @@ const Dashboard: React.FC = () => {
                                 <IonLabel>Long Beach</IonLabel>
                                 <IonButton slot="end" onClick={()=>{setGraph(graphList.Introduction)}}>↩</IonButton>
                             </IonItem>
+                            <IonItem>Barcode chart of business score percentile for each shop type</IonItem>
                             <GraphWrapper entries={entries} type="side"></GraphWrapper>
                             </>
                         }
@@ -241,7 +247,15 @@ const Dashboard: React.FC = () => {
                         <IonButton slot="end" onClick={() => {prevResult.current=result;useShowPopover3[1](true)}}>&#9662;</IonButton>
                     </IonItem>
                     <MultiSelector data={subGroup} name="subGroup" useShowPopover={useShowPopover3} filter={[filter,setFilter]}></MultiSelector>
-
+                    <IonItemDivider></IonItemDivider>
+                    <IonItem>
+                        <IonLabel>Reset Select Filters</IonLabel>
+                        <IonButton slot="end" onClick={()=>{setFilter({"topics":new Set(),"parentGroup":new Set(),"subGroup":new Set(),"subSubGroup":new Set(),"cluster":-1,"time":"all"})}}>↩</IonButton>
+                    </IonItem>
+                    <IonItem>
+                        <IonLabel>Reset Polygon Filter</IonLabel>
+                        <IonButton slot="end" onClick={()=>{area[1](null)}}>↩</IonButton>
+                    </IonItem>
                     {/* <IonItem>
                         <IonLabel>Sub-subgroup</IonLabel>
                         <IonButton slot="end" onClick={() => {prevResult.current=result;useShowPopover4[1](true)}}>&#9662;</IonButton>
@@ -271,7 +285,7 @@ const Dashboard: React.FC = () => {
 			</IonCol>
             <IonCol sizeLg="8" size="12" pullLg="2" className="canvas">
                 {
-                    switchGraph(graph,data,conf,entries)
+                    switchGraph(graph,data,conf,entries,area)
                     }
 			</IonCol>
            
@@ -308,7 +322,7 @@ const Dashboard: React.FC = () => {
 
 export default Dashboard;
 
-function switchGraph(graph:graphList, data:string, conf:object,entries:any){
+function switchGraph(graph:graphList, data:string, conf:object,entries:any,area:any){
     switch(graph){
         case "Introduction":
             return <div id="intro" style={{backgroundImage: "url(/assets/rainbowharborsunset.jpg",backgroundPosition:"center top",backgroundSize:"auto 800px"}}>
@@ -331,7 +345,7 @@ function switchGraph(graph:graphList, data:string, conf:object,entries:any){
         case "Long Beach Areas":
             return <Leaflet1></Leaflet1>
         case "Long Beach":
-            return <Leaflet3 entries={entries}></Leaflet3>
+            return <Leaflet3 entries={entries} area={area}></Leaflet3>
         case "Capital One":
             return <Leaflet4></Leaflet4>
         case "Density Chart":
