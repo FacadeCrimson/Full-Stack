@@ -34,7 +34,7 @@ export const SaveConfigButton: React.FC<ContainerProps2> = ({store,name}) => {
     const handleSave = async ()=>{
         const newConfig = KeplerGlSchema.getConfigToSave(store.getState().keplerGl.map)
         const url = process.env.REACT_APP_BACKEND+'/uploadconfig'
-        var fd = new FormData()
+        let fd = new FormData()
         fd.append('name', name)
         fd.append('type', "config")
         fd.append('file', JSON.stringify(newConfig))
@@ -103,9 +103,9 @@ interface ContainerProps3 {
 export const UploadConfigButton: React.FC<ContainerProps3> = ({name}) => {
     const handleUpload = async (files:any)=>{
          const url = process.env.REACT_APP_BACKEND+'/uploadconfig'
-         var reader = new FileReader();
+         let reader = new FileReader();
         reader.onload = async function() {
-          var fd = new FormData()
+          let fd = new FormData()
           fd.append('name', name)
           fd.append('type', "config")
           fd.append('file', reader.result as string)

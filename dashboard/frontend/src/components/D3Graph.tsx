@@ -18,8 +18,8 @@ interface ContainerProps2{
 export const DensityGraph:React.FC<ContainerProps1>=({height,width,entries})=>{
     const ref = useRef<any>()
     const margin={left:30,bottom:20,top:10,right:30}
-    // var dataMax = max(newData, function(d) { return d.passenger_count; });
-    // var dataMin = min(newData, function(d) { return d.passenger_count; });
+    // let dataMax = max(newData, function(d) { return d.passenger_count; });
+    // let dataMin = min(newData, function(d) { return d.passenger_count; });
 
     useEffect(()=>{
         let svg = select(ref.current as SVGSVGElement)
@@ -33,7 +33,7 @@ export const DensityGraph:React.FC<ContainerProps1>=({height,width,entries})=>{
         .attr('transform',"translate("+margin.left+"," + margin.top + ")")
     }
 
-    var x = scaleLinear()
+    let x = scaleLinear()
             .range([0, width-margin.left-margin.right])
             .domain([0, 5])      
     svg.append("g")
@@ -41,7 +41,7 @@ export const DensityGraph:React.FC<ContainerProps1>=({height,width,entries})=>{
     .call(axisBottom(x));
 
     // add the y Axis
-    var y = scaleLinear()
+    let y = scaleLinear()
             .range([height-margin.top-margin.bottom, 0])
             .domain([0, 0.4]);
     svg.append("g")
@@ -49,8 +49,8 @@ export const DensityGraph:React.FC<ContainerProps1>=({height,width,entries})=>{
     .call(axisLeft(y));
 
     // Compute kernel density estimation
-    var kde = kernelDensityEstimator(kernelEpanechnikov(2), x.ticks(100))
-    var density =  kde(entries.map(function(d:any){ return d.values[0].avg_review }))
+    let kde = kernelDensityEstimator(kernelEpanechnikov(2), x.ticks(100))
+    let density =  kde(entries.map(function(d:any){ return d.values[0].avg_review }))
 
     // Plot the area
     svg.append("path")
@@ -80,14 +80,14 @@ export const DensityGraph:React.FC<ContainerProps1>=({height,width,entries})=>{
 
     if(width>60){
         // set the parameters for the histogram
-        var hist = histogram()
+        let hist = histogram()
         .value(function(d:any) { return d.values[0].avg_review; })   // I need to give the vector of value
         .domain(x.domain() as any)  // then the domain of the graphic
         .thresholds(x.ticks(50)); // then the numbers of bins
         
         // And apply this function to data to get the bins
-        var bins = hist(entries);
-        var y2 = scaleLinear()
+        let bins = hist(entries);
+        let y2 = scaleLinear()
           .range([height-margin.top-margin.bottom, 0]);
           y2.domain([0, 300]);
         svg.append("g")
@@ -172,7 +172,7 @@ export const SideGraph:React.FC<ContainerProps1>=({height,width,entries})=>{
         let svg=div.append("svg").attr("height",newHeight+margin.top+margin.bottom).attr("width",width)
                 .attr("viewbox",`${width},${newHeight+margin.top+margin.bottom},${width},${newHeight+margin.top+margin.bottom}`)
 
-        var x = scaleLinear()
+        let x = scaleLinear()
         .range([0, width-margin.left-margin.right])
         .domain([0, 1])      
         svg.append("g")
@@ -180,9 +180,9 @@ export const SideGraph:React.FC<ContainerProps1>=({height,width,entries})=>{
         .attr("position","sticky")
         .call(axisTop(x));
 
-        // var x = d3.scaleBand().rangeRound([0, width]).padding(0.1),
+        // let x = d3.scaleBand().rangeRound([0, width]).padding(0.1),
 
-        var y = scaleBand()
+        let y = scaleBand()
         .range([0,newHeight])
         .domain(names.map((v,i)=>{return i as any}))
 

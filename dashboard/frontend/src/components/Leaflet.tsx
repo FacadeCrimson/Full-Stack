@@ -58,7 +58,7 @@ export const LeafletMap:React.FC<ContainerProps1>=({mapRef,center,zoom,area})=>{
      },)
 
     // function onMapClick(e:any) {
-    //     var popup = L.popup();
+    //     let popup = L.popup();
     //     popup
     //     .setLatLng(e.latlng)
     //     .setContent("You clicked the map at " + e.latlng.toString())
@@ -66,7 +66,7 @@ export const LeafletMap:React.FC<ContainerProps1>=({mapRef,center,zoom,area})=>{
     // }
 
     // function onLocationFound(e:any) {
-    //         var radius = e.accuracy;
+    //         let radius = e.accuracy;
         
     //         L.marker(e.latlng).addTo(mapRef.current as Map)
     //             .bindPopup("You are within " + radius + " meters from this point").openPopup();
@@ -80,14 +80,14 @@ export const LeafletMap:React.FC<ContainerProps1>=({mapRef,center,zoom,area})=>{
 
         useEffect(()=>{
             // Initialise the FeatureGroup to store editable layers
-            var editableLayers = new L.FeatureGroup();
+            let editableLayers = new L.FeatureGroup();
             mapRef.current.addLayer(editableLayers);
 
             if(area[0]){
                 L.polygon(area[0], {color: '#97009c'}).addTo(editableLayers);
             }
 
-            var drawPluginOptions = {
+            let drawPluginOptions = {
                 position: 'topright',
                 draw: {
                     polygon: {
@@ -113,14 +113,13 @@ export const LeafletMap:React.FC<ContainerProps1>=({mapRef,center,zoom,area})=>{
                 }};
 
             // Initialise the draw control and pass it the FeatureGroup of editable layers
-            var drawControl = new L.Control.Draw(drawPluginOptions as any);
+            let drawControl = new L.Control.Draw(drawPluginOptions as any);
             mapRef.current.addControl(drawControl);
             mapRef.current.on('draw:drawstart', function(e:any) {
                 editableLayers.clearLayers()
             })
             mapRef.current.on('draw:created', function(e:any) {
-            var type = e.layerType,
-                layer = e.layer;
+            let layer = e.layer;
             editableLayers.addLayer(layer);
             if(area){
                 let result = []

@@ -1,5 +1,5 @@
 export function doesFileExist(url:string) {
-    var xhr = new XMLHttpRequest();
+    let xhr = new XMLHttpRequest();
     xhr.open('HEAD', url, false);
     xhr.send();
      
@@ -13,9 +13,9 @@ export function doesFileExist(url:string) {
 export async function fetchData(setList:Function) {
     const url=process.env.REACT_APP_BACKEND+'/getdatalist'
     // const token = await  getAccessTokenSilently()
-    // var myHeaders = new Headers()
+    // let myHeaders = new Headers()
     // myHeaders.append("Authorization", `Bearer ${token}`)
-    // var requestOptions = {
+    // let requestOptions = {
     // method: 'GET',
     // headers: myHeaders,
     // redirect: 'follow'
