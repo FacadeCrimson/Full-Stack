@@ -67,11 +67,11 @@ const Dashboard: React.FC = () => {
 
     const handleUpload = async (files:any) => {
         const url = process.env.REACT_APP_BACKEND+'/uploaddata'
-        var reader = new FileReader();
+        let reader = new FileReader();
         let filename = ""
         reader.onload = async function() {
             // Use reader.result
-                var fd = new FormData()
+                let fd = new FormData()
                 if(name!=="input file name"){
                     fd.append('name', name)
                 }else{
@@ -158,7 +158,7 @@ const Dashboard: React.FC = () => {
             setResult(newResult)
         }
         preProcess()
-    },[filter,area[0]])
+    },[filter,area])
     
   return (
     <IonPage>
