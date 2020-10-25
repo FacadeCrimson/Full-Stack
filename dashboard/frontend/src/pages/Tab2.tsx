@@ -2,7 +2,7 @@ import React from 'react';
 import { IonContent, IonHeader, IonPage, IonTitle, IonToolbar, IonButtons, IonMenuToggle, 
   IonIcon, IonButton, IonMenu, IonList, IonLabel, IonItem, IonThumbnail, } from '@ionic/react';
 import './Tab2.css';
-import { menu, home, closeCircle } from 'ionicons/icons';
+import { menu, home } from 'ionicons/icons';
 
 const Tab2: React.FC = () => {
   return (
