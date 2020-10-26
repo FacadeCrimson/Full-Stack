@@ -158,7 +158,7 @@ const Dashboard: React.FC = () => {
             setResult(newResult)
         }
         preProcess()
-    },[filter,area[0]])
+    },[filter,area])
     
   return (
     <IonPage>
