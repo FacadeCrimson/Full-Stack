@@ -15,8 +15,7 @@ import Tab1 from './pages/Tab1';
 import Tab2 from './pages/Tab2';
 import Tab3 from './pages/Tab3';
 import About from './pages/About';
-import Comp1 from './pages/Comp1';
-import Comp2 from './pages/Comp2';
+import Comp1 from './pages/Comps';
 import User from './pages/User';
 import Category from './pages/Category';
 import Test from './pages/Test';
@@ -50,7 +49,6 @@ const App: React.FC = () => (
           <Route path="/tab3" component={Tab3} />
           <Route path="/about" component={About} exact={true} />
           <Route path="/comp1" component={Comp1} exact={true} />
-          <Route path="/comp2" component={Comp2} exact={true} />
           <Route path="/" render={() => <Redirect to="/tab1" />} exact={true} />
           <Route path='/user/:id' component={User} />
           <Route path='/category/:name' component={Category} />

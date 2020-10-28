@@ -1,8 +1,6 @@
 import React,{useEffect} from 'react';
-import { IonContent,
-	IonCard, IonCardHeader, IonCardSubtitle, IonCardTitle, IonCardContent,
-	IonItem, IonIcon, IonLabel, IonButton, IonGrid, IonRow, IonCol
-	} from '@ionic/react';
+import { IonContent, IonCard, IonCardHeader,	IonItem, IonIcon, IonLabel,  
+  IonGrid, IonRow, IonCol} from '@ionic/react';
 import { headset,camera,cart,gift } from 'ionicons/icons';
 import './CategoryGrid.css'
 
