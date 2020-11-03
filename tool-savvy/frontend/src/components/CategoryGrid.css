@@ -1,12 +1,9 @@
-#pic {
-    font-size:150px;
-    height:200px;
-}
-
-#title{
+.title{
     font-size:30px;
 }
 
-#header{
+.header{
     background-color: lightpink;
+    font-size:150px;
+    height:200px;
 }
