@@ -79,6 +79,7 @@ export const LeafletMap:React.FC<ContainerProps1>=({mapRef,center,zoom,area})=>{
     //     }
 
         useEffect(()=>{
+            if(area){
             // Initialise the FeatureGroup to store editable layers
             let editableLayers = new L.FeatureGroup();
             mapRef.current.addLayer(editableLayers);
@@ -128,7 +129,7 @@ export const LeafletMap:React.FC<ContainerProps1>=({mapRef,center,zoom,area})=>{
                 }
                 area[1](result)
             }
-        });
+        });}
         })
         
     return <div id="mapid"></div>

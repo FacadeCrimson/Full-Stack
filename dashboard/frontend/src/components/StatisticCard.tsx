@@ -1,6 +1,5 @@
 import React from 'react';
-import { IonCard, IonCardHeader, IonCardTitle, IonChip, IonItem, IonIcon, IonLabel, IonRow, IonCol
-    } from '@ionic/react';
+import { IonCard, IonCardHeader, IonCardTitle, IonChip, IonItem, IonIcon, IonLabel, IonRow, IonCol } from '@ionic/react';
 import { locate, calendar } from 'ionicons/icons';
 
 interface ContainerProps{
@@ -13,14 +12,14 @@ export const StatisticCard:React.FC<ContainerProps>=({result,prevResult,totalRes
 
     function round1(name:string){
         if(prevResult!.current[name]!==0){
-            return Math.round(10000-result[name]/prevResult!.current[name]*10000)/100
+            return Math.round(result[name]/prevResult!.current[name]*10000-10000)/100
         }
         return 0
     }
 
     function round2(name:string){
         if(totalResult.current && totalResult!.current[name]!==0){
-            return Math.round(10000-result[name]/totalResult!.current[name]*10000)/100
+            return Math.round(result[name]/totalResult!.current[name]*10000-10000)/100
         }
         return 0
     }

@@ -232,4 +232,4 @@ export const subSubGroup = ['New Car Dealers ',
 'Footwear and Leather Goods Repair', 'Gasoline Stations ',
 'Residential Property Managers ']
 
-export const topics =["PARKING","PRICE","STAFF","CLEANLINESS","ATMOSPHERE","CROWDEDNESS","PUBLIC_TRANSPORTATION"]
+export const topics =["PARKING","PRICE","STAFF","CLEANLINESS","ATMOSPHERE","CROWDEDNESS","PUBLIC TRANSPORTATION"]

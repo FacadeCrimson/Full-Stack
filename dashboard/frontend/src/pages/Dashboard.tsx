@@ -1,7 +1,7 @@
 import React,{useState,useEffect,useRef} from 'react';
 import { IonContent, IonHeader, IonPage, IonTitle, IonToolbar, IonText, IonSelect, IonSelectOption, 
-        IonButton, IonInput, IonCard, IonCardHeader, IonCardTitle, IonCardContent, IonList,IonItemDivider, IonItem,
-        IonLabel, IonGrid, IonRow, IonCol,IonRadioGroup,IonRadio} from '@ionic/react';
+        IonButton, IonInput, IonCard, IonCardHeader, IonCardTitle, IonCardContent, IonList, IonItemDivider, IonItem,
+        IonLabel, IonGrid, IonRow, IonCol, IonRadioGroup, IonRadio,IonRange} from '@ionic/react';
 import './Dashboard.css';
 import {doesFileExist, fetchData} from '../components/Function';
 import {EmbeddedMap ,SaveConfigButton, DownloadConfigButton, UploadConfigButton} from '../components/MapComponents';
@@ -13,7 +13,7 @@ import {Leaflet1, Leaflet3,Leaflet4} from '../components/Leaflet'
 import {GraphWrapper} from '../components/D3Graph'
 import {store} from '../components/Kepler';
 import {MultiSelector} from '../components/MultiSelector'
-import {subGroup, parentGroup, topics} from '../components/FilterList'
+import {subGroup, parentGroup, topics, subSubGroup} from '../components/FilterList'
 import {csv} from 'd3'
 import {nest} from 'd3-collection'
 import {polygonContains} from 'd3-polygon'
@@ -110,7 +110,7 @@ const Dashboard: React.FC = () => {
     const useShowPopover1 = useState(false);
     const useShowPopover2 = useState(false);
     const useShowPopover3 = useState(false);
-    // const useShowPopover4 = useState(false);
+    const useShowPopover4 = useState(false);
 
     const [filter,setFilter] = useState({"topics":new Set(),"parentGroup":new Set(),"subGroup":new Set(),"subSubGroup":new Set(),"cluster":-1,"time":"all"})
     const [result,setResult] = useState({"ar":0,"bfsp":0,"btfsp":0,"sspl":0})
@@ -118,27 +118,29 @@ const Dashboard: React.FC = () => {
     let prevResult=useRef(result)
     let totalResult:any= useRef(null)
     const area=useState<[number,number][]|null>();
+    const [LBData,setLBData] = useState<any>(null)
 
     useEffect(()=>{
-        async function preProcess(){
+        async function dataReading(){
             const LB = await csv('/data/LongBeach.csv')
-            const entries = nest()
-                        .key(function(d:any) { return d.latlong; })
-                        .entries(LB);
-            totalResult.current = calc(entries)
+            setLBData(LB)
         }
-        preProcess()
+        dataReading()
     },[])
 
     useEffect(()=>{
-        async function preProcess(){
+        async function calcStat(){
+            const entries = nest()
+            .key(function(d:any) { return d.latlong; })
+            .entries(LBData);
+            totalResult.current = calc(entries)
+        }
+        if(LBData) calcStat()
+    },[LBData])
 
-            const LB = await csv('/data/LongBeach.csv')
-            // console.log(min(LB,d=>parseFloat((d.Percentage_of_renting as string).substring(0,(d.Percentage_of_renting as any).length-1))),
-            // max(LB,d=>parseFloat((d.Percentage_of_renting as string).substring(0,(d.Percentage_of_renting as any).length-1))))
-            
-            
-            const LB1 = LB.filter(function(a){
+    useEffect(()=>{
+        async function preProcess(){    
+            const LB1 = LBData.filter(function(a:any){
                 return (filter.topics.size===0 || filter.topics.has(a.topic)) &&
                 ((filter.subSubGroup.has(a.sub_sub_group)) || (filter.subSubGroup.size===0)) &&
                 ((filter.subGroup.has(a.sub_group)) || (filter.subGroup.size===0)) &&
@@ -157,8 +159,8 @@ const Dashboard: React.FC = () => {
             setEntries(entries)
             setResult(newResult)
         }
-        preProcess()
-    },[filter,area[0]])
+        if (LBData) preProcess()
+    },[filter,area[0],LBData])
     
   return (
     <IonPage>
@@ -234,19 +236,43 @@ const Dashboard: React.FC = () => {
                     <IonItem>Filter</IonItem>
                     <IonItem>
                         <IonLabel>Topic</IonLabel>
-                        <IonButton slot="end" onClick={() => {prevResult.current=result;useShowPopover1[1](true)}}>&#9662;</IonButton>
+                        <IonButton slot="end" onClick={() => {useShowPopover1[1](true)}}>&#9662;</IonButton>
                     </IonItem>
                     <MultiSelector data={topics} name="topics" useShowPopover={useShowPopover1} filter={[filter,setFilter]}></MultiSelector>
                     <IonItem>
-                        <IonLabel>Industry Group</IonLabel>
-                        <IonButton slot="end" onClick={() => {prevResult.current=result;useShowPopover2[1](true)}}>&#9662;</IonButton>
+                        <IonLabel>Parent Group</IonLabel>
+                        <IonButton slot="end" onClick={() => {useShowPopover2[1](true)}}>&#9662;</IonButton>
                     </IonItem>
                     <MultiSelector data={parentGroup} name="parentGroup" useShowPopover={useShowPopover2} filter={[filter,setFilter]}></MultiSelector>
                     <IonItem>
-                        <IonLabel>Industry Sub-group</IonLabel>
-                        <IonButton slot="end" onClick={() => {prevResult.current=result;useShowPopover3[1](true)}}>&#9662;</IonButton>
+                        <IonLabel>Sub Group</IonLabel>
+                        <IonButton slot="end" onClick={() => {useShowPopover3[1](true)}}>&#9662;</IonButton>
                     </IonItem>
                     <MultiSelector data={subGroup} name="subGroup" useShowPopover={useShowPopover3} filter={[filter,setFilter]}></MultiSelector>
+                    <IonItem>
+                        <IonLabel>Sub Subgroup</IonLabel>
+                        <IonButton slot="end" onClick={() => {useShowPopover4[1](true)}}>&#9662;</IonButton>
+                    </IonItem>
+                    <MultiSelector data={subSubGroup} name="subSubGroup" useShowPopover={useShowPopover4} filter={[filter,setFilter]}></MultiSelector>
+                    <IonItem button className='clickable ion-activatable' onClick={() => { 
+                        const button = document.getElementsByClassName("leaflet-draw-draw-polygon")[0] as HTMLElement
+                        if(graph!==graphList.Leaflet3){alert("You can only draw polygon on Long Beach tab.")}
+                        else{button.click()}
+                    }} detail>
+                        Draw Polygon Filter
+                    </IonItem>
+                    <IonItem button className='clickable ion-activatable' onClick={() => { 
+                        prevResult.current=result
+                        alert("Current statistics saved for future comparison!")
+                    }}>
+                        Save Statistics
+                    </IonItem>
+                    <IonItemDivider>Cluster <IonButton slot="end" onClick={() => {setFilter({...filter,"cluster":-1});}}>Reset</IonButton></IonItemDivider>
+                    <IonItem>
+                            <IonRange pin={true} value ={filter['cluster']} min={-1} max={299} step={1} debounce={600}
+                             onIonChange={e => {setFilter({...filter,"cluster":e.detail.value as number});}} />
+                    </IonItem>
+
                     <IonItemDivider></IonItemDivider>
                     <IonItem>
                         <IonLabel>Reset Select Filters</IonLabel>
@@ -256,18 +282,7 @@ const Dashboard: React.FC = () => {
                         <IonLabel>Reset Polygon Filter</IonLabel>
                         <IonButton slot="end" onClick={()=>{area[1](null)}}>↩</IonButton>
                     </IonItem>
-                    {/* <IonItem>
-                        <IonLabel>Sub-subgroup</IonLabel>
-                        <IonButton slot="end" onClick={() => {prevResult.current=result;useShowPopover4[1](true)}}>&#9662;</IonButton>
-                    </IonItem>
-                    <MultiSelector data={subSubGroup} name="subSubGroup" useShowPopover={useShowPopover4} filter={[filter,setFilter]}></MultiSelector>
-                    <IonItemDivider>Cluster <IonButton slot="end" onClick={() => {setFilter({...filter,"cluster":-1});}}>Reset</IonButton></IonItemDivider>
-                    <IonItem>
-                            <IonRange pin={true} value ={filter['cluster']} min={-1} max={299} step={1} debounce={600}
-                             onIonChange={e => {setFilter({...filter,"cluster":e.detail.value as number});}} />
-                    </IonItem> */}
                     </>
-
                     :<>
 
                     {/* <IonItemDivider>Passenger Count</IonItemDivider>
@@ -331,12 +346,18 @@ function switchGraph(graph:graphList, data:string, conf:object,entries:any,area:
                             <IonCardTitle>Introduction<img id="logo" src="/assets/city-logo.png" alt="logo"></img></IonCardTitle>
                         </IonCardHeader>
                         <IonCardContent>
-                            <IonText><br></br>
+                            <IonText>
+                                <br></br>
                                 <p className="introtext">This is a dashboard to visualize the geospatial data for Long Beach businesses.</p>
-                            <p className="introtext">The data includes business score percentile we derive which measures the business vulnerability.</p>
-                            <p className="introtext">The most important tab in graph selector is Long Beach with all relevant data painted.</p>
-                            <p className="introtext">The Density Chart is also worth checking as it pictures the distribution of filtered data.</p>
-                            <p className="introtext">Long Beach Areas, Kepler Map and Capital One are some explorations on other data.</p></IonText>
+                                <p className="introtext">The data includes business score percentile we derive which measures the business vulnerability.</p>
+                                <br></br>
+                                <p className="introtext">Each statistic card above shows two percentage changes, the left one is change related to all data,
+                                and the right one is change related to your saved statistics. You can save statistics for comparison in the filter panel.</p>
+                                <br></br>
+                                <p className="introtext">Long Beach Areas, Kepler Map and Capital One are some explorations on other data.</p>
+                                <p className="introtext">The most important tab in graph selector is Long Beach with all relevant data painted.</p>
+                                <p className="introtext">The Density Chart is also worth checking as it pictures the distribution of filtered data.</p>
+                            </IonText>
                         </IonCardContent>
                     </IonCard>
                      </div>
