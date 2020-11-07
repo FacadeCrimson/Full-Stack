@@ -1,6 +1,6 @@
 import React from 'react';
 import { IonContent, IonHeader, IonPage, IonTitle, IonToolbar, } from '@ionic/react';
-
+import InfiniteScroll from '../components/InfiniteScroll'
 import {  RouteComponentProps } from 'react-router-dom';
 
 interface UserProps extends RouteComponentProps<{
@@ -10,14 +10,15 @@ interface UserProps extends RouteComponentProps<{
 const User: React.FC<UserProps> = ({match}) => {
   return (
     <IonPage>
-        <IonHeader>
-            <IonToolbar>
-            <IonTitle>{match.params.id}</IonTitle>
-            </IonToolbar>
-        </IonHeader>
-        <IonContent>
+      <IonHeader>
+        <IonToolbar>
+        <IonTitle>{match.params.id}</IonTitle>
+        </IonToolbar>
+      </IonHeader>
 
-        </IonContent>
+      <IonContent>
+        <InfiniteScroll></InfiniteScroll>
+      </IonContent>
     </IonPage>
   );
 };
