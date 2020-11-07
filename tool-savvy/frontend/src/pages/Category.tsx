@@ -1,11 +1,8 @@
 import React from 'react';
 import { IonContent, IonHeader, IonPage, IonTitle, IonToolbar, IonNote, IonIcon, IonRow, IonGrid, IonCol,
-          IonList, IonItem} from '@ionic/react';
-
-import {  RouteComponentProps } from 'react-router-dom';
-
+          IonList, IonItem, IonItemDivider} from '@ionic/react';
+import { RouteComponentProps } from 'react-router-dom';
 import { returnDownForwardOutline} from 'ionicons/icons';
-
 import './Category.css'
 
 interface UserProps extends RouteComponentProps<{
@@ -17,10 +14,6 @@ const subcategory:string[] = []
 const specificuse:string[] = ["listen to music","music recommendation", "listening to music free"]
 
 const tools1:string[] = ["Spotify","Apple Music","Amazon Music", "Idagio", "LiveXLive", "Pandora","PrimePhonic","SiriusXM","Tidal","Youtube Music"]
-
-const tools2:string[] = ["Spotify","Apple Music","Amazon Music", "Idagio", "LiveXLive", "Pandora","PrimePhonic","SiriusXM","Tidal","Youtube Music"]
-
-const tools3:string[] = []
 
 const Category: React.FC<UserProps> = ({match}) => {
 
@@ -46,25 +39,22 @@ const Category: React.FC<UserProps> = ({match}) => {
         <IonContent>
           <IonGrid>
             <IonRow className="subcategorycontainer">
-              <IonCol size="3" className="subcategory">
+              <IonCol sizeLg="3" sizeSm="6" size="12" className="subcategory">
                 Hello
               </IonCol>
-              <IonCol size="3" className="subcategory">
+              <IonCol sizeLg="3" sizeSm="6" size="12" className="subcategory">
                 Hello
               </IonCol>
-              <IonCol size="3" className="subcategory">
+              <IonCol sizeLg="3" sizeSm="6" size="12" className="subcategory">
                 Hello
               </IonCol>
-              <IonCol size="3" className="subcategory">
+              <IonCol sizeLg="3" sizeSm="6" size="12" className="subcategory">
                 Hello
               </IonCol>
-              <IonCol size="3" className="subcategory">
+              <IonCol sizeLg="3" sizeSm="6" size="12" className="subcategory">
                 Hello
               </IonCol>
-              <IonCol size="3" className="subcategory">
-                Hello
-              </IonCol>
-              <IonCol size="3" className="subcategory">
+              <IonCol sizeLg="3" sizeSm="6" size="12" className="subcategory">
                 Hello
               </IonCol>
             </IonRow>
@@ -72,12 +62,12 @@ const Category: React.FC<UserProps> = ({match}) => {
           <IonList>
            { specificuse.map((item)=>{
              return <>
-                   <IonItem onClick={(e)=>{e.preventDefault();handleClick(item)}} href="#" className="ion-activated">
+                   <IonItem onClick={(e)=>{e.preventDefault();handleClick(item)}} button detail className='clickable ion-activatable'>
                         {item}
                    </IonItem>
                    <IonList id={item} className="ion-hide">
                        {tools1.map((item)=>{
-                          return <IonItem>
+                          return <IonItem key={item}>
                                     <IonIcon icon={returnDownForwardOutline}></IonIcon>
                                       &nbsp;&nbsp;{item}
                                     <IonNote slot="end">23</IonNote>
@@ -85,10 +75,22 @@ const Category: React.FC<UserProps> = ({match}) => {
                       })}
                    </IonList>
                    </>
-           }
-
-           )
-            }
+           })}
+          </IonList>
+          <IonItemDivider></IonItemDivider>
+          <IonList>
+            <IonItem>Popular Tools</IonItem>
+            {tools1.map((item)=>{
+              return <IonItem key={item}>{item}</IonItem>
+            })}
+          </IonList>
+          <IonItemDivider></IonItemDivider>
+          <IonList>
+            <IonItem>Related categories</IonItem>
+            <IonItem>Movie</IonItem>
+            <IonItem>Entertaiment</IonItem>
+            <IonItem>Game</IonItem>
+            <IonItem>Reading</IonItem>
           </IonList>
         </IonContent>
     </IonPage>

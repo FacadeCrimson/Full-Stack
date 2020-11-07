@@ -1,6 +1,5 @@
 import React, {useState, useEffect} from 'react';
-import { IonContent, IonHeader, IonTitle, IonToolbar, IonMenuToggle, IonIcon, IonButton,
-         IonMenu, IonList, IonThumbnail, IonLabel, IonItem, IonLoading, IonSkeletonText, IonListHeader, IonAvatar} from '@ionic/react';
+import { IonButton, IonList, IonItem, IonLoading } from '@ionic/react';
 import useIntersect from "../hooks/useIntersect"
 import LoadingItem from "./LoadingItem"
 
