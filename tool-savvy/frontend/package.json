@@ -16,7 +16,6 @@
     "babel-preset-env": "^1.7.0",
     "global": "^4.4.0",
     "ionicons": "^5.0.0",
-    "kepler.gl": "^2.3.2",
     "node-sass": "^4.14.1",
     "react": "^16.13.0",
     "react-dom": "^16.13.0",
@@ -29,6 +28,8 @@
     "react-virtualized": "^9.22.2",
     "redux": "^4.0.5",
     "redux-actions": "^2.6.5",
+    "redux-devtools-extension": "^2.13.8",
+    "redux-thunk": "^2.3.0",
     "styled-components": "^5.2.0",
     "typescript": "3.8.3"
   },
