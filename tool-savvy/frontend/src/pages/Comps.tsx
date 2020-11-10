@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { IonContent,  IonPage, IonToolbar, IonFooter, IonActionSheet, IonAlert, IonRippleEffect, 
     IonDatetime ,IonItem, IonLabel, IonButton, IonHeader, IonTitle, IonFab, IonFabButton,
-    IonList,IonIcon, IonItemDivider, IonInput, IonFabList, IonTextarea} from '@ionic/react';
+    IonList,IonIcon, IonItemDivider, IonInput, IonFabList, IonTextarea, IonLoading} from '@ionic/react';
 import { trash, share, caretForwardCircle, heart, close, logoVimeo, logoFacebook, logoInstagram, logoTwitter } from 'ionicons/icons';
 
 const Comp1: React.FC = () => {
@@ -11,6 +11,10 @@ const Comp1: React.FC = () => {
     const [selectedDate, setSelectedDate] = useState<string>('2012-12-15T13:47:20.789');
     const [text, setText] = useState<string>();
     const [number, setNumber] = useState<number>();
+    const [showLoading, setShowLoading] = useState(true);
+    setTimeout(() => {
+        setShowLoading(false);
+    }, 2000);
 
   return (
     <IonPage>
@@ -266,6 +270,14 @@ const Comp1: React.FC = () => {
               <IonTextarea rows={6} cols={20} placeholder="Enter any notes here..." value={text} onIonChange={e => setText(e.detail.value!)}></IonTextarea>
             </IonItem>
           </IonList>
+          <IonButton onClick={() => setShowLoading(true)}>Show Loading</IonButton>
+                <IonLoading
+                    cssClass='my-custom-class'
+                    isOpen={showLoading}
+                    onDidDismiss={() => setShowLoading(false)}
+                    message={'Please wait...'}
+                    duration={5000}
+                />
       </IonContent>
     </IonPage>
   );

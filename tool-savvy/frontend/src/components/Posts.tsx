@@ -1,28 +1,36 @@
-import React, {useEffect,useState} from 'react'
-import {Link} from 'react-router-dom'
+import React from 'react'
 import {connect} from 'react-redux'
 import useGetData from '../hooks/useGetData'
 import {getPosts,getPostsSuccess,getPostsFailure} from '../actions/postsActions'
+import { IonList, IonLabel, IonItem } from '@ionic/react';
+import InfiniteScroll from "./InfiniteScroll"
 
-const DashboardPage = ({dispatch, loading, posts, hasErrors}:any) => {
+function Posts({dispatch, loading, posts, hasErrors}:any){
     const url='https://jsonplaceholder.typicode.com/posts'
-    const data = useGetData(url,[getPosts,getPostsSuccess,getPostsFailure],dispatch)
+    useGetData(url,[getPosts,getPostsSuccess,getPostsFailure],dispatch)
 
-  return <section>
-            <h1>Dashboard</h1>
-            <p>This is the dashboard.</p>
-            <Link to="/posts" className="button">
-                View Posts
-            </Link>
-        </section>
+    return  <IonList>
+              <IonItem>
+                <IonLabel>
+                  <h1>Posts</h1>
+                  <p>These are all the posts.</p>
+                </IonLabel>
+              </IonItem>
+              {loading? <IonItem>Loading posts...</IonItem>
+              : (hasErrors? <IonItem>Unable to display posts.</IonItem>
+              // :posts.map((post:any) => <Post key={post.id} post={post} />))}
+              :<InfiniteScroll items={posts} container={Post}></InfiniteScroll>)}
+            </IonList>
 }
 
-export const Post = ({post}:any) => (
-    <article className="post-excerpt">
-      <h2>{post.title}</h2>
-      <p>{post.body.substring(0, 100)}</p>
-    </article>
-  )
+function Post(props:any){
+    return  <IonItem>
+              <IonLabel>
+                <h2>{props.title}</h2>
+                <p>{props.body.substring(0, 100)}</p>
+              </IonLabel>
+            </IonItem> 
+}
 
 // Map Redux state to React component props
 const mapStateToProps = (state:any) => ({
@@ -32,4 +40,4 @@ const mapStateToProps = (state:any) => ({
   })
   // Connect Redux to React
 
-export default connect(mapStateToProps)(DashboardPage)
+export const PostsComp  = connect(mapStateToProps)(Posts)

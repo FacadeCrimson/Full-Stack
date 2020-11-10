@@ -11,7 +11,7 @@ const initialAppState = {
   }
 
 const rootReducer = combineReducers({
-    //   posts: postsReducer,
+      posts: postsReducer,
       app: handleActions({
         // empty
       }, initialAppState),
