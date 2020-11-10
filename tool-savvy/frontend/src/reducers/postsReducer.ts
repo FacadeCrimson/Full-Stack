@@ -6,15 +6,15 @@ export const initialState = {
     hasErrors: false,
   }
   
-  export default function postsReducer(state = initialState, action:any) {
-    switch (action.type) {
-      case actions.GET_POSTS:
-        return {...state, loading: true}
-      case actions.GET_POSTS_SUCCESS:
-        return {posts: action.payload, loading: false, hasErrors: false}
-      case actions.GET_POSTS_FAILURE:
-        return {...state, loading: false, hasErrors: true}
-      default:
-        return state
-    }
+export default function postsReducer(state = initialState, action:any) {
+  switch (action.type) {
+    case actions.GET_POSTS:
+      return {...state, loading: true}
+    case actions.GET_POSTS_SUCCESS:
+      return {posts: action.payload, loading: false, hasErrors: false}
+    case actions.GET_POSTS_FAILURE:
+      return {...state, loading: false, hasErrors: true}
+    default:
+      return state
   }
+}

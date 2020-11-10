@@ -2,7 +2,7 @@ import { useEffect } from 'react'
 
 export default function useGetData(url:string,action:[Function,Function,Function],dispatch:any) {
     useEffect(()=>{
-        async function getData(dispatch:any){
+        async function getData(){
                 dispatch(action[0]())
                 try {
                   const response = await fetch(url)
@@ -12,6 +12,6 @@ export default function useGetData(url:string,action:[Function,Function,Function
                   dispatch(action[2]())
                 }       
         }
-        getData(dispatch)
+        getData()
     },[])
 }
