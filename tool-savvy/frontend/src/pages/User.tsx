@@ -1,13 +1,11 @@
 import React from 'react';
-import { IonContent, IonHeader, IonPage, IonTitle, IonToolbar, IonItem} from '@ionic/react';
-import InfiniteScroll from '../components/InfiniteScroll'
+import { IonContent, IonHeader, IonPage, IonTitle, IonToolbar } from '@ionic/react';
 import {  RouteComponentProps } from 'react-router-dom';
-
+import {AuthComp} from '../components/AuthComp'
+ 
 interface UserProps extends RouteComponentProps<{
     id: string;
   }> {}
-
-const numbers = Array.from(Array(100).keys())
 
 const User: React.FC<UserProps> = ({match}) => {
   return (
@@ -19,7 +17,7 @@ const User: React.FC<UserProps> = ({match}) => {
       </IonHeader>
 
       <IonContent>
-        <InfiniteScroll items={numbers} container={IonItem}></InfiniteScroll>
+        <AuthComp></AuthComp>
       </IonContent>
     </IonPage>
   );

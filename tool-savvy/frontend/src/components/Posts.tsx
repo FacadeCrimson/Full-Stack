@@ -18,7 +18,6 @@ function Posts({dispatch, loading, posts, hasErrors}:any){
               </IonItem>
               {loading? <IonItem>Loading posts...</IonItem>
               : (hasErrors? <IonItem>Unable to display posts.</IonItem>
-              // :posts.map((post:any) => <Post key={post.id} post={post} />))}
               :<InfiniteScroll items={posts} container={Post}></InfiniteScroll>)}
             </IonList>
 }
@@ -38,6 +37,5 @@ const mapStateToProps = (state:any) => ({
     posts: state.posts.posts,
     hasErrors: state.posts.hasErrors,
   })
-  // Connect Redux to React
 
 export const PostsComp  = connect(mapStateToProps)(Posts)

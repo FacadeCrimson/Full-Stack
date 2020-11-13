@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useReducer, useState } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import {
   Auth0Client,
   Auth0ClientOptions,
@@ -14,8 +14,9 @@ import {
 } from '@auth0/auth0-spa-js';
 import Auth0Context, { RedirectLoginOptions } from './authContext';
 import { hasAuthParams, loginError, tokenError } from './utils';
-import authReducer from './authReducer' 
-import { initialState as initialAuthState } from './authReducer';
+// import authReducer from './authReducer' 
+// import { initialState as initialAuthState } from './authReducer';
+import {connect} from 'react-redux'
 
 /**
  * The state of the application before the user was redirected to the login page.
@@ -33,19 +34,7 @@ export interface Auth0ProviderOptions {
    * See the EXAMPLES.md for more info.
    */
   onRedirectCallback?: (appState: AppState) => void;
-  /**
-   * By default, if the page url has code/state params, the SDK will treat them as Auth0's and attempt to exchange the
-   * code for a token. In some cases the code might be for something else (another OAuth SDK perhaps). In these
-   * instances you can instruct the client to ignore them eg
-   *
-   * ```jsx
-   * <Auth0Provider
-   *   clientId={clientId}
-   *   domain={domain}
-   *   skipRedirectCallback={window.location.pathname === '/stripe-oauth-callback'}
-   * >
-   * ```
-   */
+
   skipRedirectCallback?: boolean;
   
   domain: string;
@@ -79,12 +68,6 @@ export interface Auth0ProviderOptions {
   audience?: string;
   [key: string]: any; // eslint-disable-line @typescript-eslint/no-explicit-any
 }
-
-/**
- * Replaced by the package version at build time.
- * @ignore
- */
-declare const __VERSION__: string;
 
 const toAuth0ClientOptions = (
   opts: Auth0ProviderOptions
@@ -127,16 +110,20 @@ const defaultOnRedirectCallback = (appState?: AppState): void => {
 };
 
 const Auth0Provider = (opts: Auth0ProviderOptions): JSX.Element => {
-  const {
+  let {
     children,
     skipRedirectCallback,
     onRedirectCallback = defaultOnRedirectCallback,
     ...clientOpts
   } = opts;
+  delete clientOpts.dispatch
+  delete clientOpts.state
   const [client] = useState(
     () => new Auth0Client(toAuth0ClientOptions(clientOpts))
   );
-  const [state, dispatch]:[any,any] = useReducer(authReducer, initialAuthState);
+
+  const dispatch = opts.dispatch
+  const state = opts.state
 
   useEffect(() => {
     (async (): Promise<void> => {
@@ -153,7 +140,7 @@ const Auth0Provider = (opts: Auth0ProviderOptions): JSX.Element => {
         dispatch({ type: 'ERROR', error: loginError(error) });
       }
     })();
-  }, [client, onRedirectCallback, skipRedirectCallback]);
+  }, [client, onRedirectCallback, skipRedirectCallback,dispatch]);
 
   const loginWithRedirect = useCallback(
     (opts?: Auth0RedirectLoginOptions): Promise<void> =>
@@ -176,7 +163,7 @@ const Auth0Provider = (opts: Auth0ProviderOptions): JSX.Element => {
       const user = await client.getUser();
       dispatch({ type: 'LOGIN_POPUP_COMPLETE', user });
     },
-    [client]
+    [client,dispatch]
   );
 
   const logout = useCallback(
@@ -186,10 +173,10 @@ const Auth0Provider = (opts: Auth0ProviderOptions): JSX.Element => {
         dispatch({ type: 'LOGOUT' });
       }
     },
-    [client]
+    [client,dispatch]
   );
 
-  const userUpdatedAt = (state as any).user?.updated_at;
+  const userUpdatedAt = state.user?.updated_at;
 
   const getAccessTokenSilently = useCallback(
     async (opts?: GetTokenSilentlyOptions): Promise<string> => {
@@ -205,7 +192,7 @@ const Auth0Provider = (opts: Auth0ProviderOptions): JSX.Element => {
       }
       return token;
     },
-    [client, userUpdatedAt]
+    [client, userUpdatedAt,dispatch]
   );
 
   const getAccessTokenWithPopup = useCallback(
@@ -225,7 +212,7 @@ const Auth0Provider = (opts: Auth0ProviderOptions): JSX.Element => {
       }
       return token;
     },
-    [client, userUpdatedAt]
+    [client, userUpdatedAt,dispatch]
   );
 
   const getIdTokenClaims = useCallback(
@@ -248,5 +235,20 @@ const Auth0Provider = (opts: Auth0ProviderOptions): JSX.Element => {
   
 };
 
-export default Auth0Provider;
+// Map Redux state to React component props
+const mapStateToProps = (state:any) => ({
+  domain:process.env.REACT_APP_AUTH0_DOMAIN!,
+  clientId:process.env.REACT_APP_AUTH0_CLIENT_ID!,
+  audience:process.env.REACT_APP_AUTH0_AUDIENCE,
+  redirectUri:process.env.REACT_APP_AUTH0_CALLBACK_URL,
+  state:state.auth
+})
 
+export const Auth0Wrapper  = connect(mapStateToProps)(Auth0Provider)
+
+// const onRedirectCallback = async (appState) => {
+//     router.replace({
+//         pathname: '/loading',
+//         query: { path: appState?.targetUrl },
+//         })
+// }
