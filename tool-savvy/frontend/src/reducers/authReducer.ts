@@ -1,4 +1,4 @@
-const initialState:AuthState = {
+export const initialState:AuthState = {
     isAuthenticated: false,
       // In SSR mode the library will never check the session, so loading should be initialised as false
     isLoading: typeof window !== 'undefined',
@@ -38,6 +38,8 @@ export default function authReducer(state = initialState, action:Action) {
         isLoading: false,
         error: action.error,
       };
+      default:
+        return state;
   }
 }
 
@@ -52,15 +54,9 @@ type Action =
   | { type: 'LOGOUT' }
   | { type: 'ERROR'; error: Error };
 
-interface AuthState {
+export interface AuthState {
     error?: Error;
     isAuthenticated: boolean;
     isLoading: boolean;
     user?: User;
   }
-
-export class OAuthError extends Error {
-  constructor(public error: string, public error_description?: string) {
-    super(error_description || error);
-  }
-}
