@@ -1,30 +1,17 @@
-import React, {useState, useEffect} from 'react';
+import React from 'react';
+import {connect} from 'react-redux'
 import { IonContent, IonHeader, IonPage, IonTitle, IonToolbar,
 	IonCard, IonCardHeader, IonCardSubtitle, IonCardTitle, IonCardContent,
 	IonItem, IonIcon, IonLabel, IonButton, IonGrid, IonRow, IonCol
 	} from '@ionic/react';
 import { pin, wifi} from 'ionicons/icons';
+import {getPosts,getPostsSuccess,getPostsFailure} from '../actions/postsActions'
+import useGetData from '../hooks/useGetData'
 import './Tab1.css';
 
-const Tab1: React.FC = () => {
-	const [data,setData] = useState<String>()
-	useEffect(() => {
-        async function fetchData() {
-                // let myHeaders = new Headers()
-                // myHeaders.append('Content-Type','application/json')
-                // const requestOptions = {
-                // method: 'GET',
-                // body: JSON.stringify(body),
-                // headers: myHeaders,
-                // redirect: 'follow'
-                // }
-				const response = await fetch(`${process.env.REACT_APP_BACKEND}/test`)
-				console.log(response)
-				setData(await response.text())
-        }
-        fetchData()
-      }, []
-     )
+const Tab1View: React.FC = ({dispatch, loading, posts, error}:any) => {
+    const url='https://jsonplaceholder.typicode.com/todos/1'
+    useGetData(url,[getPosts,getPostsSuccess,getPostsFailure],dispatch)
 
   return (
     <IonPage>
@@ -57,7 +44,7 @@ const Tab1: React.FC = () => {
             <IonButton fill="outline" slot="end">View</IonButton>
             </IonItem>
             <IonCardContent>
-            {data?data:"Nothing to display yet!"}
+            {loading?"Loading...":posts.title}
             </IonCardContent>
           </IonCard>
 			</IonCol>
@@ -131,4 +118,11 @@ const Tab1: React.FC = () => {
   );
 };
 
-export default Tab1;
+// Map Redux state to React component props
+const mapStateToProps = (state:any) => ({
+  loading: state.posts.loading,
+  posts: state.posts.posts,
+  hasErrors: state.posts.hasErrors,
+})
+
+export const Tab1  = connect(mapStateToProps)(Tab1View)

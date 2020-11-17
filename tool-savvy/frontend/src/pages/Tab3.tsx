@@ -17,46 +17,41 @@ const Tab3: React.FC = () => {
         </IonToolbar>
       </IonHeader>
       <IonContent fullscreen>
-   
-        <IonHeader collapse="condense">
-          <IonToolbar>
-            <IonTitle size="large">Tab 3</IonTitle>
-          </IonToolbar>
-        </IonHeader>
         <IonGrid>
           <IonRow>
           {photos.map((photo, index) => (
             <IonCol size="6" key={index}>
-            <IonImg onClick={() => setPhotoToDelete(photo)} src={photo.base64 ?? photo.webviewPath} />
+              <IonImg onClick={() => setPhotoToDelete(photo)} src={photo.base64 ?? photo.webviewPath} />
             </IonCol>
           ))}
           </IonRow>
       	</IonGrid>
+
         <IonFab vertical="bottom" horizontal="center" slot="fixed">
-			<IonFabButton onClick={() => takePhoto()}>
-				<IonIcon icon={camera}></IonIcon>
-			</IonFabButton>
+          <IonFabButton onClick={() => takePhoto()}>
+            <IonIcon icon={camera}></IonIcon>
+          </IonFabButton>
         </IonFab>
-		
-		<IonActionSheet
-			isOpen={!!photoToDelete}
-			buttons={[{
-				text: 'Delete',
-				role: 'destructive',
-				icon: trash,
-				handler: () => {
-				if (photoToDelete) {
-					deletePhoto(photoToDelete);
-					setPhotoToDelete(undefined);
-				}
-				}
-			}, {
-				text: 'Cancel',
-				icon: close,
-				role: 'cancel'
-			}]}
-			onDidDismiss={() => setPhotoToDelete(undefined)}
-			/>
+        
+        <IonActionSheet
+          isOpen={!!photoToDelete}
+          buttons={[{
+            text: 'Delete',
+            role: 'destructive',
+            icon: trash,
+            handler: () => {
+            if (photoToDelete) {
+              deletePhoto(photoToDelete);
+              setPhotoToDelete(undefined);
+            }
+            }
+          }, {
+            text: 'Cancel',
+            icon: close,
+            role: 'cancel'
+          }]}
+          onDidDismiss={() => setPhotoToDelete(undefined)}
+          />
       </IonContent>
     </IonPage>
   );
