@@ -1,8 +1,11 @@
-import React from 'react';
-import { IonContent, IonHeader, IonPage, IonTitle, IonToolbar,
+import React,{useState} from 'react';
+import { IonContent, IonHeader, IonPage, IonTitle, IonToolbar, IonButtons, IonButton, IonIcon,IonSegment, IonSegmentButton,IonToast, IonReorderGroup, IonItem, IonLabel,IonReorder,
 	IonCard, IonCardHeader,  IonCardTitle, IonCardContent, IonText} from '@ionic/react';
+import { personCircle, search, ellipsisHorizontal, ellipsisVertical, pizza} from 'ionicons/icons';
 
 const About: React.FC = () => {
+    const [showToast1, setShowToast1] = useState(false);
+  const [showToast2, setShowToast2] = useState(false);
   return (
     <IonPage>
         <IonHeader>
@@ -31,6 +34,90 @@ const About: React.FC = () => {
                 </IonCardContent>
             </IonCard>
 
+            <IonToolbar>
+                <IonButtons slot="secondary">
+                <IonButton>
+                    <IonIcon slot="icon-only" icon={personCircle} />
+                </IonButton>
+                <IonButton>
+                    <IonIcon slot="icon-only" icon={search} />
+                </IonButton>
+                </IonButtons>
+                <IonButtons slot="primary">
+                <IonButton color="secondary">
+                    <IonIcon slot="icon-only" ios={ellipsisHorizontal} md={ellipsisVertical} />
+                </IonButton>
+                </IonButtons>
+                <IonTitle>Default Buttons</IonTitle>
+            </IonToolbar>
+
+            <IonToolbar>
+                <IonButtons slot="secondary">
+                <IonButton>Account</IonButton>
+                </IonButtons>
+                <IonButtons slot="primary">
+                <IonButton color="danger">Edit</IonButton>
+                </IonButtons>
+                <IonTitle>Text Only Buttons</IonTitle>
+            </IonToolbar>
+
+            <IonToolbar>
+                <IonSegment value="all">
+                <IonSegmentButton value="all">
+                    All
+                </IonSegmentButton>
+                <IonSegmentButton value="favorites">Favorites</IonSegmentButton>
+                </IonSegment>
+            </IonToolbar>
+            <IonButton onClick={() => setShowToast1(true)} expand="block">Show Toast 1</IonButton>
+      <IonButton onClick={() => setShowToast2(true)} expand="block">Show Toast 2</IonButton>
+      <IonToast
+        isOpen={showToast1}
+        onDidDismiss={() => setShowToast1(false)}
+        message="Your settings have been saved."
+        duration={200}
+      />
+
+      <IonToast
+        isOpen={showToast2}
+        onDidDismiss={() => setShowToast2(false)}
+        message="Click to Close"
+        position="top"
+        buttons={[
+          {
+            side: 'start',
+            icon: 'star',
+            text: 'Favorite',
+            handler: () => {
+              console.log('Favorite clicked');
+            }
+          },
+          {
+            text: 'Done',
+            role: 'cancel',
+            handler: () => {
+              console.log('Cancel clicked');
+            }
+          }
+        ]}
+      />
+
+            <IonReorderGroup disabled={false}>
+                {/*-- Custom reorder icon end items --*/}
+                <IonItem>
+                    <IonLabel>Item 5</IonLabel>
+                    <IonReorder slot="end">
+                    <IonIcon icon={pizza} />
+                    </IonReorder>
+                </IonItem>
+
+                <IonItem>
+                    <IonLabel>Item 6</IonLabel>
+                    <IonReorder slot="end">
+                    <IonIcon icon={pizza} />
+                    </IonReorder>
+                </IonItem>
+            </IonReorderGroup>
         </IonContent>
         
     </IonPage>
